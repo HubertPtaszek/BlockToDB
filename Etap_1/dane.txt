@@ -15,7 +15,7 @@ faza projektowa: projekt tworzonej aplikacji oraz analiza wymagań;
 faza implementacji: implementacja zaprojektowanej aplikacji;
 
 Podział pracy w zespole:
-Mularczyk Mariusz - implementacja oraz obsługa tworzenia shcematu bazy danych budoanej przy pomocy bloczków, tworzenie widoków intefrejsu użytkoników, warstwa prezentacji;
+Mularczyk Mariusz - implementacja oraz obsługa tworzenia schematu bazy danych budowanej przy pomocy bloczków, tworzenie widoków intefrejsu użytkoników, warstwa prezentacji;
 Ptaszek Hubert - obsługa generowania skryptu tworzącego bazę danych, architektura aplikacji, "stylowanie";
 
 Temat projektu z przedmiotu "Programowanie systemów rozproszonych":
