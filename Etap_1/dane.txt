@@ -8,6 +8,9 @@ Tematem naszej pracy będize połączenie tematów 4 i 27 - generowanie skryptu 
 Spis technologii:
 ASP.NET Framework 4.7, Entity Framwerok, LINQ, T-SQL, C#, Microsoft SQL Server 2019, Ninject, HTML, JavaScript, jQuery, TypeScript, CSS, Sass;
 
+Spis funkcjonalności:
+Aplikacja webowa z opcją logowania oraz zakładania konta, każdy użytkownik ma możliwość tworzenia schematów bazy danych, schematy są przechowywane na jego koncie, z każdego schematu jest możliwość wygenerowania skryptu tworzacego bazę danych, możliwoćc powrotu do swojego wcześniej utworzonego schematu i edycja go w celu ponownego wygenerowania skryptu; 
+
 Harmonogram pracy:
 faza teoretyczna: opis projektu, założenia, stos technologiczny;
 faza analizy: analiza wymagań jakie powinna spełniać aplikacja oraz możliwości wybranych technologi;
