@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlockToDB.Application.Services
+namespace BlockToDB.Application
 {
-    public class Class1
+    public abstract class ConverterBase
     {
     }
 }

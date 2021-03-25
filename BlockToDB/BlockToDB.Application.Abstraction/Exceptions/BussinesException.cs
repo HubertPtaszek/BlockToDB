@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BlockToDB.Application
 {
@@ -16,6 +12,7 @@ namespace BlockToDB.Application
             Number = number;
             ExceptionMessage = message;
         }
+
         public BussinesException(string message)
          : base(string.Format(message))
         {

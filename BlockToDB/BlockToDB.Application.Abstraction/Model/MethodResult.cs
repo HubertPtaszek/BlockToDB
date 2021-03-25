@@ -1,10 +1,5 @@
-using BlockToDB.Dictionaries;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.ModelBinding;
 
 namespace BlockToDB.Application
 {
@@ -14,8 +9,10 @@ namespace BlockToDB.Application
         {
             Errors = new List<ErrorResult>();
         }
+
         public List<ErrorResult> Errors { get; set; }
         public bool IsSuccess { get { return !Errors.Any(); } }
+
         public void AddError(string key, string message)
         {
             Errors.Add(new ErrorResult(key, message));
@@ -40,17 +37,19 @@ namespace BlockToDB.Application
     {
         public T Result { get; set; }
     }
+
     public class ErrorResult
     {
         public ErrorResult()
         {
-
         }
+
         public ErrorResult(string key, string message)
         {
             Key = key;
             Message = message;
         }
+
         public string Key { get; set; }
         public string Message { get; set; }
     }
