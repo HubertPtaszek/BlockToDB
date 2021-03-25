@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlockToDB.DependencyResolver
+namespace BlockToDB.Application.Abstraction
 {
-    public class Class1
+    public interface IService
     {
     }
 }

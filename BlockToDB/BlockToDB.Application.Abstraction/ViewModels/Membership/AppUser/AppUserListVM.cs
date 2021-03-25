@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlockToDB.Infrastructure
+namespace BlockToDB.Application
 {
-    public class Class1
+    public class AppUserListVM
     {
     }
 }

@@ -1,0 +1,32 @@
+Członkowie zespołu:
+Mularczyk Mariusz, mariuszmu97@gmail.com, grupa 1ID21B;
+Ptaszek Hubert, hubertptaszek97@gmail.com, grupa 1ID21B;
+
+Temat projektu:
+Tematem naszej pracy będize połączenie tematów 4 i 27 - generowanie skryptu bazy danych na podstawie schematu a aplikacja będzie wykorzystywać ORM.
+
+Spis technologii:
+ASP.NET Framework 4.7, Entity Framwerok, LINQ, T-SQL, C#, Microsoft SQL Server 2019, Ninject, HTML, JavaScript, jQuery, TypeScript, CSS, Sass;
+
+Spis funkcjonalności:
+Aplikacja webowa z opcją logowania oraz zakładania konta, każdy użytkownik ma możliwość tworzenia schematów bazy danych, schematy są przechowywane na jego koncie, z każdego schematu jest możliwość wygenerowania skryptu tworzacego bazę danych, możliwoćc powrotu do swojego wcześniej utworzonego schematu i edycja go w celu ponownego wygenerowania skryptu; 
+
+Harmonogram pracy:
+faza teoretyczna: opis projektu, założenia, stos technologiczny;
+faza analizy: analiza wymagań jakie powinna spełniać aplikacja oraz możliwości wybranych technologi;
+faza projektowa: projekt tworzonej aplikacji oraz analiza wymagań;
+faza implementacji: implementacja zaprojektowanej aplikacji;
+
+Podział pracy w zespole:
+Mularczyk Mariusz - implementacja oraz obsługa tworzenia schematu bazy danych budowanej przy pomocy bloczków, tworzenie widoków intefrejsu użytkoników, warstwa prezentacji;
+Ptaszek Hubert - obsługa generowania skryptu tworzącego bazę danych, architektura aplikacji, "stylowanie";
+
+Temat projektu z przedmiotu "Programowanie systemów rozproszonych":
+"Cloud drive"
+
+Tematy prac inżynierskich:
+Mularczyk Mariusz - "System wspomagania obsługi restauracji"
+Ptaszek Hubert - "System wspomagania pracy przychodni lekarskiej"
+
+Tematy prac magisterskich:
+brak
