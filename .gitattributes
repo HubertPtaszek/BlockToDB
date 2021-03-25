@@ -1,4 +1,10 @@
 ###############################################################################
+# Set ignore file for linguist
+###############################################################################
+BlockToDB/BlockToDB/Scripts/* linguist-vendored
+BlockToDB/BlockToDB/Content/* linguist-vendored
+
+###############################################################################
 # Set default behavior to automatically normalize line endings.
 ###############################################################################
 * text=auto
