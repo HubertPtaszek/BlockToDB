@@ -1,0 +1,14 @@
+body {
+    background: $gray100;
+    margin: 0;
+    font-family: "Poppins";
+    font-size: 12.5px;
+
+    a {
+        text-decoration: none;
+    }
+}
+
+.container {
+    max-width: 1920px !important;
+}

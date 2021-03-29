@@ -1,12 +1,6 @@
 using BlockToDB.Application;
-using BlockToDB.Data;
 using Ninject;
 using Ninject.Extensions.Interception.Infrastructure.Language;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BlockToDB.Infrastructure
 {
@@ -18,8 +12,6 @@ namespace BlockToDB.Infrastructure
             kernel.Bind<BlockToDBService>().To<BlockToDBService>().InMainContextScope();
 
             kernel.Bind<BlockToDBConverter>().ToSelf().InMainContextScope();
-
-            kernel.Bind<ICodeRepository>().To<CodeRepository>().InMainContextScope();
         }
     }
 }

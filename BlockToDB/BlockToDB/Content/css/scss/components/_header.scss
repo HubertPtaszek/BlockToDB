@@ -1,0 +1,47 @@
+.page-header {
+    padding: $space-size 0px $space-size 0px;
+
+    &-secondary {
+        .page-header-title {
+            font-size: 14px;
+        }
+    }
+
+    &-content {
+        display: flex;
+        align-items: flex-end;
+    }
+
+    .header-text,
+    .header-nav {
+        margin-top: 8px;
+        margin-bottom: 8px;
+    }
+
+    .header-text {
+        font-weight: 500;
+        font-size: 16px;
+        margin-right: 40px;
+    }
+
+    .header-nav {
+        font-weight: 500;
+        color: #6D6D6D;
+        font-size: 12px;
+        position: relative;
+        margin-right: 30px;
+
+        &.active {
+            color: #000000;
+
+            &:after {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: -4px;
+                width: 100%;
+                border-top: 2px solid #457AE1;
+            }
+        }
+    }
+}

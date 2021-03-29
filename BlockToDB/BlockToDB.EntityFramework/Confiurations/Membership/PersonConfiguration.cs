@@ -1,10 +1,5 @@
 ﻿using BlockToDB.Domain;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BlockToDB.EntityFramework
 {
@@ -12,11 +7,6 @@ namespace BlockToDB.EntityFramework
     {
         public PersonConfiguration()
         {
-            HasRequired(x => x.Language)
-                .WithMany()
-                .HasForeignKey(x => x.LanguageId)
-                .WillCascadeOnDelete(false);
-
             HasOptional(x => x.CreatedBy)
                 .WithMany()
                 .HasForeignKey(x => x.CreatedById)

@@ -117,22 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="C" xml:space="preserve">
-    <value>C</value>
-  </data>
-  <data name="CPlusPlus" xml:space="preserve">
-    <value>C++</value>
-  </data>
-  <data name="CSharp" xml:space="preserve">
-    <value>C#</value>
-  </data>
-  <data name="LanguageDictionary_EnglishGB" xml:space="preserve">
-    <value>Angielski</value>
-  </data>
-  <data name="LanguageDictionary_GermanDE" xml:space="preserve">
-    <value>Niemiecki</value>
-  </data>
-  <data name="LanguageDictionary_Polish" xml:space="preserve">
-    <value>Polski</value>
-  </data>
 </root>

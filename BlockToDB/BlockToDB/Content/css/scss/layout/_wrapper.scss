@@ -1,0 +1,35 @@
+.wrapper {
+    border-radius: $border-radius;
+    background: white;
+    -webkit-box-shadow: 0 0 10px 0 rgba(0,0,0,.1);
+    box-shadow: 0 0 10px 0 rgba(0,0,0,.1);
+    margin-bottom: 20px;
+
+    &-header {
+        padding: 15px 20px;
+        margin-bottom: 3px;
+        border-bottom: 1px solid $gray-400;
+
+        &-title {
+            font-size: 1.125rem;
+            margin-bottom: 0;
+        }
+
+        &-actions {
+            @media(max-width: 840px) {
+                margin-top: 20px;
+            }
+        }
+
+        & + .wrapper-inner {
+            padding-top: 0;
+        }
+    }
+
+    &-inner {
+        padding: 20px;
+        .no-padding-top{
+            padding-top: 0;
+        }
+    }
+}

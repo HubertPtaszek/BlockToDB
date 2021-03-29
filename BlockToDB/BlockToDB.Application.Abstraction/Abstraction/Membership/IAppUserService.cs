@@ -12,8 +12,6 @@ namespace BlockToDB.Application
 
         int GetUnknownUserId();
 
-        AppUserData GetUserDataByAdLogin(string userNamePart);
-
         AppUserListVM GetAppUserListVM();
 
         void Delete(int id);

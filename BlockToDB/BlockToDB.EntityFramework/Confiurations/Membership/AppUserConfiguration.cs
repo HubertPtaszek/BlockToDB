@@ -1,10 +1,5 @@
 ﻿using BlockToDB.Domain;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BlockToDB.EntityFramework
 {
@@ -12,6 +7,15 @@ namespace BlockToDB.EntityFramework
     {
         public AppUserConfiguration()
         {
+            HasMany(x => x.UserRoles)
+                .WithRequired(x => x.AppUser)
+                .HasForeignKey(x => x.AppUserId)
+                .WillCascadeOnDelete(false);
+
+            HasRequired(x => x.AppIdentityUser)
+                .WithMany()
+                .HasForeignKey(x => x.AppIdentityUserId)
+                .WillCascadeOnDelete(false);
         }
     }
 }

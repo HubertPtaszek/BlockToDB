@@ -1,13 +1,7 @@
-﻿using BlockToDB.Infrastructure;
-using BlockToDB.Utils;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using System.Linq.Dynamic;
 
 namespace BlockToDB.Data
 {
@@ -74,29 +68,36 @@ namespace BlockToDB.Data
                     filterValue = TransformValue(ColumnName, Value, elementType);
                     source = System.Linq.Dynamic.DynamicQueryable.Where(source, String.Format("{0} == {1}", ColumnName, filterValue));
                     break;
+
                 case "contains":
                     filterValue = TransformValue(ColumnName, Value, elementType);
                     source = System.Linq.Dynamic.DynamicQueryable.Where(source, string.Format("{0}.Contains({1})", ColumnName, filterValue));
                     break;
+
                 case "<>":
                     source = System.Linq.Dynamic.DynamicQueryable.Where(source, string.Format("!{0}.StartsWith(\"{1}\")", ColumnName, Value));
                     break;
+
                 case ">=":
                     filterValue = TransformValue(ColumnName, Value, elementType);
                     source = System.Linq.Dynamic.DynamicQueryable.Where(source, String.Format("{0} >= {1}", ColumnName, filterValue));
                     break;
+
                 case "<=":
                     filterValue = TransformValue(ColumnName, Value, elementType);
                     source = System.Linq.Dynamic.DynamicQueryable.Where(source, String.Format("{0} <= {1}", ColumnName, filterValue));
                     break;
+
                 case ">":
                     filterValue = TransformValue(ColumnName, Value, elementType);
                     source = System.Linq.Dynamic.DynamicQueryable.Where(source, String.Format("{0} > {1}", ColumnName, filterValue));
                     break;
+
                 case "<":
                     filterValue = TransformValue(ColumnName, Value, elementType);
                     source = System.Linq.Dynamic.DynamicQueryable.Where(source, String.Format("{0} < {1}", ColumnName, filterValue));
                     break;
+
                 default:
                     break;
             }
@@ -114,28 +115,36 @@ namespace BlockToDB.Data
                     if (propertyType.IsEnum)
                         return String.Format("{0} = \"{1}\"", columnName, filterValue);
                     return String.Format("{0} == {1}", columnName, filterValue);
+
                 case "contains":
                     filterValue = TransformValue(columnName, Value, elementType);
                     return string.Format("{0}.Contains({1})", columnName, filterValue);
+
                 case "<>":
                     return string.Format("!{0}.StartsWith(\"{1}\")", columnName, Value);
+
                 case ">=":
                     filterValue = TransformValue(columnName, Value, elementType);
                     return String.Format("{0} >= {1}", columnName, filterValue);
+
                 case "<=":
                     filterValue = TransformValue(columnName, Value, elementType);
                     return String.Format("{0} <= {1}", columnName, filterValue);
+
                 case ">":
                     filterValue = TransformValue(columnName, Value, elementType);
                     return String.Format("{0} > {1}", columnName, filterValue);
+
                 case "<":
                     filterValue = TransformValue(columnName, Value, elementType);
                     return String.Format("{0} < {1}", columnName, filterValue);
+
                 default:
                     break;
             }
             return string.Empty;
         }
+
         private static object TransformValue(string columnName, string value, Type elementType)
         {
             Type propertyType = elementType.GetProperty(columnName).PropertyType;

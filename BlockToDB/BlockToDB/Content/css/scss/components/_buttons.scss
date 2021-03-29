@@ -1,0 +1,55 @@
+.dx-button {
+    .dx-icon {
+        font-size: 15px !important;
+    }
+
+    &.dx-button-mode-text {
+        .dx-button-content {
+            padding: 7px $space-size 8px;
+
+            .dx-icon {
+                margin-right: 6px;
+            }
+        }
+    }
+}
+
+.btn-datagrid {
+    color: $gray400;
+    margin: 0 6px;
+    font-size: 13.5px;
+
+    &:hover {
+        color: $black;
+    }
+}
+
+.btn-small {
+    font-size: 12px !important;
+
+    .dx-button-content {
+        padding: 3px 5px !important;
+    }
+}
+
+.btn-fb {
+    background-color: #4c6ef5;
+    width: 220px;
+    height: 36px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+
+    i {
+        margin-right: 8px;
+        font-size: 19px;
+    }
+}
+
+.btn-default {
+    background: #337ab7;
+    color: white;
+}

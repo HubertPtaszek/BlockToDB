@@ -74,6 +74,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -98,7 +99,36 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\BlockToDB.Application.Abstraction\BlockToDB.Application.Abstraction.csproj">
+      <Project>{fdbdf559-494b-42b7-be2b-9cc8b7931988}</Project>
+      <Name>BlockToDB.Application.Abstraction</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BlockToDB.Data.Abstraction\BlockToDB.Data.Abstraction.csproj">
+      <Project>{4694794e-aa58-42f3-8d71-3fde364e5072}</Project>
+      <Name>BlockToDB.Data.Abstraction</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BlockToDB.Dictionaries\BlockToDB.Dictionaries.csproj">
+      <Project>{ad40d57f-b038-4a91-a79a-bfa8a8888a2e}</Project>
+      <Name>BlockToDB.Dictionaries</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BlockToDB.Domain\BlockToDB.Domain.csproj">
+      <Project>{8772ce2b-cabb-4488-b4bd-96a101a580bb}</Project>
+      <Name>BlockToDB.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BlockToDB.EntityFramework\BlockToDB.EntityFramework.csproj">
+      <Project>{bec3b32c-9ccd-40f0-a4ee-de0eabce8769}</Project>
+      <Name>BlockToDB.EntityFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BlockToDB.Infrastructure\BlockToDB.Infrastructure.csproj">
+      <Project>{ef10ccd2-4f7b-4203-a852-44dbc7a973c9}</Project>
+      <Name>BlockToDB.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BlockToDB.Resources\BlockToDB.Resources.csproj">
+      <Project>{2f59d53c-cdbc-4c57-8f72-bd416ce0de15}</Project>
+      <Name>BlockToDB.Resources</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

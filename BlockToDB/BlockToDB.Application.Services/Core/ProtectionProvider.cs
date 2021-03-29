@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BlockToDB.Application
 {
@@ -24,7 +20,6 @@ namespace BlockToDB.Application
         /// <returns>An instance of a data protection service</returns>
         //public virtual MachineKeyDataProtector Create(params string[] purposes)
         //{
-
         //}
 
         public DataProtectionProviderDelegate ToOwinFunction()
@@ -61,6 +56,5 @@ namespace BlockToDB.Application
         {
             return MachineKey.Unprotect(protectedData, _purposes);
         }
-
     }
 }

@@ -23,7 +23,5 @@ namespace BlockToDB.Application
         [Display(ResourceType = typeof(SharedResource), Name = "IsActive")]
         public bool IsActive { get; set; }
 
-        [Display(ResourceType = typeof(SharedResource), Name = "Language")]
-        public string Language { get; set; }
     }
 }

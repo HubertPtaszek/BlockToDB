@@ -1,30 +1,72 @@
-﻿using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
 namespace BlockToDB
 {
     public class BundleConfig
     {
-        // For more information on bundling, visit https://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
+            #region scriptBundle
 
-            bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.validate*"));
+            var scriptBundle = new ScriptBundle("~/Scripts/jqueryGlobalize");
+            scriptBundle.Include(
+                 "~/Scripts/jquery-{version}.js",
+                 "~/Scripts/jquery.scrollbar.min.js",
+                 "~/Scripts/js.cookie.js",
+                 "~/Scripts/jquery.smartCart.js",
+                 "~/Scripts/jquery.unobtrusive-ajax.min.js",
+                   "~/Scripts/main.js"
 
-            // Use the development version of Modernizr to develop with and learn from. Then, when you're
-            // ready for production, use the build tool at https://modernizr.com to pick only the tests you need.
+                 );
+            // CLDR scripts
+            scriptBundle
+                .Include("~/Scripts/cldr.js")
+                .Include("~/Scripts/cldr/event.js")
+                .Include("~/Scripts/cldr/supplemental.js")
+                .Include("~/Scripts/cldr/unresolved.js");
+
+            // Globalize 1.x
+            scriptBundle
+                .Include("~/Scripts/globalize.js")
+                .Include("~/Scripts/globalize/message.js")
+                .Include("~/Scripts/globalize/number.js")
+                .Include("~/Scripts/globalize/currency.js")
+                .Include("~/Scripts/globalize/date.js")
+                .Include("~/Scripts/globalize.extensions.js");
+
+            bundles.Add(scriptBundle);
+
+            #endregion scriptBundle
+
+            #region Modernizr
+
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/Scripts/modernizr-*"));
 
+            #endregion Modernizr
+
+            #region bootstrap
+
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js"));
+                      "~/Scripts/bootstrap.bundle.min.js",
+                      "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                "~/Content/css/main.css",
+                      "~/Content/site.css"
+                      ));
+
+            #endregion bootstrap
+
+            #region jquery
+
+            bundles.Add(new ScriptBundle("~/bundles/jqueryBase64").Include(
+                "~/Scripts/jquery.base64.js"
+                ));
+            bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
+                        "~/Scripts/jquery.validate*"));
+
+            #endregion jquery
         }
     }
 }

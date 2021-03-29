@@ -57,12 +57,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Core\AppSetting.cs" />
+    <Compile Include="Core\AuditEntity.cs" />
+    <Compile Include="Core\Entity.cs" />
+    <Compile Include="Core\IAuditEntity.cs" />
+    <Compile Include="Membership\AppIdentityUser.cs" />
+    <Compile Include="Membership\AppUserRole.cs" />
+    <Compile Include="Membership\AppRole.cs" />
+    <Compile Include="Membership\AppUser.cs" />
+    <Compile Include="Membership\Person.cs" />
+    <Compile Include="Membership\SystemUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BlockToDB.Dictionaries\BlockToDB.Dictionaries.csproj">
+      <Project>{ad40d57f-b038-4a91-a79a-bfa8a8888a2e}</Project>
+      <Name>BlockToDB.Dictionaries</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BlockToDB.Infrastructure\BlockToDB.Infrastructure.csproj">
+      <Project>{ef10ccd2-4f7b-4203-a852-44dbc7a973c9}</Project>
+      <Name>BlockToDB.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BlockToDB.Resources\BlockToDB.Resources.csproj">
+      <Project>{2f59d53c-cdbc-4c57-8f72-bd416ce0de15}</Project>
+      <Name>BlockToDB.Resources</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

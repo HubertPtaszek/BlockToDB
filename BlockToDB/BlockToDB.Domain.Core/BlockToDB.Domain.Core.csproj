@@ -54,12 +54,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Core\AuditEntity.cs" />
+    <Compile Include="Core\Entity.cs" />
+    <Compile Include="Core\IAuditEntity.cs" />
+    <Compile Include="Membership\Language.cs" />
+    <Compile Include="Membership\Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BlockToDB.Dictionaries\BlockToDB.Dictionaries.csproj">
+      <Project>{ad40d57f-b038-4a91-a79a-bfa8a8888a2e}</Project>
+      <Name>BlockToDB.Dictionaries</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

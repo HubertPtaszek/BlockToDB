@@ -1,14 +1,6 @@
 ﻿using BlockToDB.Application.Abstraction;
-using Ninject;
-using NLog;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BlockToDB.Infrastructure;
-using BlockToDB.Utils;
+using Ninject;
 
 namespace BlockToDB.Application
 {

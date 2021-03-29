@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using BlockToDB.Utils;
 using System.Web.Mvc;
 
 namespace BlockToDB.Controllers
@@ -10,7 +7,10 @@ namespace BlockToDB.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Login", "Account");
+            else
+                return RedirectToAction("Index", "Dashboard", new { area = AreaNames.Dashboard_Area });
         }
 
         public ActionResult About()

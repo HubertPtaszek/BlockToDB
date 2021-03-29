@@ -2,11 +2,6 @@ using BlockToDB.Application;
 using BlockToDB.Data;
 using Ninject;
 using Ninject.Extensions.Interception.Infrastructure.Language;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BlockToDB.Infrastructure
 {
@@ -18,8 +13,6 @@ namespace BlockToDB.Infrastructure
             kernel.Bind<AppUserService>().To<AppUserService>().InMainContextScope();
             kernel.Bind<IAppUserRepository>().To<AppUserRepository>().InMainContextScope();
             kernel.Bind<AppUserConverter>().ToSelf().InMainContextScope();
-
-            kernel.Bind<ILanguageRepository>().To<LanguageRepository>().InMainContextScope();
         }
     }
 }

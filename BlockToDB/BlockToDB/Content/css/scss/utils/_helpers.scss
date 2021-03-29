@@ -1,0 +1,109 @@
+.page-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.mt-1 {
+    margin-top: $space-size;
+}
+
+.mt-2 {
+    margin-top: $space-size-2;
+}
+
+.mt-3 {
+    margin-top: $space-size-3;
+}
+
+.mt-4 {
+    margin-top: $space-size-4;
+}
+
+.mt-5 {
+    margin-top: $space-size-5;
+}
+
+.p-2 {
+    padding: $space-size-2;
+}
+
+.pt-0 {
+    padding-top: 0 !important;
+}
+
+.pt-1 {
+    padding-top: $space-size;
+}
+
+.pt-2 {
+    padding-top: $space-size-2;
+}
+
+.pt-3 {
+    padding-top: $space-size-3;
+}
+
+.pt-4 {
+    padding-top: $space-size-4;
+}
+
+.pt-5 {
+    padding-top: $space-size-5;
+}
+
+.secondary-link {
+    color: $gray400;
+    float: right;
+}
+
+.mb-2 {
+    margin-bottom: $space-size-2;
+}
+
+.mb-3 {
+    margin-bottom: $space-size-3;
+}
+
+.mb-4 {
+    margin-bottom: $space-size-4;
+}
+
+.mb-5 {
+    margin-bottom: $space-size-5;
+}
+
+.mb-6 {
+    margin-bottom: $space-size-6;
+}
+
+.ml-1 {
+    margin-left: $space-size;
+}
+
+.mr-1 {
+    margin-right: $space-size;
+}
+
+.ml-2 {
+    margin-left: $space-size-2;
+}
+
+.ml-3 {
+    margin-left: $space-size-3;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.text-gray {
+    color: gray;
+}
+
+.popup-footer {
+    justify-content: flex-end;
+}
