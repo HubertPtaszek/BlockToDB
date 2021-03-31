@@ -1,44 +1,72 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNet.Identity
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>Block to Database</title>
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/DevExtremeBundle")
     @Scripts.Render("~/bundles/modernizr")
-
+    @Scripts.Render("~/Scripts/jqueryGlobalize")
+    @Scripts.Render("~/bundles/jqueryBase64")
+    @Scripts.Render("~/Scripts/DevExtremeBundle")
+    @Scripts.Render("~/Scripts/DevExtremeBundlePL")
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>
-                @Html.Partial("_LoginPartial")
-            </div>
+    <div class="container-logo" style="padding-top: 15px">
+        <div id="logo">
+            <img src="~/Content/images/logo.svg" onclick="goToDashboard()" />
         </div>
+        <div id="title"><span onclick="goToDashboard()">Block to Database</span></div>
     </div>
-    <div class="container body-content">
+    <div class="container-fluid" style="padding-top: 15px">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+
+    <script>
+        function goToDashboard() {
+            window.location = "@Url.Action("Index", "Dashboard", new { area = AreaNames.Dashboard_Area })";
+        }
+
+        $(document).ready(function () {
+            if ($.validator != undefined) {
+                $.validator.methods.number = function (value, element) {
+                    var globalizationValue = value.replace(".", ",");
+                    return this.optional(element) ||
+                        !isNaN(Globalize.parseNumber(globalizationValue));
+                }
+
+                $.validator.methods.range = function (value, element, param) {
+                    if (value === undefined && param.length === 2 && isNaN(param[0]) && isNaN(param[1]))
+                    {
+                        return false;
+                    }
+                    if (value === "true" && param.length === 2 && isNaN(param[0]) && isNaN(param[1])) {
+                        return true;
+                    }
+
+                    var globalizationValue = value.replace(".", ",");
+                    return this.optional(element) || (Globalize.parseNumber(globalizationValue) >= param[0] && Globalize.parseNumber(globalizationValue) <= param[1]);
+                }
+            }
+        });
+        $(function () {
+            var transport = ['webSockets', 'serverSentEvents', 'longPolling', 'foreverFrame'];
+            var isChrome = !!window.chrome && !!window.chrome.webstore;
+            if (isChrome) {
+                transport = ['serverSentEvents', 'longPolling', 'foreverFrame'];
+            }
+        });
+
+        function htmlEncode(value) {
+            var encodedValue = $('<div />').text(value).html();
+            return encodedValue;
+        }
+    </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 .wrapper {
-    border-radius: $border-radius;
+    border-radius: 4px;
     background: white;
     -webkit-box-shadow: 0 0 10px 0 rgba(0,0,0,.1);
     box-shadow: 0 0 10px 0 rgba(0,0,0,.1);
@@ -8,7 +8,7 @@
     &-header {
         padding: 15px 20px;
         margin-bottom: 3px;
-        border-bottom: 1px solid $gray-400;
+        border-bottom: 1px solid $gray400;
 
         &-title {
             font-size: 1.125rem;

@@ -52,15 +52,13 @@ namespace BlockToDB
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                "~/Content/css/main.css",
-                      "~/Content/site.css"
-                      ));
+                "~/Content/css/main.css"));
 
             #endregion bootstrap
 
             #region jquery
 
-            bundles.Add(new ScriptBundle("~/bundles/jqueryBase64").Include(
+            bundles.Add(new ScriptBundle("~/Scripts/jqueryBase64").Include(
                 "~/Scripts/jquery.base64.js"
                 ));
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(

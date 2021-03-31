@@ -61,6 +61,24 @@ namespace BlockToDB.Resources.Shared {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kod.
+        /// </summary>
+        public static string Code {
+            get {
+                return ResourceManager.GetString("Code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Potwiedź hasło.
+        /// </summary>
+        public static string ConfirmPassword {
+            get {
+                return ResourceManager.GetString("ConfirmPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Opis.
         /// </summary>
         public static string Description {
@@ -70,11 +88,29 @@ namespace BlockToDB.Resources.Shared {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adres e-mail.
+        /// </summary>
+        public static string EmailAddress {
+            get {
+                return ResourceManager.GetString("EmailAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Język.
         /// </summary>
         public static string Language {
             get {
                 return ResourceManager.GetString("Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hasło.
+        /// </summary>
+        public static string Password {
+            get {
+                return ResourceManager.GetString("Password", resourceCulture);
             }
         }
         
@@ -129,6 +165,15 @@ namespace BlockToDB.Resources.Shared {
         public static string Templates {
             get {
                 return ResourceManager.GetString("Templates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Podane hasła się nie zgadzają..
+        /// </summary>
+        public static string WrongConfirmedPassword {
+            get {
+                return ResourceManager.GetString("WrongConfirmedPassword", resourceCulture);
             }
         }
     }

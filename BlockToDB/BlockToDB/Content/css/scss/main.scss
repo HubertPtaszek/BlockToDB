@@ -1,19 +1,20 @@
 @import 'utils/variables';
 @import 'utils/helpers';
-@import 'utils/fonts';
-@import 'utils/grid';
-@import 'utils/customIcons';
-@import 'vendors/fontawesome/fontawesome';
-@import 'vendors/bootstrap/bootstrap';
+
 @import 'base/body';
 @import 'base/typography';
+
 @import 'layout/logo';
-@import 'components/pageHeader';
-@import 'layout/wrapper';
 @import 'layout/navbar';
-@import 'components/form';
+@import 'layout/wrapper';
+
+@import 'vendors/fontawesome/fontawesome';
+@import 'vendors/bootstrap/bootstrap';
+
 @import 'components/buttons';
-@import 'components/grids';
 @import 'components/dashboard';
+@import 'components/form';
+@import 'components/grids';
 @import 'components/header';
+
 @import 'pages/login';

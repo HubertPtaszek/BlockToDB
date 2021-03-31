@@ -59,59 +59,5 @@ namespace BlockToDB.Resources.Shared {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to C.
-        /// </summary>
-        public static string C {
-            get {
-                return ResourceManager.GetString("C", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to C++.
-        /// </summary>
-        public static string CPlusPlus {
-            get {
-                return ResourceManager.GetString("CPlusPlus", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to C#.
-        /// </summary>
-        public static string CSharp {
-            get {
-                return ResourceManager.GetString("CSharp", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Angielski.
-        /// </summary>
-        public static string LanguageDictionary_EnglishGB {
-            get {
-                return ResourceManager.GetString("LanguageDictionary_EnglishGB", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Niemiecki.
-        /// </summary>
-        public static string LanguageDictionary_GermanDE {
-            get {
-                return ResourceManager.GetString("LanguageDictionary_GermanDE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Polski.
-        /// </summary>
-        public static string LanguageDictionary_Polish {
-            get {
-                return ResourceManager.GetString("LanguageDictionary_Polish", resourceCulture);
-            }
-        }
     }
 }

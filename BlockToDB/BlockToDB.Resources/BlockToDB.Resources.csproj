@@ -52,14 +52,35 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Shared\EnumResource.Designer.cs" />
-    <Compile Include="Shared\ErrorResource.Designer.cs" />
-    <Compile Include="Shared\SharedResource.Designer.cs" />
+    <Compile Include="Shared\EnumResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EnumResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Shared\ErrorResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ErrorResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Shared\SharedResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SharedResource.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Shared\EnumResource.resx" />
-    <EmbeddedResource Include="Shared\ErrorResource.resx" />
-    <EmbeddedResource Include="Shared\SharedResource.resx" />
+    <EmbeddedResource Include="Shared\EnumResource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>EnumResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Shared\ErrorResource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ErrorResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Shared\SharedResource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Utils\" />

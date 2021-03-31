@@ -141,4 +141,19 @@
   <data name="Show" xml:space="preserve">
     <value>Pokaż</value>
   </data>
+  <data name="EmailAddress" xml:space="preserve">
+    <value>Adres e-mail</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Hasło</value>
+  </data>
+  <data name="Code" xml:space="preserve">
+    <value>Kod</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Potwiedź hasło</value>
+  </data>
+  <data name="WrongConfirmedPassword" xml:space="preserve">
+    <value>Podane hasła się nie zgadzają.</value>
+  </data>
 </root>
