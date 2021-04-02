@@ -1,3 +1,4 @@
+using System;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -13,6 +14,11 @@ namespace BlockToDB
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             DevExtremeBundleConfig.RegisterBundles(BundleTable.Bundles);
+        }
+
+        protected void Session_End(object sender, EventArgs E)
+        {
+            Session.Clear();
         }
     }
 }

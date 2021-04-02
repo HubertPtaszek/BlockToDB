@@ -156,4 +156,22 @@
   <data name="WrongConfirmedPassword" xml:space="preserve">
     <value>Podane hasła się nie zgadzają.</value>
   </data>
+  <data name="BlockToDB" xml:space="preserve">
+    <value>Block to Database</value>
+  </data>
+  <data name="CreateAccount" xml:space="preserve">
+    <value>Załóż konto</value>
+  </data>
+  <data name="CreatorDB" xml:space="preserve">
+    <value>Kreator tworzenia bazy danych</value>
+  </data>
+  <data name="Generate" xml:space="preserve">
+    <value>Wygeneruj</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Zaloguj</value>
+  </data>
 </root>

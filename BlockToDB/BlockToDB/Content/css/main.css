@@ -88,6 +88,11 @@ body {
 .container {
   max-width: 1920px !important; }
 
+.wrapper {
+  margin-left: 200px !important;
+  margin-right: 200px !important;
+  margin-top: 24px !important; }
+
 @font-face {
   font-family: "Poppins";
   src: url("../fonts/poppins/Poppins-Regular.ttf") format("truetype");
@@ -98,118 +103,41 @@ body {
   src: url("../fonts/poppins/Poppins-Medium.ttf") format("truetype");
   font-weight: 500; }
 
-.container-logo {
-  width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
-  text-align: center; }
-
-#logo img {
-  height: 75px;
-  width: auto;
-  margin-bottom: 15px;
-  cursor: pointer; }
-
-#title {
-  color: #a0a5b9;
-  font-size: 1.063rem;
-  margin-bottom: 15px; }
-  #title span {
-    cursor: pointer; }
-
 .navbar {
-  height: 48px;
-  background: #1C1C1C; }
+  height: 52px;
+  background: #1C1C1C;
+  height: auto;
+  padding: 10px 160px !important; }
   .navbar a {
     color: #B8B8B8; }
-  .navbar-dropdown {
+  .navbar-wrapper {
+    width: auto;
     display: flex;
-    flex-direction: column; }
-    .navbar-dropdown a {
-      flex-grow: 0;
-      flex-shrink: 0;
-      margin-top: 4px; }
-    .navbar-dropdown.is-opened ul.navbar-dropdown-el {
-      display: block; }
-    .navbar-dropdown-el {
-      z-index: 1;
-      display: none;
-      right: 8px;
-      top: calc(100% - 4px);
-      position: absolute;
-      padding: 4px 8px;
-      background: white;
-      -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14);
-      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14);
-      border-radius: 2px;
-      margin-top: 2px;
-      width: 120px; }
-      .navbar-dropdown-el li {
-        padding: 8px;
-        cursor: pointer;
-        padding: 0 !important; }
-        .navbar-dropdown-el li form {
-          width: 100%; }
-        .navbar-dropdown-el li button {
-          background: none;
-          border: none;
-          width: 100%;
-          text-align: left;
-          display: inline-block;
-          padding: 2px 8px;
-          cursor: pointer;
-          border-radius: 0; }
-          .navbar-dropdown-el li button:hover {
-            background: #F5F5F5; }
-        .navbar-dropdown-el li a {
-          padding: 2px 8px;
-          display: inline-block; }
-          .navbar-dropdown-el li a:hover {
-            background: #F5F5F5; }
+    flex-grow: 1;
+    justify-content: space-between;
+    align-items: center; }
   .navbar .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 100%; }
-  .navbar-brand {
+  .navbar-logo {
     display: flex;
     height: 100%;
-    align-items: center; }
-    .navbar-brand-text {
+    align-items: center;
+    cursor: pointer; }
+    .navbar-logo-text {
       color: #E2E2E2;
       padding: 0 16px; }
+    .navbar-logo i {
+      color: #ffffff;
+      font-size: 24px; }
   .navbar-logo {
     color: #F3F3F3 !important;
     font-size: 16px;
     font-weight: 500;
     padding: 0 16px 0 0;
     border-right: 1px solid #F3F3F3; }
-  .navbar-dealer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    margin: 0 24px; }
-    .navbar-dealer img {
-      height: calc(100% - 16px); }
-  .navbar a.navbar-avatar {
-    width: 40px;
-    height: 40px;
-    overflow: hidden;
-    border-radius: 100%; }
-    .navbar a.navbar-avatar img {
-      width: 100%; }
-  .navbar-select.dx-editor-outlined {
-    background: #363636 !important;
-    border: none !important; }
-    .navbar-select.dx-editor-outlined .dx-dropdowneditor-icon {
-      color: #B8B8B8; }
-    .navbar-select.dx-editor-outlined input {
-      color: #F3F3F3; }
-    .navbar-select.dx-editor-outlined.dx-state-hover .dx-dropdowneditor-icon {
-      background: #4f4f4f !important; }
   .navbar-links {
     display: flex;
     padding: 0;
@@ -217,37 +145,25 @@ body {
     height: 100%; }
     .navbar-links li {
       list-style: none;
-      margin-left: 16px;
+      margin-left: 8px;
       padding: 0 16px;
       position: relative; }
-      .navbar-links li.is-active:after {
-        content: "";
-        display: block;
-        background: #457AE1;
-        height: 2px;
-        width: 30%;
-        border-radius: 2px;
-        position: absolute;
-        bottom: 5.33333px;
-        left: 0;
-        right: 0;
-        margin: auto; }
-      .navbar-links li.is-active a, .navbar-links li.is-active a i {
-        color: #F3F3F3; }
+      .navbar-links li.is-active a {
+        font-weight: 500; }
+        .navbar-links li.is-active a, .navbar-links li.is-active a i {
+          color: #F3F3F3; }
       .navbar-links li a {
         height: 100%;
         display: flex;
-        align-items: center; }
+        align-items: center;
+        color: #737373; }
         .navbar-links li a:hover, .navbar-links li a:hover i {
+          text-decoration: none;
           color: #F3F3F3; }
         .navbar-links li a i {
           font-size: 15px;
           margin-right: 8px;
-          color: #787878; }
-    .navbar-links-user li {
-      display: flex;
-      align-items: center;
-      margin-left: 0; }
+          color: #737373; }
 
 .wrapper {
   border-radius: 4px;
@@ -9744,29 +9660,16 @@ a.text-dark:hover, a.text-dark:focus {
     color: inherit;
     border-color: #A0A5B9; } }
 
-.dx-button .dx-icon {
-  font-size: 15px !important; }
-
-.dx-button.dx-button-mode-text .dx-button-content {
-  padding: 7px 8px 8px; }
-  .dx-button.dx-button-mode-text .dx-button-content .dx-icon {
-    margin-right: 6px; }
-
-.btn-datagrid {
-  color: #6D6D6D;
-  margin: 0 6px;
-  font-size: 13.5px; }
-  .btn-datagrid:hover {
-    color: #50535E; }
-
-.btn-small {
-  font-size: 12px !important; }
-  .btn-small .dx-button-content {
-    padding: 3px 5px !important; }
-
-.btn-default {
-  background: #000000;
-  color: white; }
+.btn {
+  margin-left: 5px; }
+  .btn-default {
+    background-color: #000000 !important;
+    border: none !important;
+    color: #ffffff !important; }
+  .btn-normal {
+    background-color: #E7E8EF !important;
+    border: none !important;
+    color: #646871 !important; }
 
 .card-daahboard {
   width: 15rem;

@@ -1,38 +1,15 @@
-.dx-button {
-    .dx-icon {
-        font-size: 15px !important;
+.btn {
+    margin-left: 5px;
+
+    &-default {
+        background-color: #000000 !important;
+        border: none !important;
+        color: #ffffff !important;
     }
 
-    &.dx-button-mode-text {
-        .dx-button-content {
-            padding: 7px $space-size 8px;
-
-            .dx-icon {
-                margin-right: 6px;
-            }
-        }
+    &-normal {
+        background-color: #E7E8EF !important;
+        border: none !important;
+        color: #646871 !important;
     }
-}
-
-.btn-datagrid {
-    color: $gray400;
-    margin: 0 6px;
-    font-size: 13.5px;
-
-    &:hover {
-        color: $black;
-    }
-}
-
-.btn-small {
-    font-size: 12px !important;
-
-    .dx-button-content {
-        padding: 3px 5px !important;
-    }
-}
-
-.btn-default {
-    background: #000000;
-    color: white;
 }

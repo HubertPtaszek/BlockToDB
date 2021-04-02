@@ -1,0 +1,42 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="wrapper" style="height:700px">
+    <div class="wrapper-header d-sm-flex align-items-center justify-content-between">
+        <h4 class="wrapper-header-title">@SharedResource.CreatorDB.ToStringSafe()</h4>
+        <div class="wrapper-header-actions">
+            <div id="importBtnId"></div>
+            <div id="generateBtnId"></div>
+        </div>
+    </div>
+    <div class="wrapper-inner pt-2">
+        //Tutaj dodać kontrolkę do tworzenia schematu blokowego
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        function generate() {
+            alert("tutaj generowanie po stronie js podpiąć - funkcja wysyłająca do controllera Creator");
+        }
+
+        function importScript() {
+            alert("tutaj importowanie gotowego skryptu po stronie js podpiąć");
+        }
+
+        $("#generateBtnId").dxButton({
+            elementAttr: { class: "btn btn-default" },
+            onClick: generate,
+            text: "@SharedResource.Generate.ToStringSafe()",
+            type: "default"
+        }).dxButton("instance");
+
+        $("#importBtnId").dxButton({
+            elementAttr: { class: "btn btn-normal" },
+            onClick: importScript,
+            text: "@SharedResource.Import.ToStringSafe()",
+            type: "normal"
+        }).dxButton("instance");
+    });
+</script>

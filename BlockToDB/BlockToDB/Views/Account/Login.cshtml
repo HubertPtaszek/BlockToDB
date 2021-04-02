@@ -14,7 +14,7 @@
         <div class="login-form">
             <div class="login-form-header">
                 <img src="~/Content/images/logo.svg" />
-                <span>Block to Database</span>
+                <span>@SharedResource.BlockToDB.ToStringSafe()</span>
             </div>
             <div class="login-form-wrapper">
                 <div class="row">
@@ -43,17 +43,3 @@
         </div>
     }
 </div>
-
-<div id="loadPanelId"></div>
-<script>
-    $(document).ready(function () {
-        $("#loadPanelId").dxLoadPanel({
-            shadingColor: "rgba(0,0,0,0.4)",
-            visible: false,
-            showIndicator: true,
-            showPane: true,
-            shading: true,
-            closeOnOutsideClick: false,
-        }).dxLoadPanel("instance");
-    });
-</script>

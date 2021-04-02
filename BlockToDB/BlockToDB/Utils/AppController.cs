@@ -9,9 +9,8 @@ using System.Web.Mvc;
 namespace BlockToDB.Utils
 {
     [ExceptionHandler]
-    [Authorize]
     [NoCache]
-    [UserAuthorization]
+    [AllowAnonymous]
     public abstract class AppController : Controller
     {
         [Inject]

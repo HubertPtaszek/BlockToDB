@@ -1,36 +1,76 @@
 ﻿@using Microsoft.AspNet.Identity
-
+@{
+    string tab = Context.Request.RequestContext.RouteData.Controller();
+}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Block to Database</title>
+    <title>@SharedResource.BlockToDB.ToStringSafe()</title>
+    <link rel="shortcut icon" href="~/content/images/logo.svg" />
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/DevExtremeBundle")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/Scripts/jqueryGlobalize")
-    @Scripts.Render("~/bundles/jqueryBase64")
+    @Scripts.Render("~/Scripts/jqueryBase64")
     @Scripts.Render("~/Scripts/DevExtremeBundle")
     @Scripts.Render("~/Scripts/DevExtremeBundlePL")
 </head>
 <body>
-    <div class="container-logo" style="padding-top: 15px">
-        <div id="logo">
-            <img src="~/Content/images/logo.svg" onclick="goToDashboard()" />
-        </div>
-        <div id="title"><span onclick="goToDashboard()">Block to Database</span></div>
-    </div>
-    <div class="container-fluid" style="padding-top: 15px">
-        @RenderBody()
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <div class="navbar-logo" onclick="goToDashboard()">
+                    <i class="fas fa-database"></i>
+                    <span class="navbar-logo-text">Block To Database</span>
+                </div>
+                <div class="navbar-wrapper">
+                    <ul class="navbar-links">
+                        <li class="@(tab == "Creator" ? "is-active" : "")">
+                            <a href="@Url.Action("Index", "Creator")"><i class="fas fa-cubes"></i>Kreator</a>
+                        </li>
+                        @{
+                            if (Context.User.Identity.IsAuthenticated)
+                            {
+                                <li class="@(tab == "Store" ? "is-active" : "")">
+                                    <a href="@Url.Action("Index", "Store")"><i class="fas fa-database"></i>Moje bazy</a>
+                                </li>
+                            }
+                        }
+                        <li class="@(tab == "Home" ? "is-active" : "")">
+                            <a href="@Url.Action("About", "Home")"><i class="fas fa-info"></i>O nas</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
     </div>
 
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 
+    <div id="loadPanelId"></div>
+
     <script>
+        $(document).ready(function () {
+            $("#loadPanelId").dxLoadPanel({
+                shadingColor: "rgba(0,0,0,0.4)",
+                visible: false,
+                showIndicator: true,
+                showPane: true,
+                shading: true,
+                closeOnOutsideClick: false,
+            }).dxLoadPanel("instance");
+        });
+
         function goToDashboard() {
-            window.location = "@Url.Action("Index", "Dashboard", new { area = AreaNames.Dashboard_Area })";
+            window.location = "@Url.Action("Index", "Creator")";
         }
 
         $(document).ready(function () {

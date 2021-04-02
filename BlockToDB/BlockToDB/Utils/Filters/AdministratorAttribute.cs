@@ -1,6 +1,3 @@
-using BlockToDB.Application;
-using BlockToDB.Resources.Shared;
-using System.Linq;
 using System.Web.Mvc;
 
 namespace BlockToDB.Utils
@@ -19,11 +16,7 @@ namespace BlockToDB.Utils
                 filterContext.Result = new HttpUnauthorizedResult();
                 return;
             }
-            AppUserData appUserData = UserHelper.GetUserData();
-            if (!appUserData.Roles.Any(x => x == BlockToDB.Dictionaries.AppRoleType.Administrator))
-            {
-                throw new AuthorizationException(ErrorResource.AccessDenied);
-            }
+            //check roles
         }
     }
 }

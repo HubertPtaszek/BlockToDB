@@ -1,75 +1,19 @@
 ﻿.navbar {
-    height: $space-size-6;
+    height: 52px;
     background: $black;
+    height: auto;
+    padding: 10px 160px !important;
 
     a {
         color: $gray200;
     }
 
-    &-dropdown {
-        a {
-            flex-grow: 0;
-            flex-shrink: 0;
-            margin-top: $space-size / 2;
-        }
-
+    &-wrapper {
+        width: auto;
         display: flex;
-        flex-direction: column;
-
-        &.is-opened {
-            ul.navbar-dropdown-el {
-                display: block;
-            }
-        }
-
-        &-el {
-            z-index: 1;
-            display: none;
-            right: $space-size;
-            top: calc(100% - 4px);
-            position: absolute;
-            padding: $space-size / 2 $space-size;
-            background: white;
-            -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14);
-            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14);
-            border-radius: 2px;
-            margin-top: $space-size / 4;
-            width: 120px;
-
-            li {
-                padding: $space-size;
-                cursor: pointer;
-                padding: 0 !important;
-
-                form {
-                    width: 100%;
-                }
-
-                button {
-                    background: none;
-                    border: none;
-                    width: 100%;
-                    text-align: left;
-                    display: inline-block;
-                    padding: $space-size / 4 $space-size;
-                    cursor: pointer;
-                    border-radius: 0;
-
-                    &:hover {
-                        background: $gray100;
-                    }
-                }
-
-                a {
-                    padding: $space-size / 4 $space-size;
-                    display: inline-block;
-
-                    &:hover {
-                        background: $gray100;
-                    }
-                }
-            }
-        }
+        flex-grow: 1;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .container {
@@ -79,14 +23,20 @@
         height: 100%;
     }
 
-    &-brand {
+    &-logo {
         display: flex;
         height: 100%;
         align-items: center;
+        cursor: pointer;
 
         &-text {
             color: $gray300;
             padding: 0 $space-size-2;
+        }
+
+        i {
+            color: #ffffff;
+            font-size: 24px;
         }
     }
 
@@ -98,48 +48,6 @@
         border-right: 1px solid $white;
     }
 
-    &-dealer {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        margin: 0 $space-size-3;
-
-        img {
-            height: calc(100% - 16px);
-        }
-    }
-
-    a.navbar-avatar {
-        width: $space-size-5;
-        height: $space-size-5;
-        overflow: hidden;
-        border-radius: 100%;
-
-        img {
-            width: 100%;
-        }
-    }
-
-    &-select.dx-editor-outlined {
-        background: lighten($black, 10%) !important;
-        border: none !important;
-
-        .dx-dropdowneditor-icon {
-            color: $gray200;
-        }
-
-        input {
-            color: $white;
-        }
-
-        &.dx-state-hover {
-            .dx-dropdowneditor-icon {
-                background: lighten($black, 20%) !important;
-            }
-        }
-    }
-
     &-links {
         display: flex;
         padding: 0;
@@ -148,26 +56,14 @@
 
         li {
             list-style: none;
-            margin-left: $space-size-2;
+            margin-left: $space-size;
             padding: 0 $space-size-2;
             position: relative;
 
             &.is-active {
-                &:after {
-                    content: "";
-                    display: block;
-                    background: $blue;
-                    height: $space-size / 4;
-                    width: 30%;
-                    border-radius: 2px;
-                    position: absolute;
-                    bottom: $space-size / 1.5;
-                    left: 0;
-                    right: 0;
-                    margin: auto;
-                }
-
                 a {
+                    font-weight: 500;
+
                     &, i {
                         color: $white;
                     }
@@ -178,9 +74,11 @@
                 height: 100%;
                 display: flex;
                 align-items: center;
+                color: #737373;
 
                 &:hover {
                     &, i {
+                        text-decoration: none;
                         color: $white;
                     }
                 }
@@ -188,16 +86,8 @@
                 i {
                     font-size: 15px;
                     margin-right: $space-size;
-                    color: darken($gray200, 25%);
+                    color: #737373;
                 }
-            }
-        }
-
-        &-user {
-            li {
-                display: flex;
-                align-items: center;
-                margin-left: 0;
             }
         }
     }
