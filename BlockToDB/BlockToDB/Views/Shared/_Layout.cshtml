@@ -23,24 +23,40 @@
             <div class="container">
                 <div class="navbar-logo" onclick="goToDashboard()">
                     <i class="fas fa-database"></i>
-                    <span class="navbar-logo-text">Block To Database</span>
+                    <span class="navbar-logo-text">@SharedResource.BlockToDB.ToStringSafe()</span>
                 </div>
                 <div class="navbar-wrapper">
                     <ul class="navbar-links">
                         <li class="@(tab == "Creator" ? "is-active" : "")">
-                            <a href="@Url.Action("Index", "Creator")"><i class="fas fa-cubes"></i>Kreator</a>
+                            <a href="@Url.Action("Index", "Creator")"><i class="fas fa-cubes"></i>@SharedResource.Creator.ToStringSafe()</a>
                         </li>
                         @{
                             if (Context.User.Identity.IsAuthenticated)
                             {
                                 <li class="@(tab == "Store" ? "is-active" : "")">
-                                    <a href="@Url.Action("Index", "Store")"><i class="fas fa-database"></i>Moje bazy</a>
+                                    <a href="@Url.Action("Index", "Store")"><i class="fas fa-database"></i>@SharedResource.MyDatabase.ToStringSafe()</a>
                                 </li>
                             }
                         }
                         <li class="@(tab == "Home" ? "is-active" : "")">
-                            <a href="@Url.Action("About", "Home")"><i class="fas fa-info"></i>O nas</a>
+                            <a href="@Url.Action("About", "Home")"><i class="fas fa-info"></i>@SharedResource.About.ToStringSafe()</a>
                         </li>
+                    </ul>
+                    <ul class="navbar-links">
+                        @{
+                            if (Context.User.Identity.IsAuthenticated)
+                            {
+                                <li>
+                                    <a href="@Url.Action("LogOff", "Account")"><i class="fas fa-sign-out-alt"></i>@SharedResource.Logout.ToStringSafe()</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <a href="@Url.Action("Login", "Account")"><i class="fas fa-sign-in-alt"></i>@SharedResource.Login.ToStringSafe()</a>
+                                </li>
+                            }
+                        }
                     </ul>
                 </div>
             </div>

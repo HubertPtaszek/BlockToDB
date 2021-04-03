@@ -156,11 +156,23 @@
   <data name="WrongConfirmedPassword" xml:space="preserve">
     <value>Podane hasła się nie zgadzają.</value>
   </data>
+  <data name="About" xml:space="preserve">
+    <value>O nas</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Dodaj</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Wróć</value>
+  </data>
   <data name="BlockToDB" xml:space="preserve">
     <value>Block to Database</value>
   </data>
   <data name="CreateAccount" xml:space="preserve">
     <value>Załóż konto</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>Kreator</value>
   </data>
   <data name="CreatorDB" xml:space="preserve">
     <value>Kreator tworzenia bazy danych</value>
@@ -172,6 +184,18 @@
     <value>Import</value>
   </data>
   <data name="Login" xml:space="preserve">
+    <value>Zaloguj się</value>
+  </data>
+  <data name="LoginShort" xml:space="preserve">
     <value>Zaloguj</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Wyloguj</value>
+  </data>
+  <data name="MyDatabase" xml:space="preserve">
+    <value>Moje bazy</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Zarejestruj</value>
   </data>
 </root>

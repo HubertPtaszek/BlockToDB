@@ -84,6 +84,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Confiurations\BlockToDB\DatabaseSchemaConfiguration.cs" />
     <Compile Include="Confiurations\Membership\AppUserRoleConfiguration.cs" />
     <Compile Include="Confiurations\Membership\AppRoleConfiguration.cs" />
     <Compile Include="Confiurations\Membership\AppUserConfiguration.cs" />
@@ -92,9 +93,7 @@
     <Compile Include="MainDatabaseMigrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Confiurations\BlockToDB\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />

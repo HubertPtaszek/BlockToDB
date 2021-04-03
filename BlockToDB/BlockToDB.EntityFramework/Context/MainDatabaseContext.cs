@@ -51,6 +51,12 @@ namespace BlockToDB.EntityFramework
 
         #endregion Core
 
+        #region BlockToDB
+
+        public DbSet<DatabaseSchema> DatabaseSchemats { get; set; }
+
+        #endregion BlockToDB
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Properties<decimal>().Configure(c => c.HasPrecision(18, 5));
@@ -63,6 +69,12 @@ namespace BlockToDB.EntityFramework
             modelBuilder.Configurations.Add(new AppUserRoleConfiguration());
 
             #endregion Core
+
+            #region BlockToDB
+
+            modelBuilder.Configurations.Add(new DatabaseSchemaConfiguration());
+
+            #endregion BlockToDB
 
             base.OnModelCreating(modelBuilder);
         }

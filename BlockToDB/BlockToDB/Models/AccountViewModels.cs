@@ -77,7 +77,7 @@ namespace BlockToDB.Models
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
+        [Display(ResourceType = typeof(SharedResource), Name = "ConfirmPassword")]
         [Compare("Password", ErrorMessageResourceType = typeof(SharedResource), ErrorMessageResourceName = "WrongConfirmedPassword")]
         public string ConfirmPassword { get; set; }
     }
