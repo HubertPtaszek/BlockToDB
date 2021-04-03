@@ -1,7 +1,7 @@
 ###############################################################################
 # Set ignore file for linguist
 ###############################################################################
-*.js linguist-language=CSharp
+*.js linguist-vendored
 
 BlockToDB/BlockToDB/Scripts/* linguist-vendored
 BlockToDB/BlockToDB/Content/* linguist-vendored
