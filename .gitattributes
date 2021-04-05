@@ -2,9 +2,7 @@
 # Set ignore file for linguist
 ###############################################################################
 *.js linguist-vendored
-
-BlockToDB/BlockToDB/Scripts/* linguist-vendored
-BlockToDB/BlockToDB/Content/* linguist-vendored
+*.css linguist-vendored
 
 ###############################################################################
 # Set default behavior to automatically normalize line endings.
