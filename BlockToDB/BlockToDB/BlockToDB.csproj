@@ -340,6 +340,7 @@
     <Content Include="Scripts\cldr\event.js" />
     <Content Include="Scripts\cldr\supplemental.js" />
     <Content Include="Scripts\cldr\unresolved.js" />
+    <Content Include="Scripts\context-menu-plugin.min.js" />
     <Content Include="Scripts\dx.all.debug.js" />
     <Content Include="Scripts\dx.all.js" />
     <Content Include="Scripts\dx.all.pl.js" />

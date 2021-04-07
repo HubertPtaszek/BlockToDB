@@ -10,8 +10,8 @@
             <div id="generateBtnId"></div>
         </div>
     </div>
-    <div class="wrapper-inner pt-2">
-        //Tutaj dodać kontrolkę do tworzenia schematu blokowego
+    <div id="editor" class="wrapper-inner pt-2">
+       
     </div>
 </div>
 
@@ -41,3 +41,270 @@
         }).dxButton("instance");
     });
 </script>
+
+@*Editor*@
+<script>
+
+    const JsRenderPlugin = {
+        install(editor, params = {}) {
+            editor.on("rendercontrol", ({ el, control }) => {
+                if (control.render && control.render !== "js") return;
+
+                control.handler(el, editor);
+            });
+        }
+    };
+
+
+
+    var numSocket = new Rete.Socket("Number");
+
+    var VueBControl = {
+        props: ['emitter', 'ikey', 'cback', 'getData', 'putData'],
+        template: '<div><input class="click_button" type="button" @@click="plus($event)" value="+" />&nbsp;<input class="click_button" type="button" @@click="minus($event)" value="-" /></div>',
+
+        methods: {
+            plus(e) { this.cback(1); this.update(); },
+            minus(e) { this.cback(0); this.update(); },
+            update() { this.emitter.trigger('process'); }
+        },
+    };
+
+    class BControl extends Rete.Control {
+        constructor(emitter, node, key, cback) {
+            super(key);
+            this.component = VueBControl;
+            this.props = { emitter, ikey: key, cback: cback };
+        }
+    }
+
+    var VueNumControl = {
+        props: ['emitter', 'ikey', 'ph', 'dataValue', 'cback', 'getData', 'putData'],
+        template: '<div><input type="text" step="any" :placeholder="ph"  @@input="change($event)" @@dblclick.stop=""/></div>',
+
+        data() { return { value: this.dataValue } },
+
+        watch: {
+            value: {
+                immediate: true,
+                handler(val) { this.value = this.dataValue },
+                deep: true
+            }
+        },
+
+        methods: {
+            change(e) { this.value = +e.target.value; this.update(); },
+            update() {
+                if (this.ikey) this.putData(this.ikey, this.value);
+                this.emitter.trigger('process');
+            },
+        },
+
+        mounted() {
+            if (this.ikey)
+                this.value = this.getData(this.ikey);
+        }
+    };
+
+@*    class NumControl extends Rete.Control {
+        constructor(emitter, key, ph) {
+            super(key);
+            this.component = VueNumControl;
+            this.props = { emitter, ikey: key, ph: ph, dataValue: 0 };
+        }
+        setValue(val) {
+            this.props.dataValue = val;
+        }
+    }*@
+    class NumControl extends Rete.Control {
+
+        constructor(emitter, key, ph) {
+            super(key);
+            this.render = 'js';
+            this.key = key;
+            this.placeholder = ph;
+        }
+
+        handler(el, editor) {
+            var input = document.createElement('input');
+            el.appendChild(input);
+
+            var text = this.getData(this.key) || this.placeholder;
+
+            input.value = text;
+            this.putData(this.key, text);
+            input.addEventListener("change", () => {
+                this.putData(this.key, input.value);
+            });
+        }
+    }
+
+    var CustomNode = {
+        template: `<div class="node" :class="[selected(), node.name] | kebab">
+  <!--- hide title <div class="title">{{node.name}}</div> -->
+  <!-- Inputs-->
+      <div class="input" v-for="input in inputs()" :key="input.key">
+        <Socket v-socket:input="input" type="input" :socket="input.socket"></Socket>
+        <div class="input-title" v-show="!input.showControl()">{{input.name}}</div>
+        <div class="input-control" v-show="input.showControl()" v-control="input.control"></div>
+      </div>
+  <!-- Controls-->
+  <div class="control" v-for="control in controls()" v-control="control"></div>
+  <!-- Outputs-->
+    <div class="output" v-for="output in outputs()" :key="output.key">
+        <div class="output-title">{{output.name}}</div>
+        <Socket v-socket:output="output" type="output" :socket="output.socket"></Socket>
+      </div>
+</div>`,
+        mixins: [VueRenderPlugin.default.mixin],
+        components: {
+            Socket: VueRenderPlugin.default.Socket
+        }
+    }
+
+    class NumComponent extends Rete.Component {
+
+        constructor() {
+            super("Number");
+            this.data.component = CustomNode;
+            this.data.render = 'vue';
+            this.data.props = {};
+        }
+
+        builder(node) {
+            var out1 = new Rete.Output('num', "Number", numSocket);
+
+            return node.addControl(new NumControl(this.editor, 'num')).addOutput(out1);
+        }
+
+        worker(node, inputs, outputs) {
+            outputs['num'] = node.data.num;
+        }
+    }
+
+    class FirstComponent extends Rete.Component {
+        constructor() {
+            super('Tabela');
+        }
+
+        builder(node) {
+            node.meta.letter = '`';
+            const editor = this.editor;
+
+            async function callback(n) {
+
+                if (!n) { // del
+                    let o1 = this.emitter.nodes.find(n => n.id == node.id).outputs.get(node.meta.letter);
+                    let i1 = this.emitter.nodes.find(n => n.id == node.id).inputs.get(node.meta.letter);
+                    let c1 = this.emitter.nodes.find(n => n.id == node.id).controls.get(node.meta.letter);
+                    if (c1 && o1 && i1) {
+                        i1.connections.map(editor.removeConnection.bind(editor));
+                        o1.connections.map(editor.removeConnection.bind(editor));
+
+                        node.removeControl(c1);
+                        node.removeOutput(o1);
+                        node.removeInput(i1);
+
+                        delete (node.data[node.meta.letter]);
+                        await node.update();
+                        node.meta.letter = node.meta.letter.substring(0, node.meta.letter.length - 1) + String.fromCharCode(node.meta.letter.charCodeAt(node.meta.letter.length - 1) - 1);
+                        setTimeout(() => { this.emitter.view.updateConnections({ node }); }, 10);
+
+                    }
+                } else { // add
+                    node.meta.letter = node.meta.letter.substring(0, node.meta.letter.length - 1) + String.fromCharCode(node.meta.letter.charCodeAt(node.meta.letter.length - 1) + 1);
+                    let out = new Rete.Output(node.meta.letter, '' + node.meta.letter, numSocket);
+                    let input = new Rete.Input(node.meta.letter, '' + node.meta.letter, numSocket, true);
+                    node.addOutput(out);
+                    node.addInput(input);
+                    node.addControl(new NumControl(this.emitter, node.meta.letter, '' + node.meta.letter));
+                    await node.update();
+                    setTimeout(() => { this.emitter.view.updateConnections({ node }); }, 10);
+
+                }
+
+                editor.view.updateConnections({ node })
+            }
+
+
+
+            return node
+                .addControl(new NumControl(this.emitter, 'tableName', 'NazwaTabeli'))
+                .addControl(new BControl(this.editor, node, 'button', callback))
+            //      			.addOutput(out)
+            //            .addControl(new NumControl(this.editor, 'a', 'Out '+node.meta.letter))
+        }
+
+        worker(node, inputs, outputs) {
+            let ob = {};
+            let a = 5;
+            Object.keys(node.outputs).forEach(function (key) {
+                ob = this.editor.nodes.find(n => n.id == node.id).controls.get(key)
+                //        console.log(ob);
+                ob.setValue(a++);
+            }, this);
+            return { text: node.data};
+        }
+    }
+
+    var components = [
+        new FirstComponent(),
+        new NumComponent(),
+    ];
+
+    var container = document.getElementById("editor");
+    var editor = new Rete.NodeEditor("demo@0.1.0", container);
+    editor.use(VueRenderPlugin.default);
+    editor.use(ConnectionPlugin.default);
+    editor.use(JsRenderPlugin);
+    editor.use(ConnectionPathPlugin, {
+        arrow: { color: 'steelblue', marker: 'M-5,-10 L-5,10 L20,0 z' }
+    });
+    editor.use(ConnectionMasteryPlugin.default);
+
+
+
+    var engine = new Rete.Engine("demo@0.1.0");
+
+    components.map(c => {
+        editor.register(c);
+        engine.register(c);
+    });
+
+    editor.use(ContextMenuPlugin.default);
+
+    editor
+        .fromJSON({
+
+        })
+        .then(() => {
+            editor.on("error", err => {
+                alertify.error(err.message);
+            });
+
+            editor.on(
+                "process connectioncreated connectionremoved nodecreated",
+                async function () {
+                    if (engine.silent) return;
+                    onMessageTask = [];
+                    console.log("process");
+                    await engine.abort();
+                    await engine.process(editor.toJSON());
+                }
+            );
+
+            editor.trigger("process");
+            editor.view.resize();
+            AreaPlugin.zoomAt(editor);
+        });
+
+</script>
+
+<style>
+    .title {
+        padding: 10px !important;
+        top: 10px;
+        position: inherit;
+    }
+
+</style>
