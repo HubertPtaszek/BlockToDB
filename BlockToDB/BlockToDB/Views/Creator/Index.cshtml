@@ -11,7 +11,7 @@
         </div>
     </div>
     <div id="editor" class="wrapper-inner pt-2">
-       
+
     </div>
 </div>
 
@@ -116,6 +116,75 @@
             this.props.dataValue = val;
         }
     }*@
+
+    class NumControl2 extends Rete.Control {
+
+        constructor(emitter, key, ph) {
+            super(key);
+            this.render = 'js';
+            this.key = key;
+            this.placeholder = ph;
+        }
+
+        handler(el, editor) {
+
+            var array = ["jeden", "wiele"];
+
+            //Create and append select list
+            var selectList = document.createElement("select");
+            selectList.id = this.key;
+            el.appendChild(selectList);
+
+            //Create and append the options
+            for (var i = 0; i < array.length; i++) {
+                var option = document.createElement("option");
+                option.value = array[i];
+                option.text = array[i];
+                selectList.appendChild(option);
+            }
+
+            var text = selectList.options[selectList.selectedIndex].value;
+            this.putData(this.key, text);
+            selectList.addEventListener("change", () => {
+                this.putData(this.key, selectList.options[selectList.selectedIndex].value);
+            });
+        }
+    }
+
+    class NumControl3 extends Rete.Control {
+
+        constructor(emitter, key, ph) {
+            super(key);
+            this.render = 'js';
+            this.key = key;
+            this.placeholder = ph;
+        }
+
+        handler(el, editor) {
+
+            var array = ["BIT", "DATE", "FLOAT", "DECIMAL", "SMALLINT", "INTEGER", "CHARACTER"];
+
+            //Create and append select list
+            var selectList = document.createElement("select");
+            selectList.id = this.key;
+            el.appendChild(selectList);
+
+            //Create and append the options
+            for (var i = 0; i < array.length; i++) {
+                var option = document.createElement("option");
+                option.value = array[i];
+                option.text = array[i];
+                selectList.appendChild(option);
+            }
+
+            var text = selectList.options[selectList.selectedIndex].value;
+            this.putData(this.key, text);
+            selectList.addEventListener("change", () => {
+                this.putData(this.key, selectList.options[selectList.selectedIndex].value);
+            });
+        }
+    }
+
     class NumControl extends Rete.Control {
 
         constructor(emitter, key, ph) {
@@ -214,10 +283,12 @@
                 } else { // add
                     node.meta.letter = node.meta.letter.substring(0, node.meta.letter.length - 1) + String.fromCharCode(node.meta.letter.charCodeAt(node.meta.letter.length - 1) + 1);
                     let out = new Rete.Output(node.meta.letter, '' + node.meta.letter, numSocket);
-                    let input = new Rete.Input(node.meta.letter, '' + node.meta.letter, numSocket, true);
+                    let input = new Rete.Input(node.meta.letter, '' + node.meta.letter, numSocket, false);
+                    input.addControl(new NumControl2(this.editor, node.meta.letter + '-relation', '' + node.meta.letter + '-relation'))
                     node.addOutput(out);
                     node.addInput(input);
                     node.addControl(new NumControl(this.emitter, node.meta.letter, '' + node.meta.letter));
+                    node.addControl(new NumControl3(this.emitter, node.meta.letter + '-type', '' + node.meta.letter + '-type'));
                     await node.update();
                     setTimeout(() => { this.emitter.view.updateConnections({ node }); }, 10);
 
