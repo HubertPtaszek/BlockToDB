@@ -1,0 +1,17 @@
+.wrapper-inner-creator {
+    height: 80vh;
+    padding: 7px 9px;
+}
+
+.wrapper-header-creator {
+    margin-bottom: 0;
+}
+
+#editor {
+    height: 100% !important;
+    width: 100% !important;
+    background-position: 0 1px;
+    background-size: 30px 30px;
+    background-image: -webkit-repeating-linear-gradient(0deg, #c3c3c3, #c3c3c3 1px, transparent 1px, transparent 15px), -webkit-repeating-linear-gradient(90deg, #c3c3c3, #c3c3c3 1px, transparent 1px, transparent 15px);
+    background-image: repeating-linear-gradient(0deg, #c3c3c3, #c3c3c3 1px, transparent 1px, transparent 15px), repeating-linear-gradient(90deg, #c3c3c3, #c3c3c3 1px, transparent 1px, transparent 15px);
+}

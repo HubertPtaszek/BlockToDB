@@ -198,4 +198,25 @@
   <data name="Register" xml:space="preserve">
     <value>Zarejestruj</value>
   </data>
+  <data name="CreateServ" xml:space="preserve">
+    <value>Utwórz na serwerze</value>
+  </data>
+  <data name="SQL" xml:space="preserve">
+    <value>SQL</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Utwórz</value>
+  </data>
+  <data name="CreateDatabseOnServe" xml:space="preserve">
+    <value>Utwórz bazę danych na serwerze</value>
+  </data>
+  <data name="ServerUrl" xml:space="preserve">
+    <value>Adres serwera</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Użytkownik</value>
+  </data>
 </root>

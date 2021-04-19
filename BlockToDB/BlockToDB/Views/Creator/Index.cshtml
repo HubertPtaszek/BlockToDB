@@ -1,42 +1,164 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    string validationGroup = Guid.NewGuid().ToString();
 }
 
-<div class="wrapper" style="height:700px">
-    <div class="wrapper-header d-sm-flex align-items-center justify-content-between">
+<div class="wrapper">
+    <div class="wrapper-header wrapper-header-creator d-sm-flex align-items-center justify-content-between">
         <h4 class="wrapper-header-title">@SharedResource.CreatorDB.ToStringSafe()</h4>
         <div class="wrapper-header-actions">
             <div id="importBtnId"></div>
-            <div id="generateBtnId"></div>
+            <div class="dropdown">
+                <button class="dropbtn">@SharedResource.Generate.ToStringSafe()</button>
+                <div class="dropdown-content">
+                    <a href="#" onclick="generateBtnHandler(0)">@SharedResource.SQL.ToStringSafe()</a>
+                    <a href="#" onclick="generateBtnHandler(1)">@SharedResource.CreateServ.ToStringSafe()</a>
+                </div>
+            </div>
         </div>
     </div>
-    <div id="editor" class="wrapper-inner pt-2"></div>
+    <div class="wrapper-inner-creator">
+        <div id="editor"></div>
+    </div>
 </div>
 
+<div id="serverPopupId"></div>
+
+<div style="display:none">
+    <div id="serverPopupContainer">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label>@SharedResource.ServerUrl.ToStringSafe()</label>
+                    <div id="urlBoxId"></div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label>@SharedResource.User.ToStringSafe()</label>
+                    <div id="userBoxId"></div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label>@SharedResource.Password.ToStringSafe()</label>
+                    <div id="passwordBoxId"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="popup-footer d-flex justify-content-end mt-3">
+                    <div id="cancelBtnId"></div>
+                    <div id="saveBtnId"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
+    function generateBtnHandler(val) {
+        if (val == 0) {
+            //generate SQL script
+            generateScript();
+        }
+        else {
+            $("#serverPopupId").dxPopup("instance").show();
+        }
+    }
+
     $(document).ready(function () {
-        function generate() {
+        function generateScript() {
             alert("tutaj generowanie po stronie js podpiąć - funkcja wysyłająca do controllera Creator");
+        }
+
+        function generateAndCreate() {
+            alert("tutaj generowanie oraz tworzenie na serwerze po stronie js podpiąć - funkcja wysyłająca do controllera Creator");
+            //hide load, results done or error (bad connection?)
         }
 
         function importScript() {
             alert("tutaj importowanie gotowego skryptu po stronie js podpiąć");
         }
 
-        $("#generateBtnId").dxButton({
+        $("#urlBoxId").dxTextBox({
+            mode: "url"
+        }).dxValidator({
+            validationRules: [
+                { type: 'required', message: "@ErrorResource.RequiredShort" },
+            ],
+            validationGroup: "@validationGroup"
+        });
+
+        $("#userBoxId").dxTextBox({
+            mode: "text"
+        }).dxValidator({
+            validationRules: [
+                { type: 'required', message: "@ErrorResource.RequiredShort" },
+            ],
+            validationGroup: "@validationGroup"
+        });
+
+        $("#passwordBoxId").dxTextBox({
+            mode: "password"
+        }).dxValidator({
+            validationRules: [
+                { type: 'required', message: "@ErrorResource.RequiredShort" },
+            ],
+            validationGroup: "@validationGroup"
+        });
+
+        $("#importBtnId").dxButton({
+            elementAttr: { class: "btn btn-normal mr-1" },
+            icon: "upload",
+            onClick: importScript,
+            text: "@SharedResource.Import.ToScriptStringSafe()",
+            type: "normal"
+        }).dxButton("instance");
+
+        $("#cancelBtnId").dxButton({
+            elementAttr: { class: "btn btn-normal mr-1" },
+            onClick: function () {
+                $("#urlBoxId").dxTextBox("instance").option("value", "");
+                $("#userBoxId").dxTextBox("instance").option("value", "");
+                $("#passwordBoxId").dxTextBox("instance").option("value", "");
+                $("#serverPopupId").dxPopup("instance").hide();
+            },
+            text: "@SharedResource.Cancel.ToScriptStringSafe()",
+            type: "normal"
+        }).dxButton("instance");
+
+        $("#saveBtnId").dxButton({
             elementAttr: { class: "btn btn-default" },
-            onClick: generate,
-            text: "@SharedResource.Generate.ToStringSafe()",
+            onClick: function () {
+                var res = DevExpress.validationEngine.validateGroup("@validationGroup");
+                if (res.isValid) {
+                    $("#loadPanelId").dxLoadPanel("instance").show();
+                    $("#serverPopupId").dxPopup("instance").hide();
+                    generateAndCreate();
+                }
+            },
+            text: "@SharedResource.Create.ToScriptStringSafe()",
             type: "default"
         }).dxButton("instance");
 
-        $("#importBtnId").dxButton({
-            elementAttr: { class: "btn btn-normal" },
-            icon: "upload",
-            onClick: importScript,
-            text: "@SharedResource.Import.ToStringSafe()",
-            type: "normal"
-        }).dxButton("instance");
+        $("#serverPopupId").dxPopup({
+            title: "@SharedResource.CreateDatabseOnServe.ToScriptStringSafe()",
+            showTitle: true,
+            width: 600,
+            height: "auto",
+            visible: false,
+            dragEnabled: false,
+            shading: true,
+            shadingColor: "rgba(0,0,0,0.5)",
+            showCloseButton: false,
+            closeOnOutsideClick: false,
+            contentTemplate: function () {
+                return $('#serverPopupContainer');
+            }
+        }).dxPopup("instance");
     });
 </script>
 
@@ -61,7 +183,7 @@
 
         methods: {
             plus(e) { this.cback(1); this.update(); },
-            minus(e) { this.cback(0); this.update(); },
+            minus(e){ this.cback(0); this.update(); },
             update() { this.emitter.trigger('process'); }
         },
     };
@@ -330,9 +452,7 @@
         engine.register(c);
     });
     editor.use(ContextMenuPlugin.default);
-    editor
-        .fromJSON({})
-        .then(() => {
+    editor.fromJSON({}).then(() => {
             editor.on("error", err => {
                 alertify.error(err.message);
             });
@@ -351,14 +471,5 @@
             editor.trigger("process");
             editor.view.resize();
             AreaPlugin.zoomAt(editor);
-        });
-
+    });
 </script>
-
-<style>
-    .title {
-        padding: 10px !important;
-        top: 10px;
-        position: inherit;
-    }
-</style>

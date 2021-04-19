@@ -159,6 +159,9 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Text.Encodings.Web, Version=5.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.5.0.1\lib\net461\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -286,6 +289,7 @@
     <Compile Include="Utils\Exceptions\BussinesExceptionMvc.cs" />
     <Compile Include="Utils\Exceptions\FunctionalityAuthorizationException.cs" />
     <Compile Include="Utils\Exceptions\NotActiveException.cs" />
+    <Compile Include="Utils\Extensions\Extensions.cs" />
     <Compile Include="Utils\Extensions\RouteDataExtensions.cs" />
     <Compile Include="Utils\Extensions\ViewDataExtensions.cs" />
     <Compile Include="Utils\Filters\AdministratorAttribute.cs" />
@@ -548,6 +552,7 @@
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
+    <Content Include="Content\css\scss\pages\_creator.scss" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

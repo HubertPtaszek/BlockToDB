@@ -97,6 +97,15 @@ namespace BlockToDB.Resources.Shared {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Anuluj.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Kod.
         /// </summary>
         public static string Code {
@@ -115,11 +124,38 @@ namespace BlockToDB.Resources.Shared {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Utwórz.
+        /// </summary>
+        public static string Create {
+            get {
+                return ResourceManager.GetString("Create", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Załóż konto.
         /// </summary>
         public static string CreateAccount {
             get {
                 return ResourceManager.GetString("CreateAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Utwórz bazę danych na serwerze.
+        /// </summary>
+        public static string CreateDatabseOnServe {
+            get {
+                return ResourceManager.GetString("CreateDatabseOnServe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Utwórz na serwerze.
+        /// </summary>
+        public static string CreateServ {
+            get {
+                return ResourceManager.GetString("CreateServ", resourceCulture);
             }
         }
         
@@ -250,6 +286,15 @@ namespace BlockToDB.Resources.Shared {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adres serwera.
+        /// </summary>
+        public static string ServerUrl {
+            get {
+                return ResourceManager.GetString("ServerUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ustawienia.
         /// </summary>
         public static string Settings {
@@ -277,6 +322,15 @@ namespace BlockToDB.Resources.Shared {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SQL.
+        /// </summary>
+        public static string SQL {
+            get {
+                return ResourceManager.GetString("SQL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Status.
         /// </summary>
         public static string Status {
@@ -291,6 +345,15 @@ namespace BlockToDB.Resources.Shared {
         public static string Templates {
             get {
                 return ResourceManager.GetString("Templates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Użytkownik.
+        /// </summary>
+        public static string User {
+            get {
+                return ResourceManager.GetString("User", resourceCulture);
             }
         }
         
