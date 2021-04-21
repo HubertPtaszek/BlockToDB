@@ -376,21 +376,6 @@
         }
     }
 
-    class NumComponent extends Rete.Component {
-        constructor() {
-            super("Number");
-            this.data.component = CustomNode;
-            this.data.render = 'vue';
-            this.data.props = {};
-        }
-        builder(node) {
-            var out1 = new Rete.Output('num', "Number", numSocket);
-            return node.addControl(new NumControl(this.editor, 'num')).addOutput(out1);
-        }
-        worker(node, inputs, outputs) {
-            outputs['num'] = node.data.num;
-        }
-    }
 
     class FirstComponent extends Rete.Component {
         constructor() {
