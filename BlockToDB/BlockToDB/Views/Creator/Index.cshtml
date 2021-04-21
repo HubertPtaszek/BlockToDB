@@ -176,6 +176,7 @@
     };
 
     var numSocket = new Rete.Socket("Number");
+    var inheritSocket = new Rete.Socket("Inherit");
 
     var VueBControl = {
         props: ['emitter', 'ikey', 'cback', 'getData', 'putData'],
@@ -259,6 +260,31 @@
         }
         handler(el, editor) {
             var array = ["BIT", "DATE", "FLOAT", "DECIMAL", "SMALLINT", "INTEGER", "CHARACTER"];
+            var selectList = document.createElement("select");
+            selectList.id = this.key;
+            el.appendChild(selectList);
+            for (var i = 0; i < array.length; i++) {
+                var option = document.createElement("option");
+                option.value = array[i];
+                option.text = array[i];
+                selectList.appendChild(option);
+            }
+            var text = selectList.options[selectList.selectedIndex].value;
+            this.putData(this.key, text);
+            selectList.addEventListener("change", () => {
+                this.putData(this.key, selectList.options[selectList.selectedIndex].value);
+            });
+        }
+    }
+
+    class NumControl5 extends Rete.Control {
+        constructor(emitter, key) {
+            super(key);
+            this.render = 'js';
+            this.key = key;
+        }
+        handler(el, editor) {
+            var array = ["TPT", "TPH","TPC"];
             var selectList = document.createElement("select");
             selectList.id = this.key;
             el.appendChild(selectList);
@@ -410,6 +436,11 @@
                 }
                 editor.view.updateConnections({ node })
             }
+            let out = new Rete.Output('inherit', 'inherit', inheritSocket);
+            let input = new Rete.Input('inherit', 'inherit', inheritSocket, false);
+            input.addControl(new NumControl5(this.editor,  'inherit-type'))
+            node.addOutput(out);
+            node.addInput(input);
             return node
                 .addControl(new NumControl(this.emitter, 'tableName', 'NazwaTabeli'))
                 .addControl(new BControl(this.editor, node, 'button', callback))
