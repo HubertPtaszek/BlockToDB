@@ -5,5 +5,6 @@
 5. Akcja w controllerze, serwisie odpowiedzialna za generowanie skryptu.
 6. Podpięcie tych akcji na widoku.
 7. Metoda nawiazujaca połączenie z serwerem.
-8. Utworzenie toolbar-a pod kreatorem. to chyba nie potrzebne jak jeden tylko kompoent jest 
+8. Utworzenie toolbar-a pod kreatorem. - to chyba nie potrzebne jak jeden tylko kompoent jest 
 9. Podpięcie funkcji importowania
+10. Atrubut autoryzacyjny
