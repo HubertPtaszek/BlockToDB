@@ -7,3 +7,4 @@
 7. Metoda nawiazujaca połączenie z serwerem.
 8. Utworzenie toolbar-a pod kreatorem.
 9. Podpięcie funkcji importowania
+10. Atrubut autoryzacyjny
