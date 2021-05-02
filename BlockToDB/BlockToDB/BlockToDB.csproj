@@ -727,8 +727,7 @@
     <Content Include="Views\Creator\Index.cshtml" />
     <Content Include="Views\Store\Index.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Schemas\Index.cshtml" />
-    <Content Include="Views\Schemas\Edit.cshtml" />
+    <Content Include="Views\Store\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

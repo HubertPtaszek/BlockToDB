@@ -222,4 +222,13 @@
   <data name="Schemas" xml:space="preserve">
     <value>Zapisane schematy</value>
   </data>
+  <data name="NameDB" xml:space="preserve">
+    <value>Podaj nazwę bazy</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Zapisz</value>
+  </data>
+  <data name="SaveDB" xml:space="preserve">
+    <value>Zapisz schemat</value>
+  </data>
 </root>

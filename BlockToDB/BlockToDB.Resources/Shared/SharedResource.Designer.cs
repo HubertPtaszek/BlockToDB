@@ -259,6 +259,15 @@ namespace BlockToDB.Resources.Shared {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Podaj nazwę bazy.
+        /// </summary>
+        public static string NameDB {
+            get {
+                return ResourceManager.GetString("NameDB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hasło.
         /// </summary>
         public static string Password {
@@ -277,11 +286,29 @@ namespace BlockToDB.Resources.Shared {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zapisz.
+        /// </summary>
+        public static string Save {
+            get {
+                return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zapisano pomyślnie.
         /// </summary>
         public static string SaveComplete {
             get {
                 return ResourceManager.GetString("SaveComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zapisz schemat.
+        /// </summary>
+        public static string SaveDB {
+            get {
+                return ResourceManager.GetString("SaveDB", resourceCulture);
             }
         }
         

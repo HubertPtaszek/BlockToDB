@@ -8,8 +8,13 @@
         <h4 class="wrapper-header-title">@SharedResource.CreatorDB.ToStringSafe()</h4>
         <div class="wrapper-header-actions">
             <div id="importBtnId"></div>
+
+                    <a href="#" class="btn" onclick="saveBtnHandler()">@SharedResource.Save.ToStringSafe()</a>
+
             <div class="dropdown">
+
                 <button class="dropbtn">@SharedResource.Generate.ToStringSafe()</button>
+
                 <div class="dropdown-content">
                     <a href="#" onclick="generateBtnHandler(0)">@SharedResource.SQL.ToStringSafe()</a>
                     <a href="#" onclick="generateBtnHandler(1)">@SharedResource.CreateServ.ToStringSafe()</a>
@@ -56,7 +61,27 @@
         </div>
     </div>
 </div>
-
+<div id="savePopupId"></div>
+<div style="display:none">
+    <div id="savePopupContainer">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label>@SharedResource.NameDB.ToStringSafe()</label>
+                    <div id="databaseName"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="popup-footer d-flex justify-content-end mt-3">
+                    <div id="cancelSaveBtnId"></div>
+                    <div id="saveSaveBtnId"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     function generateBtnHandler(val) {
@@ -69,6 +94,10 @@
         }
     }
 
+    function saveBtnHandler() {
+            $("#savePopupId").dxPopup("instance").show();
+    }
+
     $(document).ready(function () {
         function generateScript() {
             alert("tutaj generowanie po stronie js podpiąć - funkcja wysyłająca do controllera Creator");
@@ -78,7 +107,18 @@
             alert("tutaj generowanie oraz tworzenie na serwerze po stronie js podpiąć - funkcja wysyłająca do controllera Creator");
             //hide load, results done or error (bad connection?)
         }
-
+        function save() {
+            var dbName = $("#databaseName").dxTextBox("instance").option('value');
+            var json = editor.toJSON();
+             $.ajax({
+                url: '@Url.Action("AddSchemaData", "Store")',
+                type: "post",
+                data: {
+                    Json: JSON.stringify(json),
+                    Name: dbName
+                },
+            });
+        }
         function importScript() {
             alert("tutaj importowanie gotowego skryptu po stronie js podpiąć");
         }
@@ -109,6 +149,15 @@
             ],
             validationGroup: "@validationGroup"
         });
+        $("#databaseName").dxTextBox({
+            mode: "text"
+        }).dxValidator({
+            validationRules: [
+                { type: 'required', message: "@ErrorResource.RequiredShort" },
+            ],
+            validationGroup: "@validationGroup"
+        });
+
 
         $("#importBtnId").dxButton({
             elementAttr: { class: "btn btn-normal mr-1" },
@@ -144,6 +193,30 @@
             type: "default"
         }).dxButton("instance");
 
+        $("#cancelSaveBtnId").dxButton({
+            elementAttr: { class: "btn btn-normal mr-1" },
+            onClick: function () {
+                $("#databaseName").dxTextBox("instance").option("value", "");
+                $("#savePopupId").dxPopup("instance").hide();
+            },
+            text: "@SharedResource.Cancel.ToScriptStringSafe()",
+            type: "normal"
+        }).dxButton("instance");
+
+        $("#saveSaveBtnId").dxButton({
+            elementAttr: { class: "btn btn-default" },
+            onClick: function () {
+
+                    $("#loadPanelId").dxLoadPanel("instance").show();
+                    $("#savePopupId").dxPopup("instance").hide();
+                    save();
+
+
+            },
+            text: "@SharedResource.Create.ToScriptStringSafe()",
+            type: "default"
+        }).dxButton("instance");
+
         $("#serverPopupId").dxPopup({
             title: "@SharedResource.CreateDatabseOnServe.ToScriptStringSafe()",
             showTitle: true,
@@ -157,6 +230,22 @@
             closeOnOutsideClick: false,
             contentTemplate: function () {
                 return $('#serverPopupContainer');
+            }
+        }).dxPopup("instance");
+
+        $("#savePopupId").dxPopup({
+            title: "@SharedResource.SaveDB.ToScriptStringSafe()",
+            showTitle: true,
+            width: 600,
+            height: "auto",
+            visible: false,
+            dragEnabled: false,
+            shading: true,
+            shadingColor: "rgba(0,0,0,0.5)",
+            showCloseButton: false,
+            closeOnOutsideClick: false,
+            contentTemplate: function () {
+                return $('#savePopupContainer');
             }
         }).dxPopup("instance");
     });
