@@ -1,18 +1,8 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using BlockToDB.Models;
+﻿using BlockToDB.Application;
 using BlockToDB.Utils;
 using Ninject;
-using BlockToDB.Application;
 using System.Net;
+using System.Web.Mvc;
 
 namespace BlockToDB.Controllers
 {
@@ -23,7 +13,18 @@ namespace BlockToDB.Controllers
 
         [Inject]
         public IBlockToDBService BlockToDBService { get; set; }
+
         #endregion Dependencies
+
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        public ActionResult Edit()
+        {
+            return View();
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
