@@ -286,6 +286,15 @@ namespace BlockToDB.Resources.Shared {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zapisane schematy.
+        /// </summary>
+        public static string Schemas {
+            get {
+                return ResourceManager.GetString("Schemas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Adres serwera.
         /// </summary>
         public static string ServerUrl {

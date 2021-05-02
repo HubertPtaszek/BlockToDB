@@ -27,15 +27,15 @@ namespace BlockToDB.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult GetDepartmentData(DataSourceLoadOptions loadOptions)
+        public ActionResult GetSchemasToList(DataSourceLoadOptions loadOptions)
         {
-            object data = BlockToDBService.GetCaseToList(loadOptions);
+            object data = BlockToDBService.GetSchemasToList(loadOptions);
             return CustomJson(data);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddDepartmentData(BlockToDBAddVM model)
+        public ActionResult AddSchemaData(BlockToDBAddVM model)
         {
             if (ModelState.IsValid)
             {
@@ -46,7 +46,7 @@ namespace BlockToDB.Controllers
 
         [HttpPut]
         [ValidateAntiForgeryToken]
-        public ActionResult EditDepartmentData(BlockToDBEditVM model)
+        public ActionResult EditSchemaData(BlockToDBEditVM model)
         {
             if (ModelState.IsValid)
             {
@@ -57,7 +57,7 @@ namespace BlockToDB.Controllers
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteDepartmentData(int id)
+        public ActionResult DeleteDSchemaData(int id)
         {
             BlockToDBService.Delete(id);
             return new HttpStatusCodeResult(HttpStatusCode.Created, "Deleted");

@@ -16,7 +16,7 @@ namespace BlockToDB.Application
         #endregion Dependencies
 
 
-        public object GetCaseToList(DataSourceLoadOptionsBase loadOptions)
+        public object GetSchemasToList(DataSourceLoadOptionsBase loadOptions)
         {
             return DatabaseSchemaRepository.GetDatabaseSchemaToList(loadOptions);
         }

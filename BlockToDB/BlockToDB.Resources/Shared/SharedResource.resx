@@ -219,4 +219,7 @@
   <data name="User" xml:space="preserve">
     <value>Użytkownik</value>
   </data>
+  <data name="Schemas" xml:space="preserve">
+    <value>Zapisane schematy</value>
+  </data>
 </root>

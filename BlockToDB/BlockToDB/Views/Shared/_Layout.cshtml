@@ -62,6 +62,15 @@
                         <li class="@(tab == "Home" ? "is-active" : "")">
                             <a href="@Url.Action("About", "Home")"><i class="fas fa-info"></i>@SharedResource.About.ToStringSafe()</a>
                         </li>
+
+                        @{
+                            if (Context.User.Identity.IsAuthenticated)
+                            {
+                                <li class="@(tab == "Schemas" ? "is-active" : "")">
+                                    <a href="@Url.Action("Index", "Schemas")"><i class="fas fa-list"></i>@SharedResource.Schemas.ToStringSafe()</a>
+                                </li>
+                            }
+                        }
                     </ul>
                     <ul class="navbar-links">
                         @{
