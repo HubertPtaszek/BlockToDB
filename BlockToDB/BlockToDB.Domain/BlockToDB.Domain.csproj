@@ -57,7 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BlockToDB\AppSetting.cs" />
+    <Compile Include="BlockToDB\DatabaseSchema.cs" />
     <Compile Include="Core\AppSetting.cs" />
     <Compile Include="Core\AuditEntity.cs" />
     <Compile Include="Core\Entity.cs" />
