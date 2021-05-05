@@ -1,0 +1,129 @@
+﻿@{
+    string serverValidationGroup = Guid.NewGuid().ToString();
+}
+
+<div id="serverPopupId"></div>
+<div style="display:none">
+    <div id="serverPopupContainer">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label>@SharedResource.ServerUrl.ToStringSafe()</label>
+                    <div id="urlBoxId"></div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label>@SharedResource.User.ToStringSafe()</label>
+                    <div id="userBoxId"></div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label>@SharedResource.Password.ToStringSafe()</label>
+                    <div id="passwordBoxId"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="popup-footer d-flex justify-content-end mt-3">
+                    <div id="cancelServerBtnId"></div>
+                    <div id="saveServerBtnId"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        function generateAndCreate() {
+            var json = editor.toJSON();
+            $.ajax({
+                url: '@Url.Action("CreateRemoteDataBase", "Creator")',
+                type: "post",
+                data: {
+                    Json: JSON.stringify(json),
+                    Url: $("#urlBoxId").dxTextBox("instance").option("value"),
+                    UserName: $("#userBoxId").dxTextBox("instance").option("value"),
+                    Password: $("#passwordBoxId").dxTextBox("instance").option("value")
+                 },
+                 success: function (data) {
+                     $("#loadPanelId").dxLoadPanel("instance").hide();
+                    //results done or error (bad connection?)
+                 }
+            });
+        }
+
+        $("#urlBoxId").dxTextBox({
+            mode: "url"
+        }).dxValidator({
+            validationRules: [
+                { type: 'required', message: "@ErrorResource.RequiredShort" },
+            ],
+            validationGroup: "@serverValidationGroup"
+        });
+
+        $("#userBoxId").dxTextBox({
+            mode: "text"
+        }).dxValidator({
+            validationRules: [
+                { type: 'required', message: "@ErrorResource.RequiredShort" },
+            ],
+            validationGroup: "@serverValidationGroup"
+        });
+
+        $("#passwordBoxId").dxTextBox({
+            mode: "password"
+        }).dxValidator({
+            validationRules: [
+                { type: 'required', message: "@ErrorResource.RequiredShort" },
+            ],
+            validationGroup: "@serverValidationGroup"
+        });
+
+        $("#cancelServerBtnId").dxButton({
+            elementAttr: { class: "btn btn-normal mr-1" },
+            onClick: function () {
+                $("#urlBoxId").dxTextBox("instance").option("value", "");
+                $("#userBoxId").dxTextBox("instance").option("value", "");
+                $("#passwordBoxId").dxTextBox("instance").option("value", "");
+                $("#serverPopupId").dxPopup("instance").hide();
+            },
+            text: "@SharedResource.Cancel.ToScriptStringSafe()",
+            type: "normal"
+        }).dxButton("instance");
+
+        $("#saveServerBtnId").dxButton({
+            elementAttr: { class: "btn btn-default" },
+            onClick: function () {
+                var res = DevExpress.validationEngine.validateGroup("@serverValidationGroup");
+                if (res.isValid) {
+                    $("#loadPanelId").dxLoadPanel("instance").show();
+                    $("#serverPopupId").dxPopup("instance").hide();
+                    generateAndCreate();
+                }
+            },
+            text: "@SharedResource.Create.ToScriptStringSafe()",
+            type: "default"
+        }).dxButton("instance");
+
+        $("#serverPopupId").dxPopup({
+            title: "@SharedResource.CreateDatabseOnServe.ToScriptStringSafe()",
+            showTitle: true,
+            width: 600,
+            height: "auto",
+            visible: false,
+            dragEnabled: false,
+            shading: true,
+            shadingColor: "rgba(0,0,0,0.5)",
+            showCloseButton: false,
+            closeOnOutsideClick: false,
+            contentTemplate: function () {
+                return $('#serverPopupContainer');
+            }
+        }).dxPopup("instance");
+    });
+</script>

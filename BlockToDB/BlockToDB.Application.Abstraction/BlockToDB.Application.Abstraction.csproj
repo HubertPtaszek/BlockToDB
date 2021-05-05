@@ -100,9 +100,12 @@
     <Compile Include="Model\BlockToDB\Output.cs" />
     <Compile Include="Model\MethodResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\BlockToDB\BlockToDBCreateVM.cs" />
+    <Compile Include="ViewModels\BlockToDB\BlockToDBGenerateRemoteVM.cs" />
+    <Compile Include="ViewModels\BlockToDB\BlockToDBGenerateVM.cs" />
     <Compile Include="ViewModels\BlockToDB\BlockToDBAddVM.cs" />
     <Compile Include="ViewModels\BlockToDB\BlockToDBEditVM.cs" />
-    <Compile Include="ViewModels\BlockToDB\BlockToDBVM.cs" />
+    <Compile Include="ViewModels\Core\DownloadVM.cs" />
     <Compile Include="ViewModels\Membership\AppUser\AppUserAddVM.cs" />
     <Compile Include="ViewModels\Membership\AppUser\AppUserDetailsVM.cs" />
     <Compile Include="ViewModels\Membership\AppUser\AppUserEditVM.cs" />
@@ -132,7 +135,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Utils\" />
-    <Folder Include="ViewModels\Core\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

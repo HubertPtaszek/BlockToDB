@@ -196,6 +196,15 @@ namespace BlockToDB.Resources.Shared {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Eksport.
+        /// </summary>
+        public static string Export {
+            get {
+                return ResourceManager.GetString("Export", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wygeneruj.
         /// </summary>
         public static string Generate {
@@ -309,6 +318,15 @@ namespace BlockToDB.Resources.Shared {
         public static string SaveDB {
             get {
                 return ResourceManager.GetString("SaveDB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zapisz schemat.
+        /// </summary>
+        public static string SaveSchema {
+            get {
+                return ResourceManager.GetString("SaveSchema", resourceCulture);
             }
         }
         

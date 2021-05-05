@@ -14,7 +14,6 @@ namespace BlockToDB.Infrastructure
         public MainContext()
         {
             _id = Guid.NewGuid().ToString();
-            //_kernel = kernel;
         }
     }
 }

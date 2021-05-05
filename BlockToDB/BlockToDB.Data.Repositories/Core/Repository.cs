@@ -8,7 +8,6 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BlockToDB.Data
@@ -41,6 +40,7 @@ namespace BlockToDB.Data
             }
             _dbset.Add(entity);
         }
+
         public virtual void AddRange(List<TEntity> entities)
         {
             foreach (var entity in entities)
@@ -75,7 +75,6 @@ namespace BlockToDB.Data
             return _dbset.AsQueryable();
         }
 
-
         public IList<TEntity> GetAll(bool tracking = false)
         {
             if (tracking)
@@ -94,7 +93,6 @@ namespace BlockToDB.Data
             return await _dbset.AsNoTracking().ToListAsync();
         }
 
-
         public IList<TEntity> GetAll(Expression<Func<TEntity, bool>> whereCondition, bool tracking = false)
         {
             if (tracking)
@@ -102,7 +100,6 @@ namespace BlockToDB.Data
                 return _dbset.Where(whereCondition).ToList();
             }
             return _dbset.AsNoTracking().Where(whereCondition).ToList();
-
         }
 
         public async Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> whereCondition, bool tracking = false)
@@ -112,7 +109,6 @@ namespace BlockToDB.Data
                 return await _dbset.Where(whereCondition).ToListAsync();
             }
             return await _dbset.AsNoTracking().Where(whereCondition).ToListAsync();
-
         }
 
         public TEntity GetSingle(Expression<Func<TEntity, bool>> whereCondition, bool tracking = false)
@@ -131,7 +127,6 @@ namespace BlockToDB.Data
                 return await _dbset.Where(whereCondition).FirstOrDefaultAsync();
             }
             return await _dbset.AsNoTracking().Where(whereCondition).FirstOrDefaultAsync();
-
         }
 
         public void Attach(TEntity entity)
@@ -151,7 +146,6 @@ namespace BlockToDB.Data
                 return _dbset.AsNoTracking();
             }
             return _dbset.AsQueryable();
-
         }
 
         public IQueryable<TEntity> GetQueryable(Expression<Func<TEntity, bool>> whereCondition, bool tracking = false)
@@ -167,14 +161,17 @@ namespace BlockToDB.Data
         {
             return _dbset.Count();
         }
+
         public async Task<int> CountAsync()
         {
             return await _dbset.CountAsync();
         }
+
         public bool Any()
         {
             return _dbset.Any();
         }
+
         public async Task<bool> AnyAsync()
         {
             return await _dbset.AnyAsync();
@@ -194,6 +191,7 @@ namespace BlockToDB.Data
         {
             return await _dbset.Where(whereCondition).CountAsync();
         }
+
         public bool Any(Expression<Func<TEntity, bool>> whereCondition)
         {
             return _dbset.Any(whereCondition);
@@ -258,7 +256,6 @@ namespace BlockToDB.Data
         {
             return _dbset.Find(id);
         }
-
     }
 
     public class Repository : IRepository
@@ -267,6 +264,7 @@ namespace BlockToDB.Data
 
         [Inject]
         public MainContext MainContext { get; set; }
+
         public Repository(MainDatabaseContext context)
         {
             Context = context;
@@ -279,6 +277,7 @@ namespace BlockToDB.Data
 
         [Inject]
         public MainContext MainContext { get; set; }
+
         public Repository(TDbContext context)
         {
             Context = context;

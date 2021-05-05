@@ -20,40 +20,18 @@ namespace BlockToDB.Application
 
         #endregion Dependencies
 
-        public string GetActiveUserIdByEmail(string email)
+        public AppUserData GetUserDataByWebUserId(string webUserId)
         {
-            return AppUserRepository.GetActiveUserIdByEmail(email);
-        }
-
-        public AppUserData GetFirstUser()
-        {
-            AppUser user = AppUserRepository.GetSingle(x => x.Email == "admin@admin.pl");
+            AppUser user = AppUserRepository.GetSingle(x => x.IsActive && x.AppIdentityUserId == webUserId);
             if (user == null)
-            {
-                user = AppUserRepository.GetAll(x => x.LastName != null && x.LastName != "").OrderBy(x => x.LastName).FirstOrDefault();
-            }
+                return null;
             AppUserData result = new AppUserData()
             {
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                UserName = user.Email,
-                IsActive = user.IsActive,
+                AppIdentityUserId = user.AppIdentityUserId
             };
-            return result;
-        }
-
-        public AppUserListVM GetAppUserListVM()
-        {
-            AppUserListVM model = new AppUserListVM()
-            { };
-            return model;
-        }
-
-        public AppUserDetailsVM GetAppUserDetailsVM(int userId)
-        {
-            AppUser crmUser = AppUserRepository.GetSingle(x => x.Id == userId);
-            AppUserDetailsVM result = AppUserConverter.ToAppUserDetailsVM(crmUser);
             return result;
         }
 
@@ -63,12 +41,11 @@ namespace BlockToDB.Application
                 throw new BussinesException(1000, ErrorResource.UserAlreadyAdded);
             AppUser user = new AppUser()
             {
-                CreatedById = MainContext.PersonId,
-                CreatedDate = DateTime.Now,
                 IsActive = model.IsActive,
                 LastName = model.LastName,
                 FirstName = model.FirstName,
-                Email = model.Email
+                Email = model.Email,
+                AppIdentityUserId = model.AppIdentityUserId
             };
             AppUserRepository.Add(user);
             AppUserRepository.Save();
@@ -83,15 +60,6 @@ namespace BlockToDB.Application
             }
             appUser = AppUserConverter.FromAppUserEditVM(model, appUser);
             AppUserRepository.Edit(appUser);
-        }
-
-        public void Delete(int id)
-        {
-            AppUser appUser = AppUserRepository.GetSingle(x => x.Id == id);
-            if (appUser == null)
-            {
-                throw new BussinesException(1002, ErrorResource.NoData);
-            }
         }
 
         public int GetUnknownUserId()

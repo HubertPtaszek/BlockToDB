@@ -21,12 +21,13 @@ namespace BlockToDB.Areas.Dashboard.Controllers
             return View();
         }
 
-        public ActionResult Edit()
+        public ActionResult Edit(int id)
         {
-            return View();
+            BlockToDBEditVM blockToDBEdit = BlockToDBService.GetToEdit(id);
+            return View(blockToDBEdit);
         }
 
-        [HttpPost]
+        [HttpGet]
         public ActionResult GetSchemasToList(DataSourceLoadOptions loadOptions)
         {
             object data = BlockToDBService.GetSchemasToList(loadOptions);
@@ -34,16 +35,6 @@ namespace BlockToDB.Areas.Dashboard.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddSchemaData(BlockToDBAddVM model)
-        {
-            if (ModelState.IsValid)
-            {
-                BlockToDBService.Add(model);
-            }
-            return new HttpStatusCodeResult(HttpStatusCode.Created, "Added");
-        }
-
-        [HttpPut]
         public ActionResult EditSchemaData(BlockToDBEditVM model)
         {
             if (ModelState.IsValid)
@@ -58,13 +49,6 @@ namespace BlockToDB.Areas.Dashboard.Controllers
         {
             BlockToDBService.Delete(id);
             return new HttpStatusCodeResult(HttpStatusCode.Created, "Deleted");
-        }
-
-
-        public ActionResult Edit(int id)
-        {
-            BlockToDBEditVM blockToDBEdit = BlockToDBService.GetToEdit(id);
-            return View(blockToDBEdit);
         }
     }
 }

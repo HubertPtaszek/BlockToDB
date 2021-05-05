@@ -46,8 +46,6 @@ namespace BlockToDB.EntityFramework
         public DbSet<Person> Peoples { get; set; }
         public DbSet<SystemUser> SystemUsers { get; set; }
         public DbSet<AppUser> AppUsers { get; set; }
-        public DbSet<AppRole> AppRoles { get; set; }
-        public DbSet<AppUserRole> AppUserRoles { get; set; }
 
         #endregion Core
 
@@ -65,8 +63,6 @@ namespace BlockToDB.EntityFramework
 
             modelBuilder.Configurations.Add(new PersonConfiguration());
             modelBuilder.Configurations.Add(new AppUserConfiguration());
-            modelBuilder.Configurations.Add(new AppRoleConfiguration());
-            modelBuilder.Configurations.Add(new AppUserRoleConfiguration());
 
             #endregion Core
 

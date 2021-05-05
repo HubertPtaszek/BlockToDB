@@ -272,7 +272,6 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="Controllers\SchemasController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Controllers\CreatorController.cs" />
@@ -298,10 +297,9 @@
     <Compile Include="Utils\Extensions\Extensions.cs" />
     <Compile Include="Utils\Extensions\RouteDataExtensions.cs" />
     <Compile Include="Utils\Extensions\ViewDataExtensions.cs" />
-    <Compile Include="Utils\Filters\AdministratorAttribute.cs" />
     <Compile Include="Utils\Filters\ExceptionHandlerAttribute.cs" />
+    <Compile Include="Utils\Filters\ContextAttribute.cs" />
     <Compile Include="Utils\Filters\NoCacheAttribute.cs" />
-    <Compile Include="Utils\Filters\UserAuthorizationAttribute.cs" />
     <Compile Include="Utils\UserHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -728,6 +726,9 @@
     <Content Include="Views\Store\Index.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Store\Edit.cshtml" />
+    <Content Include="Views\Creator\_ServerPopup.cshtml" />
+    <Content Include="Views\Creator\_SchemaPopup.cshtml" />
+    <Content Include="Views\Creator\_Editor.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

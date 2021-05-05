@@ -231,4 +231,10 @@
   <data name="SaveDB" xml:space="preserve">
     <value>Zapisz schemat</value>
   </data>
+  <data name="Export" xml:space="preserve">
+    <value>Eksport</value>
+  </data>
+  <data name="SaveSchema" xml:space="preserve">
+    <value>Zapisz schemat</value>
+  </data>
 </root>

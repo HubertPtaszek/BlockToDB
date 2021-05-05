@@ -11,6 +11,7 @@ namespace BlockToDB.Utils
     [ExceptionHandler]
     [NoCache]
     [AllowAnonymous]
+    [Context]
     public abstract class AppController : Controller
     {
         [Inject]

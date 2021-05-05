@@ -1,0 +1,373 @@
+﻿<div id="editor"></div>
+
+<script>
+    const JsRenderPlugin = {
+        install(editor, params = {}) {
+            editor.on("rendercontrol", ({ el, control }) => {
+                if (control.render && control.render !== "js") {
+                    return;
+                }
+                control.handler(el, editor);
+            });
+        }
+    };
+
+    var numSocket = new Rete.Socket("Number");
+    var inheritSocket = new Rete.Socket("Inherit");
+
+    var VueBControl = {
+        props: ['emitter', 'ikey', 'cback', 'getData', 'putData'],
+        template: '<div><input class="click_button" type="button" @@click="plus($event)" value="+" />&nbsp;<input class="click_button" type="button" @@click="minus($event)" value="-" /></div>',
+
+        methods: {
+            plus(e) { this.cback(1); this.update(); },
+            minus(e){ this.cback(0); this.update(); },
+            update() { this.emitter.trigger('process'); }
+        },
+    };
+
+    class BControl extends Rete.Control {
+        constructor(emitter, node, key, cback) {
+            super(key);
+            this.component = VueBControl;
+            this.props = { emitter, ikey: key, cback: cback };
+        }
+    }
+
+    var VueNumControl = {
+        props: ['emitter', 'ikey', 'ph', 'dataValue', 'cback', 'getData', 'putData'],
+        template: '<div><input type="text" step="any" :placeholder="ph"  @@input="change($event)" @@dblclick.stop=""/></div>',
+        data() {
+            return { value: this.dataValue }
+        },
+        watch: {
+            value: {
+                immediate: true,
+                handler(val) { this.value = this.dataValue },
+                deep: true
+            }
+        },
+        methods: {
+            change(e) { this.value = +e.target.value; this.update(); },
+            update() {
+                if (this.ikey) {
+                    this.putData(this.ikey, this.value);
+                }
+                this.emitter.trigger('process');
+            },
+        },
+        mounted() {
+            if (this.ikey) {
+                this.value = this.getData(this.ikey);
+            }
+        }
+    };
+
+    class NumControl2 extends Rete.Control {
+        constructor(emitter, key, ph) {
+            super(key);
+            this.render = 'js';
+            this.key = key;
+            this.placeholder = ph;
+        }
+        handler(el, editor) {
+            var array = ["jeden", "wiele"];
+            var selectList = document.createElement("select");
+            selectList.id = this.key;
+            el.appendChild(selectList);
+            for (var i = 0; i < array.length; i++) {
+                var option = document.createElement("option");
+                option.value = array[i];
+                option.text = array[i];
+                selectList.appendChild(option);
+            }
+            var text = selectList.options[selectList.selectedIndex].value;
+            this.putData(this.key, text);
+            selectList.addEventListener("change", () => {
+                this.putData(this.key, selectList.options[selectList.selectedIndex].value);
+            });
+        }
+    }
+
+    class NumControl3 extends Rete.Control {
+        constructor(emitter, key) {
+            super(key);
+            this.render = 'js';
+            this.key = key;
+        }
+        handler(el, editor) {
+            var array = ["BIT", "DATE", "FLOAT", "DECIMAL", "SMALLINT", "INTEGER", "CHARACTER"];
+            var selectList = document.createElement("select");
+            selectList.id = this.key;
+            el.appendChild(selectList);
+            for (var i = 0; i < array.length; i++) {
+                var option = document.createElement("option");
+                option.value = array[i];
+                option.text = array[i];
+                selectList.appendChild(option);
+            }
+            var text = selectList.options[selectList.selectedIndex].value;
+            this.putData(this.key, text);
+            selectList.addEventListener("change", () => {
+                this.putData(this.key, selectList.options[selectList.selectedIndex].value);
+            });
+        }
+    }
+
+    class NumControl5 extends Rete.Control {
+        constructor(emitter, key) {
+            super(key);
+            this.render = 'js';
+            this.key = key;
+        }
+        handler(el, editor) {
+            var array = ["TPT", "TPH","TPC"];
+            var selectList = document.createElement("select");
+            selectList.id = this.key;
+            el.appendChild(selectList);
+            for (var i = 0; i < array.length; i++) {
+                var option = document.createElement("option");
+                option.value = array[i];
+                option.text = array[i];
+                selectList.appendChild(option);
+            }
+            var text = selectList.options[selectList.selectedIndex].value;
+            this.putData(this.key, text);
+            selectList.addEventListener("change", () => {
+                this.putData(this.key, selectList.options[selectList.selectedIndex].value);
+            });
+        }
+    }
+
+    class NumControl4 extends Rete.Control {
+        constructor(emitter, key) {
+            super(key);
+            this.render = 'js';
+            this.key = key;
+        }
+        handler(el, editor) {
+            // creating checkbox element
+            var checkbox = document.createElement('input');
+            checkbox.type = "checkbox";
+            checkbox.name = "name";
+            checkbox.value = "value";
+            checkbox.id = this.key;
+
+            // creating label for checkbox
+            var label = document.createElement('label');
+            label.htmlFor = this.key;
+
+            // appending the created text to
+            // the created label tag
+            label.appendChild(document.createTextNode('Klucz główny'));
+
+            el.appendChild(checkbox);
+            el.appendChild(label);
+            var text = checkbox.checked ;
+            this.putData(this.key, text);
+            checkbox.addEventListener("change", () => {
+                this.putData(this.key, checkbox.checked );
+            });
+        }
+    }
+
+    class NumControl extends Rete.Control {
+        constructor(emitter, key, ph) {
+            super(key);
+            this.render = 'js';
+            this.key = key;
+            this.placeholder = ph;
+        }
+        handler(el, editor) {
+            var input = document.createElement('input');
+            el.appendChild(input);
+            var text = this.getData(this.key) || this.placeholder;
+            input.value = text;
+            this.putData(this.key, text);
+            input.addEventListener("change", () => {
+                this.putData(this.key, input.value);
+            });
+        }
+    }
+
+    var CustomNode = {
+        template: `<div class="node" :class="[selected(), node.name] | kebab">
+  <!--- hide title <div class="title">{{node.name}}</div> -->
+  <!-- Outputs-->
+      <div style="float:left; width:91px ">
+            <!-- Inputs-->
+            <div class="input" style="float:left; width:91px;" v-for="input in inputs()" :key="input.key" style="height:50px">
+              <Socket v-socket:input="input" type="input" :socket="input.socket"></Socket>
+              <div class="input-control" style="display: inline-block; margin-right: 10px;" v-show="input.showControl()" v-control="input.control"></div>
+            </div>
+</div>
+<div style="float:left; width:405px;">
+            <!-- Controls-->
+            <div class="control" v-for="control in controls()" v-control="control" style="height:50px;padding-top: 8px; float: left; margin-right: 10px;" ></div>
+
+</div>
+<div style="float:right; ">
+            <div class="output" v-for="output in outputs()" :key="output.key" style="height:50px">
+              <div class="output-title"></div>
+              <Socket v-socket:output="output" type="output" :socket="output.socket"></Socket>
+            </div>
+</div>
+<div style ="clear: both"></div>
+
+
+</div>`,
+        mixins: [VueRenderPlugin.default.mixin],
+        components: {
+            Socket: VueRenderPlugin.default.Socket
+        }
+    }
+
+
+    class FirstComponent extends Rete.Component {
+        constructor() {
+            super('Tabela');
+            this.data.component = CustomNode;
+        }
+
+        builder(node) {
+            node.meta.letter = '`';
+            const editor = this.editor;
+            async function callback(n) {
+                if (!n) { // del
+                    let o1 = this.emitter.nodes.find(n => n.id == node.id).outputs.get(node.meta.letter);
+                    let i1 = this.emitter.nodes.find(n => n.id == node.id).inputs.get(node.meta.letter);
+                    let c1 = this.emitter.nodes.find(n => n.id == node.id).controls.get(node.meta.letter + '-name');
+                    let c2 = this.emitter.nodes.find(n => n.id == node.id).controls.get(node.meta.letter + '-type');
+                    let c3 = this.emitter.nodes.find(n => n.id == node.id).controls.get(node.meta.letter + '-isPrimaryKey');
+                    if (c1 && c2 && c3 && o1 && i1) {
+                        i1.connections.map(editor.removeConnection.bind(editor));
+                        o1.connections.map(editor.removeConnection.bind(editor));
+                        node.removeControl(c1);
+                        node.removeControl(c2);
+                        node.removeControl(c3);
+                        node.removeOutput(o1);
+                        node.removeInput(i1);
+                        delete (node.data[node.meta.letter]);
+                        await node.update();
+                        node.meta.letter = node.meta.letter.substring(0, node.meta.letter.length - 1) + String.fromCharCode(node.meta.letter.charCodeAt(node.meta.letter.length - 1) - 1);
+                        setTimeout(() => {
+                            this.emitter.view.updateConnections({ node });
+                        }, 10);
+
+                    }
+                } else { // add
+                    node.meta.letter = node.meta.letter.substring(0, node.meta.letter.length - 1) + String.fromCharCode(node.meta.letter.charCodeAt(node.meta.letter.length - 1) + 1);
+                    let out = new Rete.Output(node.meta.letter, '' + node.meta.letter, numSocket);
+                    let input = new Rete.Input(node.meta.letter, '' + node.meta.letter, numSocket, false);
+                    input.addControl(new NumControl2(this.editor, node.meta.letter + '-relation'))
+                    node.addOutput(out);
+                    node.addInput(input);
+                    node.addControl(new NumControl(this.emitter, node.meta.letter + '-name', '' + node.meta.letter ));
+                    node.addControl(new NumControl3(this.emitter, node.meta.letter + '-type'));
+                    node.addControl(new NumControl4(this.emitter, node.meta.letter + '-isPrimaryKey'));
+                    await node.update();
+                    setTimeout(() => {
+                        this.emitter.view.updateConnections({ node });
+                    }, 10);
+                }
+                editor.view.updateConnections({ node })
+            }
+            let out = new Rete.Output('inheritTo', 'inheritTo', inheritSocket);
+            let input = new Rete.Input('inheritFrom', 'inheritFrom', inheritSocket, false);
+            input.addControl(new NumControl5(this.editor,  'inherit-type'))
+            node.addOutput(out);
+            node.addInput(input);
+            return node
+                .addControl(new NumControl(this.emitter, 'tableName', 'NazwaTabeli'))
+                .addControl(new BControl(this.editor, node, 'button', callback))
+            //      			.addOutput(out)
+            //            .addControl(new NumControl(this.editor, 'a', 'Out '+node.meta.letter))
+        }
+        worker(node, inputs, outputs) {
+            let ob = {};
+            let a = 5;
+            Object.keys(node.outputs).forEach(function (key) {
+                ob = this.editor.nodes.find(n => n.id == node.id).controls.get(key)
+                ob.setValue(a++);
+            }, this);
+            return { text: node.data };
+        }
+    }
+
+    var components = [
+        new FirstComponent(),
+    ];
+
+    var container = document.getElementById("editor");
+    var editor = new Rete.NodeEditor("demo@0.1.0", container);
+    editor.use(VueRenderPlugin.default);
+    editor.use(ConnectionPlugin.default);
+    editor.use(JsRenderPlugin);
+    editor.use(MinimapPlugin.default);
+    editor.use(ConnectionPathPlugin, {
+        arrow: {
+            color: 'steelblue',
+            marker: 'M-5,-10 L-5,10 L20,0 z'
+        }
+    });
+    editor.use(ConnectionMasteryPlugin.default);
+
+    var engine = new Rete.Engine("demo@0.1.0");
+
+    components.map(c => {
+        editor.register(c);
+        engine.register(c);
+    });
+    editor.use(ContextMenuPlugin.default);
+    editor.fromJSON({}).then(() => {
+            editor.on("error", err => {
+                alertify.error(err.message);
+            });
+            editor.on(
+                "process connectioncreated connectionremoved nodecreated",
+                async function () {
+                    if (engine.silent) {
+                        return;
+                    }
+                    onMessageTask = [];
+                    console.log("process");
+                    await engine.abort();
+                    await engine.process(editor.toJSON());
+                }
+        );
+
+            editor.trigger("process");
+            editor.view.resize();
+            AreaPlugin.zoomAt(editor);
+    });
+    this.editor.on("connectioncreated connectionremoved", connection => {
+        setTimeout(() => {
+            var node = connection.output.node;
+            var node2 = connection.input.node;
+             node.update();
+             node2.update();
+
+            this.editor.view.updateConnections({ node });
+            this.editor.view.updateConnections({ node2 });
+        }, 1000);
+    });
+</script>
+
+<style>
+    .node {
+        background-color: rgba(110, 136, 255,0.9);
+        color: white;
+        border: 2px solid #4e58bf;
+        cursor: pointer;
+        border-radius: 1%;
+    }
+
+    .inherit {
+        background: coral !important;
+    }
+
+    .minimap {
+        width: 400px;
+        height: 400px;
+    }
+</style>

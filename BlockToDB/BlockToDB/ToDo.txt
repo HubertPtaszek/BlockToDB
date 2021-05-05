@@ -8,3 +8,5 @@
 8. Utworzenie toolbar-a pod kreatorem. - to chyba nie potrzebne jak jeden tylko kompoent jest 
 9. Podpięcie funkcji importowania
 10. Atrubut autoryzacyjny
+
+import, eksport, zapis i pobieranei schmatów oraz baz do grida 

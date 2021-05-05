@@ -84,8 +84,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Confiurations\BlockToDB\DatabaseSchemaConfiguration.cs" />
-    <Compile Include="Confiurations\Membership\AppUserRoleConfiguration.cs" />
-    <Compile Include="Confiurations\Membership\AppRoleConfiguration.cs" />
     <Compile Include="Confiurations\Membership\AppUserConfiguration.cs" />
     <Compile Include="Confiurations\Membership\PersonConfiguration.cs" />
     <Compile Include="Context\MainDatabaseContext.cs" />

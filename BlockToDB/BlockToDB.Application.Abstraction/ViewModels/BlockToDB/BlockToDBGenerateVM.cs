@@ -1,9 +1,8 @@
 namespace BlockToDB.Application
 {
-    public class BlockToDBAddVM
+    public class BlockToDBGenerateVM
     {
-        [RequiredShort]
-        public string Name { get; set; }
+        public int? Id { get; set; }
         [RequiredShort]
         public string Json { get; set; }
     }

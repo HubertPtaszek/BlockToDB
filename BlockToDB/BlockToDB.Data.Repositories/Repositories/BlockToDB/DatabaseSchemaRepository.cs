@@ -1,12 +1,8 @@
 using BlockToDB.Domain;
 using BlockToDB.EntityFramework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
+using System.Linq;
 
 namespace BlockToDB.Data
 {
@@ -16,6 +12,7 @@ namespace BlockToDB.Data
             : base(context)
         {
         }
+
         public object GetDatabaseSchemaToList(DataSourceLoadOptionsBase loadOptions)
         {
             var query = _dbset.Where(x => x.CreatedById == MainContext.PersonId).Select(x => new

@@ -65,8 +65,6 @@
     <Compile Include="Core\Entity.cs" />
     <Compile Include="Core\IAuditEntity.cs" />
     <Compile Include="Membership\AppIdentityUser.cs" />
-    <Compile Include="Membership\AppUserRole.cs" />
-    <Compile Include="Membership\AppRole.cs" />
     <Compile Include="Membership\AppUser.cs" />
     <Compile Include="Membership\Person.cs" />
     <Compile Include="Membership\SystemUser.cs" />

@@ -1,0 +1,131 @@
+﻿@{
+    string schemaValidationGroup = Guid.NewGuid().ToString();
+}
+
+<div id="schemaPopupId"></div>
+<div style="display:none">
+    <div id="schemaPopupContainer">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label>@SharedResource.NameDB.ToStringSafe()</label>
+                    <div id="databaseName"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="popup-footer d-flex justify-content-end mt-3">
+                    <div id="cancelSchemaBtnId"></div>
+                    <div id="saveSchemaBtnId"></div>
+                    <div id="downloadSchemaBtnId"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        function saveSchema() {
+            var dbName = $("#databaseName").dxTextBox("instance").option('value');
+            var json = editor.toJSON();
+             $.ajax({
+                url: '@Url.Action("SaveSchemaData", "Creator")',
+                type: "post",
+                data: {
+                    Json: JSON.stringify(json),
+                    Name: dbName
+                 },
+                 success: function (data) {
+                     $("#databaseName").dxTextBox("instance").option("value", "");
+                     $("#schemaPopupId").dxPopup("instance").hide();
+                 }
+            });
+        }
+
+        function downloadSchema() {
+            var dbName = $("#databaseName").dxTextBox("instance").option('value');
+            var json = editor.toJSON();
+             $.ajax({
+                url: '@Url.Action("ExportSchemaData", "Creator")',
+                type: "post",
+                data: {
+                    Json: JSON.stringify(json),
+                    Name: dbName
+                 },
+                 success: function (data) {
+                     $("#databaseName").dxTextBox("instance").option("value", "");
+                     $("#schemaPopupId").dxPopup("instance").hide();
+                     window.location = "@Url.Action("Download", "Creator", new { id = "__id__", isScript = false })".replace(/__id__/g, data.Id);
+                 }
+            });
+        }
+
+        $("#databaseName").dxTextBox({
+            mode: "text"
+        }).dxValidator({
+            validationRules: [
+                { type: 'required', message: "@ErrorResource.RequiredShort" },
+            ],
+            validationGroup: "@schemaValidationGroup"
+        });
+
+        $("#cancelSchemaBtnId").dxButton({
+            elementAttr: { class: "btn btn-normal mr-1" },
+            onClick: function () {
+                $("#databaseName").dxTextBox("instance").option("value", "");
+                $("#schemaPopupId").dxPopup("instance").hide();
+            },
+            text: "@SharedResource.Cancel.ToScriptStringSafe()",
+            type: "normal"
+        }).dxButton("instance");
+
+        $("#saveSchemaBtnId").dxButton({
+            elementAttr: { class: "btn btn-default" },
+            onClick: function () {
+                var res = DevExpress.validationEngine.validateGroup("@schemaValidationGroup");
+                if (res.isValid) {
+                    $("#schemaPopupId").dxPopup("instance").hide();
+                    $("#loadPanelId").dxLoadPanel("instance").show();
+                    saveSchema();
+                }
+            },
+            text: "@SharedResource.Create.ToScriptStringSafe()",
+            type: "default",
+            visible: @Json.Encode(Context.User.Identity.IsAuthenticated),
+        }).dxButton("instance");
+
+
+        $("#downloadSchemaBtnId").dxButton({
+            elementAttr: { class: "btn btn-default" },
+            onClick: function () {
+                var res = DevExpress.validationEngine.validateGroup("@schemaValidationGroup");
+                if (res.isValid) {
+                    $("#schemaPopupId").dxPopup("instance").hide();
+                    $("#loadPanelId").dxLoadPanel("instance").show();
+                    downloadSchema();
+                }
+            },
+            text: "@SharedResource.Export.ToScriptStringSafe()",
+            type: "default",
+            visible: @Json.Encode(!Context.User.Identity.IsAuthenticated),
+        }).dxButton("instance");
+
+        $("#schemaPopupId").dxPopup({
+            title: "@SharedResource.SaveSchema.ToScriptStringSafe()",
+            showTitle: true,
+            width: 600,
+            height: "auto",
+            visible: false,
+            dragEnabled: false,
+            shading: true,
+            shadingColor: "rgba(0,0,0,0.5)",
+            showCloseButton: false,
+            closeOnOutsideClick: false,
+            contentTemplate: function () {
+                return $('#schemaPopupContainer');
+            }
+        }).dxPopup("instance");
+    });
+</script>

@@ -1,6 +1,7 @@
 using BlockToDB.Data;
 using BlockToDB.Domain;
 using DevExtreme.AspNet.Data;
+using Newtonsoft.Json;
 using Ninject;
 
 namespace BlockToDB.Application
@@ -11,28 +12,59 @@ namespace BlockToDB.Application
 
         [Inject]
         public BlockToDBConverter BlockToDBConverter { get; set; }
+
         [Inject]
         public IDatabaseSchemaRepository DatabaseSchemaRepository { get; set; }
-        #endregion Dependencies
 
+        #endregion Dependencies
 
         public object GetSchemasToList(DataSourceLoadOptionsBase loadOptions)
         {
             return DatabaseSchemaRepository.GetDatabaseSchemaToList(loadOptions);
         }
 
-        public void Add(BlockToDBAddVM model)
+        public int GenerateScript(BlockToDBGenerateVM model)
         {
-            DatabaseSchema databaseSchema = new DatabaseSchema()
+            Editor editor = JsonConvert.DeserializeObject<Editor>(model.Json); //deserializowanie JSON-a
+            string result = ""; //algorytm do tworzenia skryptu
+            DatabaseSchema databaseSchema = new DatabaseSchema();
+            if (model.Id.HasValue)
             {
-               Json = model.Json,
-               Name = model.Name
+                databaseSchema = DatabaseSchemaRepository.GetSingle(x => x.Id == model.Id.Value);
+                BlockToDBConverter.FromBlockToDBGenerateVM(model, databaseSchema, result);
+                DatabaseSchemaRepository.Edit(databaseSchema);
+            }
+            else
+            {
+                databaseSchema = new DatabaseSchema()
+                {
+                    Json = model.Json,
+                    Script = result,
+                    Name = "Script1"
+                };
+                DatabaseSchemaRepository.Add(databaseSchema);
+            }
+            DatabaseSchemaRepository.Save();
+            return databaseSchema.Id;
+        }
 
-            };
+        public string CreateRemoteDataBase(BlockToDBGenerateRemoteVM model)
+        {
+            BlockToDBGenerateVM blockToDBGenerate = BlockToDBConverter.FromBlockToDBGenerateRemoteVM(model);
+            int fileId = GenerateScript(blockToDBGenerate);
+            //ToDo remote create
+            string result = "";
+            return result;
+        }
+
+        public int Add(BlockToDBAddVM model)
+        {
+            DatabaseSchema databaseSchema = BlockToDBConverter.FromBlockToDBAddVM(model);
             DatabaseSchemaRepository.Add(databaseSchema);
             DatabaseSchemaRepository.Save();
-
+            return databaseSchema.Id;
         }
+
         public void Edit(BlockToDBEditVM model)
         {
             DatabaseSchema databaseSchema = DatabaseSchemaRepository.GetSingle(x => x.Id == model.Id);
@@ -40,13 +72,11 @@ namespace BlockToDB.Application
             {
                 throw new BussinesException(1001, "Brak danych");
             }
-
-            databaseSchema.Name = model.Name;
-            databaseSchema.Json = model.Json;
-
+            databaseSchema = BlockToDBConverter.FromBlockToDBEditVM(model, databaseSchema);
             DatabaseSchemaRepository.Edit(databaseSchema);
             DatabaseSchemaRepository.Save();
         }
+
         public BlockToDBEditVM GetToEdit(int id)
         {
             DatabaseSchema databaseSchema = DatabaseSchemaRepository.GetSingle(x => x.Id == id);
@@ -62,12 +92,15 @@ namespace BlockToDB.Application
         public void Delete(int id)
         {
             DatabaseSchema databaseSchema = DatabaseSchemaRepository.GetSingle(x => x.Id == id);
-
             DatabaseSchemaRepository.Delete(databaseSchema);
             DatabaseSchemaRepository.Save();
-
         }
 
-
+        public DownloadVM DownloadFile(int id, bool isScript)
+        {
+            DatabaseSchema databaseSchema = DatabaseSchemaRepository.GetSingle(x => x.Id == id);
+            DownloadVM model = BlockToDBConverter.ToDownloadVM(databaseSchema, isScript);
+            return model;
+        }
     }
 }

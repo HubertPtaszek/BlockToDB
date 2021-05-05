@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BlockToDB.Domain
@@ -8,12 +7,9 @@ namespace BlockToDB.Domain
     {
         public AppUser()
         {
-            UserRoles = new List<AppUserRole>();
         }
+
         public string AppIdentityUserId { get; set; }
         public virtual AppIdentityUser AppIdentityUser { get; set; }
-
-        public virtual List<AppUserRole> UserRoles { get; set; }
-
     }
 }

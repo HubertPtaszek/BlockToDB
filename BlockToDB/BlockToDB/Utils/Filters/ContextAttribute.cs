@@ -4,20 +4,16 @@ using System.Web.Mvc;
 
 namespace BlockToDB.Utils
 {
-    [Authorize]
-    public class UserAuthorizationAttribute : FilterAttribute, IAuthorizationFilter
+    public class ContextAttribute : FilterAttribute, IAuthorizationFilter
     {
-        public UserAuthorizationAttribute()
+        public ContextAttribute()
         {
         }
 
         void IAuthorizationFilter.OnAuthorization(AuthorizationContext filterContext)
         {
+            AppUserData userData = UserHelper.GetUserData();
             MainContext context = DependencyResolver.Current.GetService<MainContext>();
-            AppUserData userData = new AppUserData()
-            {
-                Id = 3
-            };
             context.PersonId = userData.Id;
         }
     }
