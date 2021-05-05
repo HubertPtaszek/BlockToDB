@@ -13,13 +13,13 @@ namespace BlockToDB.Application
         public int Id { get; set; }
 
         [JsonProperty("data")]
-        public Data Data { get; set; }
+        Dictionary<string, string> Data { get; set; }
 
         [JsonProperty("inputs")]
-        public Input Inputs { get; set; }
+        Dictionary<string, Input> Inputs { get; set; }
 
         [JsonProperty("outputs")]
-        public Output Outputs { get; set; }
+        Dictionary<string, Output> Outputs { get; set; }
 
         [JsonProperty("position")]
         public decimal[] Position { get; set; }

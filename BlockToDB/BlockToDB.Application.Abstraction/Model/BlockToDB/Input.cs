@@ -9,7 +9,7 @@ namespace BlockToDB.Application
 {
     public class Input
     {
-        [JsonProperty("num")]
-        public Num Num { get; set; }
+        [JsonProperty("connections")]
+        List<Connection> Connections { get; set; }
     }
 }

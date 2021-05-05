@@ -9,7 +9,6 @@ namespace BlockToDB.Application
 {
     public class Data
     {
-        [JsonProperty("text")]
-        public string Text { get; set; }
+        Dictionary<string, string> data { get; set; }
     }
 }
