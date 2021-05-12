@@ -230,7 +230,8 @@
         }
 
         builder(node) {
-            node.meta.letter = '`';
+            node.meta.letter = 0;
+            debugger
             const editor = this.editor;
             async function callback(n) {
                 if (!n) { // del
@@ -240,6 +241,11 @@
                     let c2 = this.emitter.nodes.find(n => n.id == node.id).controls.get(node.meta.letter + '-type');
                     let c3 = this.emitter.nodes.find(n => n.id == node.id).controls.get(node.meta.letter + '-isPrimaryKey');
                     if (c1 && c2 && c3 && o1 && i1) {
+                        delete (node.data[node.meta.letter + '-name']);
+                        delete (node.data[node.meta.letter + '-type']);
+                        delete (node.data[node.meta.letter + '-isPrimaryKey']);
+                        delete (node.data[node.meta.letter + '-relation']);
+
                         i1.connections.map(editor.removeConnection.bind(editor));
                         o1.connections.map(editor.removeConnection.bind(editor));
                         node.removeControl(c1);
@@ -247,16 +253,17 @@
                         node.removeControl(c3);
                         node.removeOutput(o1);
                         node.removeInput(i1);
-                        delete (node.data[node.meta.letter]);
+
                         await node.update();
-                        node.meta.letter = node.meta.letter.substring(0, node.meta.letter.length - 1) + String.fromCharCode(node.meta.letter.charCodeAt(node.meta.letter.length - 1) - 1);
+                        node.meta.letter = node.meta.letter - 1;
                         setTimeout(() => {
                             this.emitter.view.updateConnections({ node });
                         }, 10);
 
+                        node.update();
                     }
                 } else { // add
-                    node.meta.letter = node.meta.letter.substring(0, node.meta.letter.length - 1) + String.fromCharCode(node.meta.letter.charCodeAt(node.meta.letter.length - 1) + 1);
+                    node.meta.letter = node.meta.letter + 1;
                     let out = new Rete.Output(node.meta.letter, '' + node.meta.letter, numSocket);
                     let input = new Rete.Input(node.meta.letter, '' + node.meta.letter, numSocket, false);
                     input.addControl(new NumControl2(this.editor, node.meta.letter + '-relation'))
