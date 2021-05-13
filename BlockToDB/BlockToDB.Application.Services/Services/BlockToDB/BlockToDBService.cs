@@ -23,6 +23,13 @@ namespace BlockToDB.Application
             return DatabaseSchemaRepository.GetDatabaseSchemaToList(loadOptions);
         }
 
+        public BlockToDBVM GetBlockToDBVM(int id)
+        {
+            DatabaseSchema databaseSchema = DatabaseSchemaRepository.GetSingle(x => x.Id == id);
+            BlockToDBVM model = BlockToDBConverter.ToBlockToDBVM(databaseSchema);
+            return model;
+        }
+
         public int GenerateScript(BlockToDBGenerateVM model)
         {
             Editor editor = JsonConvert.DeserializeObject<Editor>(model.Json); //deserializowanie JSON-a

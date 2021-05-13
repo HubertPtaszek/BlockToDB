@@ -18,5 +18,7 @@ namespace BlockToDB.Application
         BlockToDBEditVM GetToEdit(int id);
 
         DownloadVM DownloadFile(int id, bool isScript);
+
+        BlockToDBVM GetBlockToDBVM(int id);
     }
 }

@@ -237,4 +237,13 @@
   <data name="SaveSchema" xml:space="preserve">
     <value>Zapisz schemat</value>
   </data>
+  <data name="CreatedDate" xml:space="preserve">
+    <value>Data utworzenia</value>
+  </data>
+  <data name="ModifiedDate" xml:space="preserve">
+    <value>Data ostatniej modyfikacji</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nazwa</value>
+  </data>
 </root>

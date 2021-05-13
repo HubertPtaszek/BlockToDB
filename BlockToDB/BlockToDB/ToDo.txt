@@ -1,12 +1,5 @@
-﻿1. Ostylowanie tabel w edytorze. - chyba done 
-2. Poprawa wyglądu przycisku "Wygeneruj".
+﻿2. Poprawa wyglądu przycisku "Wygeneruj".
 3. Strona "O nas".
-4. Strona "Moje bazy".
-5. Akcja w controllerze, serwisie odpowiedzialna za generowanie skryptu.
-6. Podpięcie tych akcji na widoku.
 7. Metoda nawiazujaca połączenie z serwerem.
-8. Utworzenie toolbar-a pod kreatorem. - to chyba nie potrzebne jak jeden tylko kompoent jest 
-9. Podpięcie funkcji importowania
-10. Atrubut autoryzacyjny
 
-import, eksport, zapis i pobieranei schmatów oraz baz do grida 
+import pliku json, ostylowanie strony about, NADPISANIE SKRYTPU w przypadku gdy jest edytowany

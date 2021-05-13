@@ -28,6 +28,16 @@ namespace BlockToDB.Application
             return result;
         }
 
+        public BlockToDBVM ToBlockToDBVM(DatabaseSchema databaseSchema)
+        {
+            BlockToDBVM model = new BlockToDBVM() { 
+                Id = databaseSchema.Id,
+                Json = databaseSchema.Json,
+                Name = databaseSchema.Name
+            };
+            return model;
+        }
+
         public DatabaseSchema FromBlockToDBEditVM(BlockToDBEditVM model, DatabaseSchema databaseSchema)
         {
             databaseSchema.Json = model.Json;

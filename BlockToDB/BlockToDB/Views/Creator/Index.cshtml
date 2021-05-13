@@ -1,4 +1,5 @@
-﻿@{
+﻿@model BlockToDBVM
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     string validationGroup = Guid.NewGuid().ToString();
 }
@@ -48,6 +49,7 @@
                  },
                  success: function (data) {
                      window.location = "@Url.Action("Download", "Creator", new { id = "__id__", isScript = true })".replace(/__id__/g, data.Id);
+                     $("#loadPanelId").dxLoadPanel("instance").hide();
                  }
             });
     }

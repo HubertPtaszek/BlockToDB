@@ -16,9 +16,13 @@ namespace BlockToDB.Areas.Dashboard.Controllers
 
         #endregion Dependencies
 
-        public ActionResult Index()
+        public ActionResult Index(int? id)
         {
-            return View();
+            BlockToDBVM model = new BlockToDBVM();
+            if (id.HasValue) {
+                model = BlockToDBService.GetBlockToDBVM(id.Value);
+            }
+            return View("Index", model);
         }
 
         [HttpPost]

@@ -18,8 +18,10 @@ namespace BlockToDB.Data
             var query = _dbset.Where(x => x.CreatedById == MainContext.PersonId).Select(x => new
             {
                 x.Id,
+                x.CreatedDate,
+                x.ModifiedDate,
                 x.Name,
-                x.Json,
+                x.Json
             });
             LoadResult result = DataSourceLoader.Load(query, loadOptions);
             return result;

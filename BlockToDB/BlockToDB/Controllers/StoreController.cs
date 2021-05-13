@@ -28,7 +28,7 @@ namespace BlockToDB.Areas.Dashboard.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetSchemasToList(DataSourceLoadOptions loadOptions)
+        public ActionResult GetData(DataSourceLoadOptions loadOptions)
         {
             object data = BlockToDBService.GetSchemasToList(loadOptions);
             return CustomJson(data);
@@ -45,7 +45,7 @@ namespace BlockToDB.Areas.Dashboard.Controllers
         }
 
         [HttpDelete]
-        public ActionResult DeleteDSchemaData(int id)
+        public ActionResult DeleteSchemaData(int id)
         {
             BlockToDBService.Delete(id);
             return new HttpStatusCodeResult(HttpStatusCode.Created, "Deleted");

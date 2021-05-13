@@ -40,6 +40,8 @@
                  success: function (data) {
                      $("#databaseName").dxTextBox("instance").option("value", "");
                      $("#schemaPopupId").dxPopup("instance").hide();
+                     $("#loadPanelId").dxLoadPanel("instance").hide();
+                     window.location = "@Url.Action("Index", "Store")";
                  }
             });
         }
@@ -57,6 +59,7 @@
                  success: function (data) {
                      $("#databaseName").dxTextBox("instance").option("value", "");
                      $("#schemaPopupId").dxPopup("instance").hide();
+                     $("#loadPanelId").dxLoadPanel("instance").hide();
                      window.location = "@Url.Action("Download", "Creator", new { id = "__id__", isScript = false })".replace(/__id__/g, data.Id);
                  }
             });
@@ -91,7 +94,7 @@
                     saveSchema();
                 }
             },
-            text: "@SharedResource.Create.ToScriptStringSafe()",
+            text: "@SharedResource.Save.ToScriptStringSafe()",
             type: "default",
             visible: @Json.Encode(Context.User.Identity.IsAuthenticated),
         }).dxButton("instance");
