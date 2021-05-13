@@ -26,7 +26,7 @@ namespace BlockToDB.Application
         public int GenerateScript(BlockToDBGenerateVM model)
         {
             Editor editor = JsonConvert.DeserializeObject<Editor>(model.Json); //deserializowanie JSON-a
-            string result = ""; //algorytm do tworzenia skryptu
+            string result = BlockToDBConverter.ToSqlCode(editor); //algorytm do tworzenia skryptu
             DatabaseSchema databaseSchema = new DatabaseSchema();
             if (model.Id.HasValue)
             {

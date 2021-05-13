@@ -146,7 +146,6 @@
             this.key = key;
         }
         handler(el, editor) {
-            // creating checkbox element
             var checkbox = document.createElement('input');
             checkbox.type = "checkbox";
             checkbox.name = "name";
@@ -159,18 +158,116 @@
 
             // appending the created text to
             // the created label tag
-            label.appendChild(document.createTextNode('Klucz główny'));
+            label.appendChild(document.createTextNode('PK'));
 
             el.appendChild(checkbox);
             el.appendChild(label);
-            var text = checkbox.checked ;
+            var text = checkbox.checked;
             this.putData(this.key, text);
             checkbox.addEventListener("change", () => {
-                this.putData(this.key, checkbox.checked );
+                this.putData(this.key, checkbox.checked);
+            });
+        }
+    }
+    class NumControl7 extends Rete.Control {
+        constructor(emitter, key) {
+            super(key);
+            this.render = 'js';
+            this.key = key;
+        }
+        handler(el, editor) {
+            var checkbox = document.createElement('input');
+            checkbox.type = "checkbox";
+            checkbox.name = "name";
+            checkbox.value = "value";
+            checkbox.id = this.key;
+
+            // creating label for checkbox
+            var label = document.createElement('label');
+            label.htmlFor = this.key;
+
+            // appending the created text to
+            // the created label tag
+            label.appendChild(document.createTextNode('NN'));
+
+            el.appendChild(checkbox);
+            el.appendChild(label);
+            var text = checkbox.checked;
+            this.putData(this.key, text);
+            checkbox.addEventListener("change", () => {
+                this.putData(this.key, checkbox.checked);
+            });
+        }
+    }
+    class NumControl6 extends Rete.Control {
+        constructor(emitter, key) {
+            super(key);
+            this.render = 'js';
+            this.key = key;
+        }
+        handler(el, editor) {
+            var checkbox = document.createElement('input');
+            checkbox.type = "checkbox";
+            checkbox.name = "name";
+            checkbox.value = "value";
+            checkbox.id = this.key;
+
+            // creating label for checkbox
+            var label = document.createElement('label');
+            label.htmlFor = this.key;
+
+            // appending the created text to
+            // the created label tag
+            label.appendChild(document.createTextNode('U'));
+
+            el.appendChild(checkbox);
+            el.appendChild(label);
+            var text = checkbox.checked;
+            this.putData(this.key, text);
+            checkbox.addEventListener("change", () => {
+                this.putData(this.key, checkbox.checked);
             });
         }
     }
 
+    /* class NumControl6 extends Rete.Control {
+        constructor(emitter, key) {
+            super(key);
+            this.render = 'js';
+            this.key = key;
+        }
+        handler(el, editor) {
+            // creating checkbox element
+            let divElement = document.createElement('div')
+            divElement.id = "ck-button";
+
+            var checkbox = document.createElement('input');
+            checkbox.type = "checkbox";
+            checkbox.name = "name";
+            checkbox.value = "value";
+            checkbox.id = this.key;
+
+            // creating label for checkbox
+            var label = document.createElement('label');
+            label.htmlFor = this.key;
+
+            // appending the created text to
+            // the created label tag
+
+            var spanElement = document.createElement('span')
+            spanElement.innerHTML = "U";
+
+            label.appendChild(checkbox);
+            label.appendChild(spanElement);
+            divElement.appendChild(label);
+            el.appendChild(divElement);
+            var text = checkbox.checked;
+            this.putData(this.key, text);
+            checkbox.addEventListener("change", () => {
+                this.putData(this.key, checkbox.checked);
+            });
+        }
+    }*/
     class NumControl extends Rete.Control {
         constructor(emitter, key, ph) {
             super(key);
@@ -201,7 +298,7 @@
               <div class="input-control" style="display: inline-block; margin-right: 10px;" v-show="input.showControl()" v-control="input.control"></div>
             </div>
 </div>
-<div style="float:left; width:405px;">
+<div style="float:left; width:425px;">
             <!-- Controls-->
             <div class="control" v-for="control in controls()" v-control="control" style="height:50px;padding-top: 8px; float: left; margin-right: 10px;" ></div>
 
@@ -240,17 +337,23 @@
                     let c1 = this.emitter.nodes.find(n => n.id == node.id).controls.get(node.meta.letter + '-name');
                     let c2 = this.emitter.nodes.find(n => n.id == node.id).controls.get(node.meta.letter + '-type');
                     let c3 = this.emitter.nodes.find(n => n.id == node.id).controls.get(node.meta.letter + '-isPrimaryKey');
-                    if (c1 && c2 && c3 && o1 && i1) {
+                    let c4 = this.emitter.nodes.find(n => n.id == node.id).controls.get(node.meta.letter + '-notNull');
+                    let c5 = this.emitter.nodes.find(n => n.id == node.id).controls.get(node.meta.letter + '-unique');
+                    if (c1 && c2 && c3 && c4 && c5 && o1 && i1) {
                         delete (node.data[node.meta.letter + '-name']);
                         delete (node.data[node.meta.letter + '-type']);
                         delete (node.data[node.meta.letter + '-isPrimaryKey']);
                         delete (node.data[node.meta.letter + '-relation']);
+                        delete (node.data[node.meta.letter + '-notNull']);
+                        delete (node.data[node.meta.letter + '-unique']);
 
                         i1.connections.map(editor.removeConnection.bind(editor));
                         o1.connections.map(editor.removeConnection.bind(editor));
                         node.removeControl(c1);
                         node.removeControl(c2);
                         node.removeControl(c3);
+                        node.removeControl(c4);
+                        node.removeControl(c5);
                         node.removeOutput(o1);
                         node.removeInput(i1);
 
@@ -266,12 +369,14 @@
                     node.meta.letter = node.meta.letter + 1;
                     let out = new Rete.Output(node.meta.letter, '' + node.meta.letter, numSocket);
                     let input = new Rete.Input(node.meta.letter, '' + node.meta.letter, numSocket, false);
-                    input.addControl(new NumControl2(this.editor, node.meta.letter + '-relation'))
+                    //input.addControl(new NumControl2(this.editor, node.meta.letter + '-relation'))
                     node.addOutput(out);
                     node.addInput(input);
                     node.addControl(new NumControl(this.emitter, node.meta.letter + '-name', '' + node.meta.letter ));
                     node.addControl(new NumControl3(this.emitter, node.meta.letter + '-type'));
                     node.addControl(new NumControl4(this.emitter, node.meta.letter + '-isPrimaryKey'));
+                    node.addControl(new NumControl7(this.emitter, node.meta.letter + '-notNull'));
+                    node.addControl(new NumControl6(this.emitter, node.meta.letter + '-unique'));
                     await node.update();
                     setTimeout(() => {
                         this.emitter.view.updateConnections({ node });
@@ -377,4 +482,6 @@
         width: 400px;
         height: 400px;
     }
+
+
 </style>

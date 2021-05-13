@@ -10,6 +10,6 @@ namespace BlockToDB.Application
     public class Input
     {
         [JsonProperty("connections")]
-        List<Connection> Connections { get; set; }
+        public List<Connection> Connections { get; set; }
     }
 }

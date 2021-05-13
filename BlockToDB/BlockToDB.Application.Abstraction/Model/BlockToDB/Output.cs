@@ -9,6 +9,6 @@ namespace BlockToDB.Application
 {
     public class Output
     {
-        List< Connection> Connections { get; set; }
+        public List<Connection> Connections { get; set; }
     }
 }

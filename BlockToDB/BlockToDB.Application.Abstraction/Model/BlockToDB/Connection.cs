@@ -12,5 +12,6 @@ namespace BlockToDB.Application
         [JsonProperty("node")]
         public int Node { get; set; }
         public string Input { get; set; }
+        public string Output { get; set; }
     }
 }

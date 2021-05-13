@@ -1,4 +1,7 @@
 ﻿using BlockToDB.Domain;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace BlockToDB.Application
 {
@@ -48,5 +51,87 @@ namespace BlockToDB.Application
             databaseSchema.Script = result;
             return databaseSchema;
         }
+
+        public string ToSqlCode(Editor model)
+        {
+            StringBuilder content = new StringBuilder();
+            
+            foreach (KeyValuePair<string, Node> node in model.Nodes)
+            {
+                int fieldsCount = node.Value.Inputs.Count - 1;
+                StringBuilder nodeContent = new StringBuilder();
+                List<string> primaryKeys = new List<string>();
+                nodeContent.AppendLine("CREATE TABLE " + node.Value.GetTableName() + " (");
+                for(int i = 1; i<= fieldsCount; i++)
+                {
+                    nodeContent.AppendLine(node.Value.GetTableField(i, ref primaryKeys));
+                }
+                if(primaryKeys.Count  != 0)
+                {
+                    StringBuilder primaryKeysString = new StringBuilder();
+
+                    primaryKeysString.Append("PRIMARY KEY (");
+                    int last = primaryKeys.Count;
+                    int j = primaryKeys.Count;
+                    foreach (string key in primaryKeys)
+                    {
+                        primaryKeysString.Append(key);
+                        if (last == j)
+                        {
+                            primaryKeysString.Append(")");
+                        }
+                        else
+                        {
+                            j++;
+                            primaryKeysString.Append(",");
+                        }
+                    }
+                    nodeContent.AppendLine(primaryKeysString.ToString());
+                }
+
+                nodeContent.AppendLine(");");
+
+                content.AppendLine(nodeContent.ToString());
+            }
+            Random rnd = new Random();
+            foreach (KeyValuePair<string, Node> node in model.Nodes)
+            {
+               
+                StringBuilder nodeContent = new StringBuilder();
+                Dictionary<string, Input> inputs = node.Value.GetConnections();
+                string nodeName = node.Value.GetTableName();
+                foreach(KeyValuePair<string, Input> input in inputs)
+                {
+                    foreach (Connection connection in input.Value.Connections)
+                    {
+                        StringBuilder connContent = new StringBuilder();
+                        connContent.Append("ALTER TABLE ");
+                        connContent.Append(nodeName);
+                        connContent.Append("  ADD CONSTRAINT ");
+                        connContent.Append("  FK_");
+                        connContent.Append(input.Key);
+                        connContent.Append("_");
+                        connContent.Append(connection.Output);
+                        connContent.Append("_");
+                        connContent.Append(rnd.Next(100));
+                        connContent.Append(" FOREIGN KEY(");
+                        connContent.Append(node.Value.GetFieldName(int.Parse(input.Key)));
+                        connContent.Append(") REFERENCES ");
+                        connContent.Append(model.GetTableName(connection.Node));
+                        connContent.Append("(");
+                        connContent.Append(model.GetTableField(connection.Node, int.Parse(connection.Output)));
+                        connContent.Append(");");
+                        nodeContent.Append(connContent.ToString());
+                    }
+                }
+
+                //ALTER TABLE MailSent ADD CONSTRAINT fk_profile_sender_id FOREIGN KEY(profil_sender_id) REFERENCES TABLE-NAME(id);
+
+
+                content.AppendLine(nodeContent.ToString());
+            }
+            return content.ToString();
+        }
+
     }
 }

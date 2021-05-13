@@ -13,18 +13,57 @@ namespace BlockToDB.Application
         public int Id { get; set; }
 
         [JsonProperty("data")]
-        Dictionary<string, string> Data { get; set; }
+        public Dictionary<string, string> Data { get; set; }
 
         [JsonProperty("inputs")]
-        Dictionary<string, Input> Inputs { get; set; }
+        public Dictionary<string, Input> Inputs { get; set; }
 
         [JsonProperty("outputs")]
-        Dictionary<string, Output> Outputs { get; set; }
+        public Dictionary<string, Output> Outputs { get; set; }
 
         [JsonProperty("position")]
         public decimal[] Position { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
+
+        public string GetTableName()
+        {
+            return Data.FirstOrDefault(x => x.Key == "tableName").Value;
+        }
+        public string GetTableField(int id, ref List<string> primaryKeys)
+        {
+            StringBuilder field = new StringBuilder();
+            string fieldName = Data.FirstOrDefault(x => x.Key == id + "-name").Value;
+            string fieldType = Data.FirstOrDefault(x => x.Key == id + "-type").Value;
+            string isPrimaryKey = Data.FirstOrDefault(x => x.Key == id + "-isPrimaryKey").Value;
+            string notNull = Data.FirstOrDefault(x => x.Key == id + "-notNull").Value;
+            string unique = Data.FirstOrDefault(x => x.Key == id + "-unique").Value;
+            field.Append(fieldName + " " + fieldType);
+
+            if(isPrimaryKey == "true")
+            {
+                primaryKeys.Add(fieldName);
+            }
+            if (notNull == "true")
+            {
+                field.Append(" NOT NULL");
+            }
+            if (unique == "true")
+            {
+                field.Append(" UNIQUE");
+            }
+            field.Append(",");
+            return field.ToString();
+        }
+        public Dictionary<string, Input> GetConnections() 
+        {
+            return Inputs.Where(x => x.Key != "inheritFrom").ToDictionary(x => x.Key, x => x.Value);
+        }
+        public string GetFieldName(int id)
+        {
+            string fieldName = Data.FirstOrDefault(x => x.Key == id + "-name").Value;
+            return fieldName;
+        }
     }
 }
