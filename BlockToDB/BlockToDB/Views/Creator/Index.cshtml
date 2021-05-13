@@ -58,7 +58,81 @@
         }
 
         function importScript() {
-            alert("tutaj importowanie gotowego skryptu po stronie js podpiąć");
+            var data = {
+                "id": "demo@0.1.0",
+                "nodes":
+                {
+                    "1": {
+                        "id": 1,
+                        "data": {
+                            "inherit-type": "TPT",
+                            "tableName": "Tabela1",
+                            "1-relation": "jeden",
+                            "1-name": "A",
+                            "1-type": "INTEGER",
+                            "1-isPrimaryKey": true,
+                            "2-relation": "jeden",
+                            "2-name": "B",
+                            "2-type": "INTEGER",
+                            "2-isPrimaryKey": false,
+                            "3-relation": "jeden",
+                            "3-name": "C",
+                            "3-type": "DATE",
+                            "3-isPrimaryKey": false
+                        },
+                        "inputs": {
+                            "1": { "connections": [] }, "2": { "connections": [] }, "3": { "connections": [] }, "inheritFrom": { "connections": [] }
+                        },
+                        "outputs": {
+                            "1": { "connections": [] }, "2": { "connections": [{ "node": 2, "input": 2, "data": {} }] }, "3": { "connections": [] }, "inheritTo": { "connections": [] }
+                        },
+                        "position": [81, 87.5625],
+                        "name": "Tabela"
+                    },
+                    "2": {
+                        "id": 2,
+                        "data": {
+                            "inherit-type": "TPT",
+                            "tableName": "Tabel2",
+                            "1-relation": "jeden",
+                            "1-name": "A",
+                            "1-type": "INTEGER",
+                            "1-isPrimaryKey": true,
+                            "2-relation": "jeden",
+                            "2-name": "B",
+                            "2-type": "BIT",
+                            "2-isPrimaryKey": false
+                        },
+                        "inputs": {
+                            "1": { "connections": [] }, "2": { "connections": [{ "node": 1, "output": 2, "data": {} }] }, "inheritFrom": { "connections": [] }
+                        },
+                        "outputs": {
+                            "1": { "connections": [] }, "2": { "connections": [] }, "inheritTo": { "connections": [] }
+                        },
+                        "position": [751, 95.5625],
+                        "name": "Tabela"
+                    }
+                }0
+            };
+            editor.fromJSON(data)
+            .then(() => {
+                editor.on("error", err => {
+                    console.log("Error: {0}", err.message);
+                });
+                editor.on(
+                    "process connectioncreated connectionremoved nodecreated",
+                    async function () {
+                        if (engine.silent) return;
+                        onMessageTask = [];
+                        console.log("process");
+                        await engine.abort();
+                        await engine.process(editor.toJSON());
+                    }
+                );
+                editor.trigger("process");
+                editor.view.resize();
+                AreaPlugin.zoomAt(editor);
+            });
         }
 
         function exportScript() {
