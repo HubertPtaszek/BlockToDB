@@ -60,6 +60,18 @@ namespace BlockToDB.Application
         {
             return Inputs.Where(x => x.Key != "inheritFrom").ToDictionary(x => x.Key, x => x.Value);
         }
+        public Input GetInheritFrom()
+        {
+            return Inputs.FirstOrDefault(x => x.Key == "inheritFrom").Value;
+        }
+        public string GetInheritType()
+        {
+            return Data.FirstOrDefault(x => x.Key == "inherit-type").Value;
+        }
+        public Output GetInheritTo()
+        {
+            return Outputs.FirstOrDefault(x => x.Key == "inheritTo").Value;
+        }
         public string GetFieldName(int id)
         {
             string fieldName = Data.FirstOrDefault(x => x.Key == id + "-name").Value;

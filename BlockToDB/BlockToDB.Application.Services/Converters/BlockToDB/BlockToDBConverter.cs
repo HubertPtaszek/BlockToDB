@@ -72,32 +72,54 @@ namespace BlockToDB.Application
                 StringBuilder nodeContent = new StringBuilder();
                 List<string> primaryKeys = new List<string>();
                 nodeContent.AppendLine("CREATE TABLE " + node.Value.GetTableName() + " (");
-                for(int i = 1; i<= fieldsCount; i++)
+                Input inhetitFrom = node.Value.GetInheritFrom();
+                string inhetitType = "0";
+                if(inhetitFrom.Connections.Count > 0)
                 {
-                    nodeContent.AppendLine(node.Value.GetTableField(i, ref primaryKeys));
+                    inhetitType = node.Value.GetInheritType();
                 }
-                if(primaryKeys.Count  != 0)
+                if (inhetitType == "TPT")
                 {
-                    StringBuilder primaryKeysString = new StringBuilder();
 
-                    primaryKeysString.Append("PRIMARY KEY (");
-                    int last = primaryKeys.Count;
-                    int j = primaryKeys.Count;
-                    foreach (string key in primaryKeys)
-                    {
-                        primaryKeysString.Append(key);
-                        if (last == j)
-                        {
-                            primaryKeysString.Append(")");
-                        }
-                        else
-                        {
-                            j++;
-                            primaryKeysString.Append(",");
-                        }
-                    }
-                    nodeContent.AppendLine(primaryKeysString.ToString());
                 }
+                else if (inhetitType == "TPH")
+                {
+
+                }
+                else if (inhetitType == "TPC")
+                {
+
+                }
+                else
+                {
+                    for (int i = 1; i <= fieldsCount; i++)
+                    {
+                        nodeContent.AppendLine(node.Value.GetTableField(i, ref primaryKeys));
+                    }
+                    if (primaryKeys.Count != 0)
+                    {
+                        StringBuilder primaryKeysString = new StringBuilder();
+
+                        primaryKeysString.Append("PRIMARY KEY (");
+                        int last = primaryKeys.Count;
+                        int j = primaryKeys.Count;
+                        foreach (string key in primaryKeys)
+                        {
+                            primaryKeysString.Append(key);
+                            if (last == j)
+                            {
+                                primaryKeysString.Append(")");
+                            }
+                            else
+                            {
+                                j++;
+                                primaryKeysString.Append(",");
+                            }
+                        }
+                        nodeContent.AppendLine(primaryKeysString.ToString());
+                    }
+                }
+
 
                 nodeContent.AppendLine(");");
 
