@@ -1,0 +1,2209 @@
+﻿@model GraphV2VM
+@{
+    ViewBag.Title = "Diagram";
+
+    string validationGroup = Guid.NewGuid().ToString();
+    string validationGroupEdit = Guid.NewGuid().ToString();
+    string validationGroupEditNode = Guid.NewGuid().ToString();
+    string validationGroupNode = Guid.NewGuid().ToString();
+    string validationGroupConn = Guid.NewGuid().ToString();
+    string validationGroupEditConn = Guid.NewGuid().ToString();
+    string validationGroupAddConn = Guid.NewGuid().ToString();
+}
+
+@*<script src="https://d3js.org/d3-path.v1.min.js"></script>
+    <script src="https://d3js.org/d3-shape.v1.min.js"></script>*@
+<script src="~/js/graph/d3-path.min.js"></script>
+<script src="~/js/graph/d3-shape.min.js"></script>
+<script src="~/js/graph/rete.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.6/vue.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/rete-vue-render-plugin@0.2.6/build/vue-render-plugin.min.js"></script>
+
+<script src="~/js/graph/connection-plugin.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
+<script src="~/js/graph/context-menu-plugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/rete-area-plugin@0.2.1/build/area-plugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/rete-comment-plugin@0.6.1/build/comment-plugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/rete-connection-path-plugin@0.3.1/build/connection-path-plugin.min.js"></script>
+<script src="~/js/graph/dock-plugin.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/alight@0.14.1/alight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/rete-connection-reroute-plugin@0.4.0/build/connection-reroute-plugin.min.js"></script>
+<script src="~/js/graph/dom-to-image.min.js" type="text/javascript" charset="utf-8"></script>
+
+
+
+<template id="customNode">
+    <div class="customnodetemplate" :class="[node.name] | kebab">
+        <div class="title">{{node.name}}</div>
+        <div class="control" v-for="control in controls()" v-control="control"></div>
+        <div class="content">
+            <div class="col" v-if="node.controls.size&gt;0 || node.inputs.size&gt;0">
+                <div class="input" v-for="input in inputs()" :key="input.key" style="text-align: left">
+                    <Socket v-socket:input="input" type="input" :socket="input.socket" :used="() => input.connections.length"></Socket>
+                    <div class="input-title" v-show="!input.showControl()">{{input.name}}</div>
+                    <div class="input-control" v-show="input.showControl()" v-control="input.control"></div>
+                </div>
+
+            </div>
+            <div class="col">
+                <div class="output" v-for="output in outputs()" :key="output.key">
+                    <div class="output-title">{{output.name}}</div>
+                    <Socket v-socket:output="output" type="output" :socket="output.socket" :used="() => output.connections.length"></Socket>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+
+
+<div class="container main-container">
+    <div class="page-header main-header">
+        <div class="container header-container">
+            <h2>@SharedResource.Diagram</h2>
+            @{
+                string processName = Context.Session.GetObject<AppUserData>(SessionVariableNames.AppUserData)?.ProcessName;
+                <h1 id="proces" style=" visibility: hidden;">@processName</h1>
+
+            }
+            <div style=" position: fixed;right: 3%; z-index: 0;">
+                <button onclick="SaveCords()" class="btn btn-primary">Zapisz ustawienie</button>
+                <button onclick="SaveAsImage()" class="btn btn-primary">Zapisz jako obraz</button>
+            </div>
+        </div>
+    </div>
+    <div class="custom-cm">
+        <div id="szczegoly" class="custom-cm__item">Szczegóły</div>
+        <div id="edytuj" class="custom-cm__item">Edytuj</div>
+        <div id="usun" class="custom-cm__item">Usuń</div>
+    </div>
+    <div id="diagram">
+        <div id="rete" class="node-editor" style="height:761px;width:1121px !important;"></div>
+    </div>
+
+    <div class="dock"></div>
+
+</div>
+<div class="popup">
+    <div class="popup-content">
+        @using (Html.BeginForm("Add", "Step", FormMethod.Post, new { id = "addform" }))
+        {
+
+            using (Html.DevExtreme().ValidationGroup(validationGroup))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    @await Html.PartialAsync("_AddStepPartial", Model.StepAddVM)
+                    <div class="col-xs-12 text-right">
+                        @(Html.DevExtreme().Button()
+                                        .ID("button")
+                                        .Text(ButtonNameResource.Save)
+                                        .Type(DevExtreme.AspNet.Mvc.ButtonType.Default)
+                                        .OnClick(@<text>  function (e) {
+                                                    Save();
+                                                    } </text>)
+
+                        )
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<div class="popupnode">
+    <div class="popupnode-content">
+        @using (Html.BeginForm("Add", "Node", FormMethod.Post, new { id = "addnodeform" }))
+        {
+
+            using (Html.DevExtreme().ValidationGroup(validationGroupNode))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    @await Html.PartialAsync("_AddNodePartial", Model.ConnectionNodeAddVM)
+                    <div class="col-xs-12 text-right">
+                        @(Html.DevExtreme().Button()
+                                        .ID("buttonnode")
+                                        .Text(ButtonNameResource.Save)
+                                        .Type(DevExtreme.AspNet.Mvc.ButtonType.Default)
+                                        .OnClick(@<text>  function (e) {
+                                                    SaveNode();
+                                                    } </text>)
+
+                        )
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+<div class="popupdetails">
+    <div class="popupdetails-content">
+        <div class="row">
+            <div id="detailspartial">
+            </div>
+            <div class="col-xs-12 text-right">
+                @(Html.DevExtreme().Button()
+                                .ID("CloseButton")
+                                .Text("Zamknij")
+                                .Type(DevExtreme.AspNet.Mvc.ButtonType.Default)
+                                .OnClick(@<text>  function (e) {
+                                            Close();
+                                            } </text>)
+
+                )
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<div class="popupnodedetails">
+    <div class="popupnodedetails-content">
+        <div class="row">
+            <div id="detailsnodepartial">
+            </div>
+            <div class="col-xs-12 text-right">
+                @(Html.DevExtreme().Button()
+                                .ID("CloseNodeDetailsButton")
+                                .Text("Zamknij")
+                                .Type(DevExtreme.AspNet.Mvc.ButtonType.Default)
+                                .OnClick(@<text>  function (e) {
+                                            CloseNodeDetails();
+                                            } </text>)
+
+                )
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<div class="popupedit">
+    <div class="popupedit-content">
+        @using (Html.BeginForm("Edit", "Step", FormMethod.Post, new { id = "editform" }))
+        {
+
+            using (Html.DevExtreme().ValidationGroup(validationGroupEdit))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="row">
+                    <div id="editpartial">
+                    </div>
+                    <div class="col-xs-12 text-right">
+                        @(Html.DevExtreme().Button()
+                        .ID("CloseEditButton")
+                        .Text("Zamknij")
+                        .Type(DevExtreme.AspNet.Mvc.ButtonType.Default)
+                        .OnClick(@<text>  function (e) {
+                                    CloseEdit();
+                                    } </text>)
+
+                        )
+                        @(Html.DevExtreme().Button()
+                                              .ID("edit")
+                                              .Text(ButtonNameResource.Save)
+                                              .Type(DevExtreme.AspNet.Mvc.ButtonType.Default)
+                                              .OnClick(@<text>  function (e) {
+                                                        Edit();
+                                                        } </text>)
+
+                        )
+                    </div>
+
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<div class="popupeditnode">
+    <div class="popupeditnode-content">
+        @using (Html.BeginForm("Edit", "Node", FormMethod.Post, new { id = "editnodeform" }))
+        {
+
+            using (Html.DevExtreme().ValidationGroup(validationGroupEditNode))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="row">
+                    <div id="editnodepartial">
+                    </div>
+                    <div class="col-xs-12 text-right">
+                        @(Html.DevExtreme().Button()
+                        .ID("CloseEditNodeButton")
+                        .Text("Zamknij")
+                        .Type(DevExtreme.AspNet.Mvc.ButtonType.Default)
+                        .OnClick(@<text>  function (e) {
+                                    CloseNodeEdit();
+                                    } </text>)
+
+                        )
+                        @(Html.DevExtreme().Button()
+                                              .ID("editNode")
+                                              .Text(ButtonNameResource.Save)
+                                              .Type(DevExtreme.AspNet.Mvc.ButtonType.Default)
+                                              .OnClick(@<text>  function (e) {
+                                                        EditNode();
+                                                        } </text>)
+
+                        )
+                    </div>
+
+                </div>
+            }
+        }
+    </div>
+</div>
+<div class="popupaddconnection">
+    <div class="popupaddconnection-content">
+        @using (Html.BeginForm("Add", "Connections", FormMethod.Post, new { id = "addconnform" }))
+        {
+
+            using (Html.DevExtreme().ValidationGroup(validationGroupAddConn))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="row">
+                    <div id="addconnectionpartial">
+                    </div>
+                    <div class="col-xs-12 text-right">
+
+
+                        @(Html.DevExtreme().Button()
+                                              .ID("AddConn")
+                                              .Text(ButtonNameResource.Save)
+                                              .Type(DevExtreme.AspNet.Mvc.ButtonType.Default)
+                                              .OnClick(@<text>  function (e) {
+                                                        AddCon();
+                                                        } </text>)
+
+                        )
+                    </div>
+
+                </div>
+            }
+        }
+    </div>
+</div>
+
+
+
+<div class="popupconndetails">
+    <div class="popupconndetails-content">
+        <div class="row">
+            <div id="detailsconnpartial">
+            </div>
+            <div class="col-xs-12 text-right">
+                @(Html.DevExtreme().Button()
+                                .ID("CloseConnDetailsButton")
+                                .Text("Zamknij")
+                                .Type(DevExtreme.AspNet.Mvc.ButtonType.Default)
+                                .OnClick(@<text>  function (e) {
+                                            CloseConnDetails();
+                                            } </text>)
+
+                )
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<div class="popupeditconn">
+    <div class="popupeditconn-content">
+        @using (Html.BeginForm("Edit", "Connections", FormMethod.Post, new { id = "editconnform" }))
+        {
+
+            using (Html.DevExtreme().ValidationGroup(validationGroupEditConn))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="row">
+                    <div id="editconnpartial">
+                    </div>
+                    <div class="col-xs-12 text-right">
+                        @(Html.DevExtreme().Button()
+                        .ID("CloseEditConnButton")
+                        .Text("Zamknij")
+                        .Type(DevExtreme.AspNet.Mvc.ButtonType.Default)
+                        .OnClick(@<text>  function (e) {
+                                    CloseConnEdit();
+                                    } </text>)
+
+                        )
+                        @(Html.DevExtreme().Button()
+                                              .ID("editConn")
+                                              .Text(ButtonNameResource.Save)
+                                              .Type(DevExtreme.AspNet.Mvc.ButtonType.Default)
+                                              .OnClick(@<text>  function (e) {
+                                                        EditConn();
+                                                        } </text>)
+
+                        )
+                    </div>
+
+                </div>
+            }
+        }
+    </div>
+</div>
+<script>
+    var template = document.querySelector('#customNode').innerHTML;
+
+    var numSocket = new Rete.Socket('Number value');
+    const cm = document.querySelector(".custom-cm");
+    var lastStepId = @Model.LastStepId;
+    var lastNodeId = @Model.LastNodeId;
+    var lastConnId = @Model.LastConnId;
+    const JsRenderPlugin = {
+        install(editor, params = {}) {
+            editor.on("rendercontrol", ({ el, control }) => {
+                if (control.render && control.render !== "js") return;
+
+                control.handler(el, editor);
+            });
+        }
+    };
+
+
+
+
+
+var CustomSocket = {
+  template: `<div class="socket"
+    :class="[type, socket.name, used()?'used':''] | kebab"
+    :title="socket.name+'\\n'+socket.hint"></div>`,
+  props: ['type', 'socket', 'used']
+}
+
+
+
+var CustomNode = {
+  template,
+  mixins: [VueRenderPlugin.mixin],
+  methods:{
+    used(io){
+      return io.connections.length;
+    }
+  },
+  components: {
+    Socket: /*VueRenderPlugin.Socket*/CustomSocket
+  }
+}
+
+
+
+
+
+    class TextControl extends Rete.Control {
+        constructor(key) {
+            super(key);
+            this.render = "js";
+            this.key = key;
+        }
+
+        handler(el, editor) {
+            var input = document.createElement("input");
+            if (this.parent.data.id) {
+                input.setAttribute("id", this.parent.data.id);
+            } else {
+                debugger
+                input.setAttribute("id", "S"+lastStepId.toUpperCase() );
+            }
+            input.setAttribute("class", "nodename");
+            input.readOnly = true;
+            el.appendChild(input);
+            var text;
+            if (this.getData(this.key)) {
+                input.value = this.getData(this.key);
+                text = this.getData(this.key);
+            }
+            else {
+                input.placeholder = "Nazwa kroku...";
+                text = "Nazwa kroku..."
+            }
+            this.putData(this.key, text);
+
+            input.addEventListener("change", () => {
+                this.putData(this.key, input.value);
+            });
+        }
+    }
+     class TextNodeControl extends Rete.Control {
+        constructor(key) {
+            super(key);
+            this.render = "js";
+            this.key = key;
+        }
+
+        handler(el, editor) {
+            var input = document.createElement("input");
+            if (this.parent.data.id) {
+                input.setAttribute("id", this.parent.data.id);
+            } else {
+                input.setAttribute("id", "N" + lastNodeId.toUpperCase());
+            }
+            input.setAttribute("class", "nodename");
+            input.readOnly = true;
+            el.appendChild(input);
+            var text;
+            if (this.getData(this.key)) {
+                input.value = this.getData(this.key);
+                text = this.getData(this.key);
+            }
+            else {
+                input.placeholder = "Nazwa kroku...";
+                text = "Nazwa kroku..."
+            }
+            this.putData(this.key, text);
+
+            input.addEventListener("change", () => {
+                this.putData(this.key, input.value);
+            });
+        }
+    }
+    class IdControl extends Rete.Control {
+        constructor(key) {
+            super(key);
+            this.render = "js";
+            this.key = key;
+        }
+
+        handler(el, editor) {
+            var input = document.createElement("input");
+            input.setAttribute("class", "nodeId");
+            el.appendChild(input);
+            if (this.getData(this.key)) {
+                input.value = this.getData(this.key);
+
+            }
+            else {
+                debugger
+                var id = lastStepId.toUpperCase();;
+                input.value = "S"+id;
+                this.putData(this.key, input.value);
+            }
+             input.addEventListener("change", () => {
+                this.putData(this.key, input.value);
+            });
+
+        }
+    }
+
+
+    class IdNodeControl extends Rete.Control {
+        constructor(key) {
+            super(key);
+            this.render = "js";
+            this.key = key;
+        }
+
+        handler(el, editor) {
+            var input = document.createElement("input");
+            input.setAttribute("class", "nodeId");
+            el.appendChild(input);
+            if (this.getData(this.key)) {
+                input.value = this.getData(this.key);
+
+            }
+            else {
+                var id = lastNodeId.toUpperCase();
+                input.value = "N"+id;
+                this.putData(this.key, input.value);
+            }
+             input.addEventListener("change", () => {
+                this.putData(this.key, input.value);
+            });
+
+        }
+    }
+    class ConnectionControl extends Rete.Control {
+        constructor(key) {
+            super(key);
+            this.render = "js";
+            this.key = key;
+        }
+
+        handler(el, editor) {
+            var array = [];
+            var tmp = [];
+            tmp = document.querySelectorAll('.nodename');
+            tmp.forEach(el => {
+                array.push(el.value);
+            })
+            var paraFrom = document.createElement("P");
+            paraFrom.innerText = "Połączenie z:";
+            paraFrom.className = "from";
+            el.appendChild(paraFrom);
+
+            //Create and append select list
+            var selectList = document.createElement("select");
+            selectList.setAttribute("id", "mySelect");
+            el.appendChild(selectList);
+
+            //Create and append the options
+            for (var i = 0; i < array.length; i++) {
+                var option = document.createElement("option");
+                option.setAttribute("value", array[i]);
+                option.text = array[i];
+                selectList.appendChild(option);
+            }
+            var paraTo = document.createElement("P");
+            paraTo.innerText = "Połączenie do:";
+            paraTo.className = "to";
+            el.appendChild(paraTo);
+            var selectList2 = document.createElement("select");
+            selectList2.setAttribute("id", "mySelect1");
+            el.appendChild(selectList2);
+
+            //Create and append the options
+            for (var i = 0; i < array.length; i++) {
+                var option = document.createElement("option");
+                option.setAttribute("value", array[i]);
+                option.text = array[i];
+                selectList2.appendChild(option);
+            }
+            var paraName = document.createElement("P");
+            paraName.innerText = "Nazwa:";
+            paraName.className = "connname";
+            el.appendChild(paraName);
+            var input = document.createElement("input");
+            el.appendChild(input);
+            var br = document.createElement("br");
+            el.appendChild(br);
+            var br2 = document.createElement("br");
+            el.appendChild(br2);
+            var button = document.createElement("button");
+            button.innerHTML = "Dodaj";
+
+            el.appendChild(button);
+
+            var inp;
+            button.addEventListener("click", () => {
+                var tmp = editor.nodes;
+                var tmp2 = [];
+
+                tmp.forEach(el => {
+                    if (el.data.text == selectList.value) {
+                        tmp2.push(el);
+                    }
+                })
+                var tmp3 = editor.nodes;
+                var tmp4 = [];
+                tmp3.forEach(el => {
+                    if (el.data.text == selectList2.value) {
+                        tmp4.push(el);
+                    }
+                })
+                var str = input.value;
+                var id = str.replace(/ /g, '_');
+                var type;
+                    if (tmp2[0].data.id.substring(0, 1) == "S" && tmp4[0].data.id.substring(0, 1) == "S") {
+                        var type = 0
+                    } else if (tmp2[0].data.id.substring(0, 1) == "N" && tmp4[0].data.id.substring(0, 1) == "N") {
+                        var type = "error",
+                        text = "Nie może istnieć połączenie węzeł - węzeł "
+                        DevExpress.ui.notify(text, type, 1000);
+                        return;
+                    }else if (tmp2[0].data.id.substring(0, 1) == "N") {
+                         var type = 2
+                    }
+                    else if (tmp4[0].data.id.substring(0, 1) == "N") {
+                         var type = 1
+                    }
+                var promise1 = new Promise(function (resolve, reject) {
+
+
+                    if (!tmp4[0].inputs.get(input.value)) {
+                        inp = new Rete.Input(id, input.value, numSocket, true);
+
+                        tmp4[0].addInput(inp);
+                    }
+                    if (!tmp2[0].outputs.get(input.value)) {
+                        var out = new Rete.Output(id, input.value, numSocket, true);
+                        tmp2[0].addOutput(out);
+                    }
+                    tmp2[0].update();
+                    tmp4[0].update();
+                    lastConnId = uuidv4();
+                    OpenAddConnection(lastConnId,tmp2[0].data.id.substring(1, tmp2[0].data.id.length), tmp4[0].data.id.substring(1, tmp4[0].data.id.length), type, input.value);
+                    //  setTimeout(function () {
+                    debugger
+                    resolve();
+                    // }, 300);
+                });
+                promise1.then(() => {
+                    var promise2 = new Promise(function (resolve, reject) {
+                        button1.click()
+                        //  setTimeout(function () {
+                        resolve();
+                        // }, 300);
+                    });
+                    promise2.then(() => {
+                        editor.removeNode(this.getNode());
+                    })
+                })
+            });
+            el.appendChild(button);
+
+
+            var button1 = document.createElement("button1");
+            button1.innerHTML = "";
+
+            el.appendChild(button1);
+
+            button1.addEventListener("click", () => {
+                var tmp = editor.nodes;
+                var tmp2 = [];
+
+                tmp.forEach(el => {
+                    if (el.data.text == selectList.value) {
+                        tmp2.push(el);
+                    }
+                })
+                var tmp3 = editor.nodes;
+                var tmp4 = [];
+                tmp3.forEach(el => {
+                    if (el.data.text == selectList2.value) {
+                        tmp4.push(el);
+                    }
+                })
+                var str = input.value;
+                var id = str.replace(/ /g, '_');
+
+                debugger
+                var prop = "!" + tmp2[0].id + "@@" + tmp4[0].id + "^" + id + "*"+lastConnId.toUpperCase() + "&";
+
+                editor.connect(tmp2[0].outputs.get(id), tmp4[0].inputs.get(id), { class: prop });
+            });
+            el.appendChild(button1);
+
+            var button2 = document.createElement("button");
+            button2.innerHTML = "Zamknij";
+
+            el.appendChild(button2);
+
+            button2.addEventListener("click", () => {
+                editor.removeNode(this.getNode());
+            });
+            el.appendChild(button2);
+
+        }
+    }
+
+    class ConnectionComponent extends Rete.Component {
+        constructor() {
+            super("Dodaj połączenie");
+            this.data.noContextMenu = true;
+
+        }
+        builder(node) {
+            node.addControl(new ConnectionControl('dodaj'));
+            return node;
+        }
+    }
+
+    class NodeFactory {
+        modifyNode(node) {
+            var id = [];
+
+             @foreach (var d in Model.Id)
+             {
+               @:id.push("@Html.Raw(d)");
+               }
+
+            var names = [];
+
+             @foreach (var d in Model.Names)
+            {
+                @:names.push("@Html.Raw(d)");
+             }
+
+            var i;
+            for (i = 0; i < names.length; i++) {
+                var inp = new Rete.Input(id[i], names[i], numSocket, true);
+                node.addInput(inp);
+                var out = new Rete.Output(id[i], names[i], numSocket, true);
+                node.addOutput(out);
+            }
+        }
+    }
+
+
+    class MyComponent extends Rete.Component {
+        constructor(nodeFactory) {
+            super("Middle");
+            this.nodeFactory = nodeFactory;
+            this.contextMenuName = "Krok";
+              this.data.component = CustomNode;
+        }
+        builder(node) {
+            node.addControl(new TextControl('text'));
+            node.addControl(new IdControl('id'));
+
+            this.nodeFactory.modifyNode(node);
+            return node;
+        }
+    }
+
+    class MyStartComponent extends Rete.Component {
+        constructor(nodeFactory) {
+            super("Beginning");
+            this.nodeFactory = nodeFactory;
+            this.contextMenuName = "Start";
+            this.data.component = CustomNode;
+        }
+        builder(node) {
+            node.addControl(new TextControl('text'));
+            node.addControl(new IdControl('id'));
+
+            this.nodeFactory.modifyNode(node);
+            return node;
+        }
+    }
+
+
+    class MyEndComponent extends Rete.Component {
+        constructor(nodeFactory) {
+            super("End");
+            this.nodeFactory = nodeFactory;
+            this.contextMenuName = "Koniec";
+            this.data.component = CustomNode;
+        }
+        builder(node) {
+            node.addControl(new TextControl('text'));
+            node.addControl(new IdControl('id'));
+
+            this.nodeFactory.modifyNode(node);
+            return node;
+        }
+    }
+
+     class MyNodeComponent extends Rete.Component {
+        constructor(nodeFactory) {
+            super("CustomNode");
+            this.nodeFactory = nodeFactory;
+            this.contextMenuName = "Węzeł";
+            this.data.component = CustomNode;
+        }
+        builder(node) {
+            node.addControl(new TextNodeControl('text'));
+            node.addControl(new IdNodeControl('id'));
+
+            this.nodeFactory.modifyNode(node);
+            return node;
+        }
+    }
+
+    var container = document.querySelector('#rete');
+    var components = [new ConnectionComponent(), new MyStartComponent(new NodeFactory()), new MyComponent(new NodeFactory()), new MyNodeComponent(new NodeFactory()), new MyEndComponent(new NodeFactory())];
+
+    var editor = new Rete.NodeEditor('demo@0.1.0', container);
+
+    editor.use(ConnectionPlugin.default);
+    // editor.use(ConnectionReroutePlugin.default);
+    editor.use(VueRenderPlugin);
+    editor.use(JsRenderPlugin);
+    editor.use(ContextMenuPlugin.default, {
+
+        searchBar: false, // true by default
+        searchKeep: title => true, // leave item when searching, optional. For example, title => ['Refresh'].includes(title)
+        delay: 10000000,
+        rename(component) { return component.contextMenuName || component.name }
+    });
+    editor.use(AreaPlugin);
+    editor.use(CommentPlugin.default);
+   //editor.use(ConnectionPathPlugin.default, {
+       // type: ConnectionPathPlugin.LINEAR, // DEFAULT or LINEAR transformer
+
+        //curve: d3.curveStepAfter, // curve identifier
+     //  options: { vertical: false, curvature: 0.5 }, // optional
+     //  arrow: { color: 'Charcoal', marker: 'M+5,-6 L+5,6 L20,1 z' }
+   //});
+    editor.use(ConnectionReroutePlugin.default, {
+    // defaut values
+    curve: d3.curveCatmullRom.alpha(1),
+    curvature: 0.05
+});
+     editor.use(DockPlugin.default, {
+      container: document.querySelector('.dock'),
+      itemClass: 'dock-item', // default: dock-item
+      plugins: [VueRenderPlugin] // render plugins
+    });
+    var engine = new Rete.Engine('demo@0.1.0');
+
+    components.map(c => {
+        editor.register(c);
+        engine.register(c);
+    });
+    var data = @Html.Raw(Model.Data);
+    editor
+        .fromJSON(data)
+        .then(() => {
+            editor.on("error", err => {
+                alertify.error(err.message);
+            });
+
+            editor.on('process nodecreated noderemoved connectioncreated connectionremoved', async () => {
+                UpdateView();
+                await engine.abort();
+                await engine.process(editor.toJSON());
+            });
+
+            editor.on('nodecreated noderemoved', async () => {
+                UpdateConnAndView();
+
+                await engine.abort();
+                await engine.process(editor.toJSON());
+            });
+            editor.on('nodecreate', node => {
+                const names = ['Dodaj połączenie'];
+
+                if (names.includes(node.name) && editor.nodes.find(n => names.includes(n.name))) {
+                    console.log(node.name + ' node already exist');
+                    return false;
+                }
+            });
+            editor.on('nodetranslate', node => {
+
+                var outputs = node.node.outputs;
+                var x = node.node.position[0];
+                var y = node.node.position[1];
+                var x1 = node.x;
+                var y1 = node.y;
+                outputs.forEach(output => {
+
+                    output.connections.forEach(conn => {
+                        str = conn.data.class;
+                        var from = str.substring(
+                            str.lastIndexOf("!") + 1,
+                            str.lastIndexOf("@@")
+                        );
+                        var to = str.substring(
+                            str.lastIndexOf("@@") + 1,
+                            str.lastIndexOf("^")
+                        );
+                        if (from == to) {
+
+                            var xmove = 265;
+                            conn.data.pins.forEach(pin => {
+                                pin.x = xmove + x;
+                                pin.y = -10 + y;
+                                xmove = xmove - 285;
+                            });
+                        }
+                    });
+                })
+
+
+            });
+            editor.on('showcontextmenu', ({ node }) => {
+                 return !node || !editor.components.get(node.name).data.noContextMenu;
+            });
+            editor.on('showcontextmenu', () => {
+                showContextMenu(false);
+            });
+            editor.on('updateconnection', ({ el }) => {
+                const path = el.querySelector('path');
+                var elements = el.getElementsByClassName('marker');
+                 while(elements.length > 0){
+                    elements[0].parentNode.removeChild(elements[0]);
+                 }
+            const marker = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+
+            el.querySelector('svg').appendChild(marker);
+            marker.classList.add('marker');
+            marker.setAttribute('fill', 'steelblue');
+            marker.setAttribute('d',  'M-5,-10 L-5,10 L20,0 z');
+
+                marker.setAttribute('transform', getTransformAlong(path, -25));
+
+        });
+
+        editor.on('updateconnection', ({ el }) => {
+            const path = el.querySelector('path');
+            const marker = el.querySelector('.marker');
+
+            marker.setAttribute('transform', getTransformAlong(path, -25));
+        });
+            editor.on('updateconnection', ({ el }) => {
+                el.addEventListener('contextmenu', (e) => {
+                    editor.trigger('hidecontextmenu');
+                    e.stopPropagation();
+                    e.preventDefault();
+                    var str = el.querySelector('.connection path').className.baseVal;
+                    var old_element = document.getElementById("szczegoly");
+                    var new_element = old_element.cloneNode(true);
+                    old_element.parentNode.replaceChild(new_element, old_element);
+                    old_element = document.getElementById("usun");
+                    new_element = old_element.cloneNode(true);
+                    old_element.parentNode.replaceChild(new_element, old_element);
+                    old_element = document.getElementById("edytuj");
+                    new_element = old_element.cloneNode(true);
+                    old_element.parentNode.replaceChild(new_element, old_element);
+                    usun.addEventListener('click', function () {
+                        DelConn(str,1);
+                    }, false);
+                    szczegoly.addEventListener('click', function () {
+                         var id = str.substring(
+                             str.lastIndexOf("*") + 1,
+                                str.lastIndexOf("&")
+                        );
+                        @*var url = '@Url.Action("Details", "Connections", new { connectionId = "__id__" })'.replace(/__id__/g, id);
+                        var win = window.open(url , '_blank');
+                        win.focus();*@
+                        OpenConnDetails(id);
+                    }, false);
+                     edytuj.addEventListener('click', function () {
+                         var id = str.substring(
+                             str.lastIndexOf("*") + 1,
+                                str.lastIndexOf("&")
+                        );
+                        @*var url = '@Url.Action("Edit", "Connections", new { connectionId = "__id__" })'.replace(/__id__/g, id);
+                        var win = window.open(url , '_blank');
+                        win.focus();*@
+                         $("#editconnform").data("str", str);
+                         OpenConnEdit(id);
+
+                    }, false);
+
+                    showContextMenu();
+                    cm.style.top = e.y-20 + "px";
+                    cm.style.left = e.x-50 + "px";
+
+                });
+
+                window.addEventListener("click", () => {
+                    showContextMenu(false);
+                });
+
+            });
+        });
+
+    jQuery(function ($) {
+        UpdateConnAndView();
+        editor.view.resize();
+        AreaPlugin.zoomAt(editor);
+
+    });
+    function getAngle({ x: x1, y: y1 }, { x: x2, y: y2 }) {
+        const dx = x1 - x2;
+        const dy = y1 - y2;
+
+        return 180 * Math.atan2(dy, dx) / Math.PI;
+    }
+    function getTransformAlong(path, offset, delta = 1, needRotate = true) {
+        const length = path.getTotalLength() * delta;
+        const p1 = path.getPointAtLength(length + offset);
+        const p2 = path.getPointAtLength(length);
+        const angle = 180 + (needRotate ? getAngle(p1, p2) : 0);
+
+        return `translate(${p1.x}, ${p1.y}) rotate(${angle})`;
+    }
+    function Save() {
+        var addData = $("#addform").serializeArray();
+        console.log(addData);
+        $.ajax({
+            type: "post",
+            url: '@Url.Action("Add", "Step")',
+            data: addData ,
+
+        });
+           var tmp = addData.find(function (i) {
+			var id;
+			if(i.name == "Name")
+            {id = i.value;}
+            return id;
+           });
+        debugger
+        lastStepId;
+        document.getElementById("S" + lastStepId.toUpperCase()).value = tmp.value;
+        var event = new Event('change');
+        document.getElementById("S"+lastStepId.toUpperCase()).dispatchEvent(event);
+         $(':input','#addform')
+            .not(':button, :submit, :reset, :hidden')
+            .val('')
+            .prop('checked', false)
+            .prop('selected', false);
+        document.querySelector(".popup").style.display = "none";
+    }
+        function SaveNode() {
+        var addData = $("#addnodeform").serializeArray();
+        console.log(addData);
+        $.ajax({
+            type: "post",
+            url: '@Url.Action("Add", "Node")',
+            data: addData ,
+
+        });
+               var tmp = addData.find(function (i) {
+			var id;
+			if(i.name == "Name")
+            {id = i.value;}
+            return id;
+        });
+
+
+            document.getElementById("N" + lastNodeId.toUpperCase()).value = tmp.value;
+            var event = new Event('change');
+            document.getElementById("N"+lastNodeId.toUpperCase()).dispatchEvent(event);
+            $(':input','#addnodeform')
+            .not(':button, :submit, :reset, :hidden')
+            .val('')
+            .prop('checked', false)
+            .prop('selected', false);
+            document.querySelector(".popupnode").style.display = "none";
+
+    }
+        function AddCon() {
+        var addData = $("#addconnform").serializeArray();
+        console.log(addData);
+        $.ajax({
+            type: "post",
+            url: '@Url.Action("Add", "Connections")',
+            data: addData ,
+
+        });
+
+        $(':input','#addconnform')
+            .not(':button, :submit, :reset, :hidden')
+            .val('')
+            .prop('checked', false)
+            .prop('selected', false);
+
+            document.querySelector(".popupaddconnection").style.display = "none";
+
+    }
+    function Edit() {
+        var addData = $("#editform").serializeArray();
+         console.log(addData);
+         var dataid =  addData.find(function (i) {
+			var id;
+             if (i.name == "Id")
+             { id = i.value; }
+            return id;
+         })
+        var id = dataid.value.toUpperCase();
+        var nodeData = editor.nodes.find(function (node) {
+            return node.data.id == "S"+id;
+        });
+
+        var tmp = addData.find(function (i) {
+			var id;
+			if(i.name == "Name")
+            {id = i.value.toUpperCase();}
+            return id;
+        });
+         var name =tmp.value;
+
+               $.ajax({
+            type: "post",
+            url: '@Url.Action("Edit", "Step")',
+            data: addData ,
+
+        });
+        var tmp2 = addData.find(function (i) {
+			var id;
+			if(i.name == "StepType")
+            {id = i.value.toUpperCase();}
+            return id;
+        });
+        if (tmp2.value == 0) {
+            nodeData.name = "Beginning";
+        }
+        else if (tmp2.value == 1 ) {
+            nodeData.name ="Middle";
+        }else if (tmp2.value == 2) {
+            nodeData.name = "End";
+        }
+        nodeData.update();
+
+                document.getElementById("S"+id).value = name;
+                var event = new Event('change');
+                document.getElementById("S"+id).dispatchEvent(event);
+
+
+
+          document.getElementById("editpartial").innerHTML = "";
+        document.querySelector(".popupedit").style.display = "none";
+    }
+
+
+     function EditNode() {
+        var addData = $("#editnodeform").serializeArray();
+         console.log(addData);
+         var dataid =  addData.find(function (i) {
+			var id;
+             if (i.name == "NodeId")
+             { id = i.value; }
+            return id;
+         })
+        var id = dataid.value;
+        var nodeData = editor.nodes.find(function (node) {
+            return node.data.id == "N"+id;
+        });
+
+        var tmp = addData.find(function (i) {
+			var id;
+			if(i.name == "Name")
+            {id = i.value;}
+            return id;
+        });
+         var name =tmp.value;
+
+               $.ajax({
+            type: "post",
+            url: '@Url.Action("Edit", "Node")',
+            data: addData ,
+
+        });
+
+        nodeData.update();
+
+                document.getElementById("N"+id).value = name;
+         var event = new Event('change');
+         document.getElementById("N"+id).dispatchEvent(event);
+
+
+
+          document.getElementById("editnodepartial").innerHTML = "";
+        document.querySelector(".popupeditnode").style.display = "none";
+    }
+
+     function EditConn() {
+         var addData = $("#editconnform").serializeArray();
+         var str = $('#editconnform').data('str');
+         var destinationId;
+         var sourceId;
+         console.log(addData);
+         var connId=  addData.find(function (i) {
+			var id;
+             if (i.name == "ConnectionId")
+             { id = i.value.toUpperCase; }
+            return id;
+         })
+         var sourceIdData =  addData.find(function (i) {
+			var id;
+			if(i.name == "SourceId")
+            {id = i.value.toUpperCase();}
+            return id;
+         })
+          var destinationIdData =  addData.find(function (i) {
+			var id;
+			if(i.name == "DestinationId")
+            {id = i.value.toUpperCase();}
+            return id;
+          })
+          var nameData =  addData.find(function (i) {
+			var id;
+			if(i.name == "ConnectionData.ButtonName")
+            {id = i.value;}
+            return id;
+          })
+          var typeData =  addData.find(function (i) {
+			var id;
+			if(i.name == "ConnectionData.ConnectionType")
+            {id = i.value;}
+            return id;
+          })
+         var isActive =  addData.find(function (i) {
+			var id;
+			if(i.name == "ConnectionData.IsActive")
+            {id = i.value;}
+            return id;
+          })
+         if (typeData.value == "Step") {
+             sourceId = "S" + sourceIdData.value.toUpperCase();
+             destinationId = "S" + destinationIdData.value.toUpperCase();
+         } else if (typeData.value == "ToNode") {
+             sourceId = "S" + sourceIdData.value.toUpperCase();
+             destinationId = "N" + destinationIdData.value.toUpperCase();
+         } else if (typeData.value == "FromNode") {
+             sourceId = "N" + sourceIdData.value.toUpperCase();
+             destinationId = "S" + destinationIdData.value.toUpperCase();
+         }
+
+         DelConn(str,0)
+               $.ajax({
+            type: "post",
+            url: '@Url.Action("Edit", "Connections")',
+            data: addData ,
+
+        });
+
+
+         var promise2 = new Promise(function (resolve, reject) {
+             EditConnection(connId.value, sourceId, destinationId, nameData.value, isActive.value)
+                resolve();
+            });
+            promise2.then(() => {
+                UpdateConnAndView();
+            })
+
+        document.getElementById("editconnpartial").innerHTML = "";
+        document.querySelector(".popupeditconn").style.display = "none";
+    }
+    function uuidv4() {
+      return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+      );
+    }
+    function Close() {
+        document.getElementById("detailspartial").innerHTML = "";
+        document.querySelector(".popupdetails").style.display = "none";
+    }
+    function CloseNodeDetails() {
+        document.getElementById("detailsnodepartial").innerHTML = "";
+        document.querySelector(".popupnodedetails").style.display = "none";
+    }
+    function CloseConnDetails() {
+        document.getElementById("detailsconnpartial").innerHTML = "";
+        document.querySelector(".popupconndetails").style.display = "none";
+    }
+    function CloseEdit() {
+        document.getElementById("editpartial").innerHTML = "";
+        document.querySelector(".popupedit").style.display = "none";
+    }
+    function CloseNodeEdit() {
+        document.getElementById("editnodepartial").innerHTML = "";
+        document.querySelector(".popupeditnode").style.display = "none";
+    }
+    function CloseConnEdit() {
+        document.getElementById("editconnpartial").innerHTML = "";
+        document.querySelector(".popupeditconn").style.display = "none";
+    }
+    function showContextMenu(show = true) {
+        cm.style.display = show ? "block" : "none";
+    }
+
+    function OpenDetailsInNewTab(id) {
+     var url = '@Url.Action("Details", "Step", new { stepId = "__id__" })'.replace(/__id__/g, id);
+    var win = window.open(url, '_blank');
+    win.focus();
+    }
+    function OpenDetails(id) {
+        debugger
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("PartialDetails")',
+            data: {
+                stepId: id
+            },
+            success: function (data) {
+                console.log(data);
+                 $( "#detailspartial" ).prepend( data );
+            },
+        });
+
+
+          document.querySelector(".popupdetails").style.display = "flex";
+    }
+
+     function OpenNodeDetails(id) {
+
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("PartialNodeDetails")',
+            data: {
+                nodeId: id
+            },
+            success: function (data) {
+                console.log(data);
+                 $( "#detailsnodepartial" ).prepend( data );
+            },
+        });
+
+
+          document.querySelector(".popupnodedetails").style.display = "flex";
+    }
+
+    function OpenEdit(node) {
+        id = node.data.id.substring(1, node.data.id.length);
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("PartialEdit")',
+            data: {
+                stepId: id
+            },
+            success: function (data) {
+                console.log(data);
+                 $( "#editpartial" ).prepend( data );
+            },
+        });
+
+
+          document.querySelector(".popupedit").style.display = "flex";
+    }
+
+    function OpenNodeEdit(node) {
+        id = node.data.id.substring(1, node.data.id.length);
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("PartialNodeEdit")',
+            data: {
+                nodeId: id
+            },
+            success: function (data) {
+                console.log(data);
+
+                 $( "#editnodepartial" ).prepend( data );
+            },
+        });
+
+
+          document.querySelector(".popupeditnode").style.display = "flex";
+    }
+    function OpenAddConnection(connId, sourceId,destinationId,ConnectionType,buttonName) {
+        document.getElementById("addconnectionpartial").innerHTML = "";
+        debugger
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("AddConnectionPartial")',
+            data: {
+                id:connId,
+                sourceId: sourceId,
+                destinationId: destinationId,
+                connectionType: ConnectionType,
+                buttonName :buttonName
+            },
+            success: function (data) {
+                console.log(data);
+                 $( "#addconnectionpartial" ).prepend( data );
+            },
+        });
+
+
+          document.querySelector(".popupaddconnection").style.display = "flex";
+    }
+
+    function OpenConnDetails(id) {
+
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("PartialConnDetails")',
+            data: {
+                connectionId: id
+            },
+            success: function (data) {
+                console.log(data);
+                 $( "#detailsconnpartial" ).prepend( data );
+            },
+        });
+
+
+          document.querySelector(".popupconndetails").style.display = "flex";
+    }
+
+        function OpenConnEdit(id) {
+
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("PartialConnEdit")',
+            data: {
+                connectionId: id
+            },
+            success: function (data) {
+                console.log(data);
+                 $( "#editconnpartial" ).prepend( data );
+            },
+        });
+
+
+          document.querySelector(".popupeditconn").style.display = "flex";
+    }
+
+
+        function openEditInNewTab(id) {
+    var url = '@Url.Action("Edit", "Step", new { stepId = "__id__" })'.replace(/__id__/g, id);
+    var win = window.open(url, '_blank');
+    win.focus();
+    }
+            function openEdit(id) {
+    var url = '@Url.Action("Edit", "Step", new { stepId = "__id__" })'.replace(/__id__/g, id);
+    var win = window.open(url, '_blank');
+    win.focus();
+    }
+    function DelConn(str,type) {
+
+
+        var from = str.substring(
+            str.lastIndexOf("!") + 1,
+            str.lastIndexOf("@@")
+        );
+        var to = str.substring(
+            str.lastIndexOf("@@") + 1,
+            str.lastIndexOf("^")
+        );
+        var name = str.substring(
+            str.lastIndexOf("^") + 1,
+            str.lastIndexOf("*")
+        );
+
+        var tmp = [];
+        var node;
+        var conn;
+        editor.nodes.forEach(e => { if (e.id == from) { node = e } })
+        node.outputs.forEach(e => { if (e.key == name) { tmp = e.connections } })
+
+        tmp.forEach(e => { if (e.input.node.id == to) { conn = e } })
+
+        editor.removeConnection(conn);
+        if (type == 1) {
+            UpdateConnAndView();
+            return;
+        } else {
+            return;
+        }
+    }
+
+    function DelUnusedInputs() {
+
+        var nodes = [];
+        nodes = this.editor.nodes;
+        nodes.forEach(node => {
+
+            node.inputs.forEach(e => {
+                if (e.connections.length == 0) {
+                    node.inputs.delete(e.key);
+                    editor.view.updateConnections({ node });
+                    node.update();
+                }
+            });
+        })
+    }
+
+    function DelUnusedOutputs() {
+
+        var nodes = [];
+        nodes = this.editor.nodes;
+        nodes.forEach(node => {
+            node.outputs.forEach(e => {
+                if (e.connections.length == 0) {
+                    node.outputs.delete(e.key);
+                    editor.view.updateConnections({ node });
+                    node.update();
+                }
+            });
+        })
+    }
+
+    function UpdateView() {
+        var nodes = [];
+        nodes = this.editor.nodes;
+        nodes.forEach(node => {
+            node.update();
+            editor.view.updateConnections({ node });
+            node.update();
+        })
+
+    }
+
+
+    function UpdateConnAndView() {
+        var promise1 = new Promise(function (resolve, reject) {
+            DelUnusedInputs();
+            resolve();
+        });
+        promise1.then(() => {
+            var promise2 = new Promise(function (resolve, reject) {
+                DelUnusedOutputs();
+                resolve();
+            });
+            promise2.then(() => {
+                UpdateView();
+            })
+        })
+    }
+    function ShowAddPopup(type) {
+        debugger
+        lastStepId = uuidv4();
+        var numType;
+        if (type == "Beginning") {
+            numType = @((int)StepType.Beginning);
+        }
+        else if (type == "Middle") {
+            numType = @((int)StepType.Middle);
+        } else if (type == "End") {
+            numType = @((int)StepType.End);
+        }
+        $("#type")
+            .dxSelectBox("instance")
+            .option("value", numType);
+        document.querySelector(".popup").style.display = "flex";
+        $("#stepIdPartial")
+            .dxTextBox("instance")
+            .option("value", lastStepId);
+
+
+    }
+    function ShowAddNodePopup() {
+
+
+        lastNodeId = uuidv4();
+        document.querySelector(".popupnode").style.display = "flex";
+
+        $("#nodeIdPartial")
+            .dxTextBox("instance")
+            .option("value", lastNodeId);
+
+    }
+    function getLastConnId() {
+
+           return  $.ajax({
+            type: "get",
+            url: '@Url.Action("getLastConnId")',
+
+           success: function (data) {
+                   console.log(data);
+                   lastConnId = parseInt(data);
+           }
+           });
+
+    }
+    function SaveCords() {
+        var data = editor.nodes;
+        var dataArray = [];
+        data.forEach(e => {
+            if (e.name != "Dodaj połączenie") {
+                var dataRow = { Id: e.data.id.substring(1, e.data.id.length), Type: e.data.id.substring(0, 1), PositionX: e.position[0], PositionY: e.position[1] };
+                dataArray.push(dataRow);
+            }
+        });
+        $.ajax({
+            type: "post",
+            url: '@Url.Action("SaveCords")',
+            data: {
+                data: JSON.stringify(dataArray)
+            },
+            success: function (data) {
+
+            },
+        });
+    }
+    function SaveAsImage() {
+        domtoimage.toSvg(document.getElementById('diagram'), { quality: 1})
+            .then(function (dataUrl) {
+            var link = document.createElement('a');
+            link.download = document.getElementById("proces").innerHTML;
+            link.href = dataUrl;
+            link.click();
+    });
+    }
+    function EditConnection(connId,sourceId,destinationId,name,isActive)
+    {
+
+
+                var tmp = editor.nodes;
+                var tmp2 = [];
+
+                tmp.forEach(el => {
+                    if (el.data.id == sourceId) {
+                        tmp2.push(el);
+                    }
+                })
+                var tmp3 = editor.nodes;
+                var tmp4 = [];
+                tmp3.forEach(el => {
+                    if (el.data.id == destinationId) {
+                        tmp4.push(el);
+                    }
+                })
+                var str = name;
+                var id = str.replace(/ /g, '_');
+
+
+                var promiseEditConn = new Promise(function (resolve, reject) {
+
+                    if (!tmp4[0].inputs.get(id)) {
+                        inp = new Rete.Input(id, name, numSocket, true);
+                        tmp4[0].addInput(inp);
+                    }
+                    if (!tmp2[0].outputs.get(id)) {
+                        var out = new Rete.Output(id, name, numSocket, true);
+                        tmp2[0].addOutput(out);
+                    }
+
+                          resolve();
+                });
+                promiseEditConn.then(() => {
+                    var tmp = editor.nodes;
+                    var tmp2 = [];
+
+                    tmp.forEach(el => {
+                        if (el.data.id == sourceId) {
+                            tmp2.push(el);
+                        }
+                    })
+                    var tmp3 = editor.nodes;
+                    var tmp4 = [];
+                    tmp3.forEach(el => {
+                        if (el.data.id == destinationId) {
+                            tmp4.push(el);
+                        }
+                    })
+                    var str = name;
+                    var id = str.replace(/ /g, '_');
+                    if (isActive == "true") {
+                        var prop = "!" + tmp2[0].data.id + "@@" + tmp4[0].data.id + "^" + id + "*" + connId + "&";
+                    } else {
+                         var prop = "!" + tmp2[0].data.id + "@@" + tmp4[0].data.id + "^" + id + "*" + connId + "&inactive";
+                    }
+                    editor.connect(tmp2[0].outputs.get(id), tmp4[0].inputs.get(id), { class: prop });
+                })
+                    //  setTimeout(function () {
+
+                    // }, 300);
+
+
+        }
+
+</script>
+<style>
+    .node .control input, .node .input-control input {
+        @*width: 140px;*@
+    }
+
+    select, input {
+        width: 100%;
+        border-radius: 5px;
+        background-color: white;
+        padding: 2px 6px;
+        border: 1px solid #999;
+        font-size: 110%;
+        width: 170px;
+    }
+
+    .title {
+        padding-left: 10px !important;
+    }
+
+    svg.connection {
+    }
+
+    .editor {
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: column;
+        height: 100vh;
+    }
+
+    .dock {
+    height: 110px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+}
+
+.dock-item {
+    display: inline-block;
+    vertical-align: bottom;
+    transform: scale(0.8);
+    opacity: 0.5;
+}
+
+.dock-item:hover {
+   opacity: 0.9;
+   position: relative;
+   top: -10px;
+}
+.dock-item .title {
+   display: block;
+   text-align: center;
+   padding-top: 20px !important;
+   padding-bottom: 20px !important;
+   font-weight: bold;
+   font-family: sans-serif;
+   font-size: 18px;
+   border-radius: 10px 10px 0 0;
+   padding: 8px;
+   overflow: hidden;
+   color: white;
+}
+
+
+
+.dock-item .start {
+       background: #43AD4E;
+}
+.dock-item .krok  {
+      background:#435abe;
+}
+.dock-item .koniec {
+      background: #0c3657;
+}
+.dock-item .węzeł  {
+        background: #2AC0E3;
+}
+    /*//To psuje guziki u gory*/
+    .container {
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .input-title {
+       /* display: inline-block !important;*/
+    }
+
+    .input-control {
+        width: 40px !important;
+        display: inline !important;
+    }
+
+     .title {
+        display: none;
+    }
+    .node .title {
+        display: block;
+    }
+    .custom-cm {
+        background-color: #ffffff;
+        border: 1px solid #cccccc;
+        box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+        display: none;
+        padding: 10px 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 140px;
+        z-index: 3;
+    }
+
+    .custom-cm__item {
+        cursor: pointer;
+        padding: 8px 15px;
+    }
+
+        .custom-cm__item:hover {
+            background-color: #f8f8f8;
+        }
+
+    .custom-cm__divider {
+        border-bottom: 1px solid #eeeeee;
+        margin: 10px 0;
+    }
+
+    .context-menu {
+        background-color: #ffffff !important;
+        border: 1px solid #cccccc !important;
+        box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1) !important;
+        padding: 10px 0 !important;
+        width: 140px !important;
+        z-index: 3 !important;
+    }
+
+    .item {
+        border-top-left-radius: 0px !important;
+        border-top-right-radius: 0px !important;
+        border-bottom-left-radius: 0px !important;
+        border-bottom-right-radius: 0px !important;
+        border-bottom: 0px solid rgba(69, 103, 255, 0.8) !important;
+        background-color: rgba(0, 0, 0, 0.0) !important;
+        cursor: pointer !important;
+        padding: 8px 15px !important;
+        color: black !important;
+    }
+
+        .item:hover {
+            background-color: #f8f8f8 !important;
+        }
+
+
+
+
+    .beginning input{
+       background: #43AD4E;
+    }
+    .middle input {
+      background:#435abe;
+    }
+    .end input{
+      background: #0c3657;
+    }
+    .customnode input {
+        background: #2AC0E3;
+    }
+
+
+    .popup {
+        background: rgba(0,0,0,0.6);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popup-content {
+        height: 375px;
+        width: 500px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        position: relative;
+    }
+
+    .popupnode {
+        background: rgba(0,0,0,0.6);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popupnode-content {
+        height: 470px;
+        width: 500px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        position: relative;
+    }
+
+    .popupedit {
+        background: rgba(0,0,0,0.6);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popupedit-content {
+        height: 375px;
+        width: 500px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        position: relative;
+    }
+
+    .popupeditnode {
+        background: rgba(0,0,0,0.6);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popupeditnode-content {
+        height: 470px;
+        width: 500px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        position: relative;
+    }
+
+    .popupdetails {
+        background: rgba(0,0,0,0.6);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popupdetails-content {
+        height: 700px;
+        overflow: auto;
+        width: 1000px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        position: relative;
+    }
+
+    .popupnodedetails {
+        background: rgba(0,0,0,0.6);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popupnodedetails-content {
+        height: 700px;
+        overflow: auto;
+        width: 1000px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        position: relative;
+    }
+
+    .popupconndetails {
+        background: rgba(0,0,0,0.6);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popupconndetails-content {
+        height: 700px;
+        overflow: auto;
+        width: 1000px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        position: relative;
+    }
+
+    .popupeditconn {
+        background: rgba(0,0,0,0.6);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popupeditconn-content {
+        height: 700px;
+        width: 1000px;
+        overflow: auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        position: relative;
+    }
+
+    .popupaddconnection {
+        background: rgba(0,0,0,0.6);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popupaddconnection-content {
+        height: 700px;
+        overflow: auto;
+        width: 1000px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        position: relative;
+    }
+
+    .connection .main-path {
+        stroke-width: 2.5px;
+        stroke: #36454f;
+    }
+
+    .connection:hover .main-path {
+        stroke-width: 6px;
+        stroke: #36454f;
+    }
+
+    .connection:hover .marker {
+        stroke:#36454f;
+        stroke-width: 4px;
+        stroke-linejoin: miter;
+        fill: #36454f;
+    }
+    .connection .marker {
+        fill: #36454f;
+    }
+    .nodeId {
+        display: none;
+    }
+
+    #toast {
+        padding: 10px;
+    }
+
+        #toast ul {
+            text-align: center;
+            list-style-type: none;
+            margin: 20px 0;
+        }
+
+            #toast ul li {
+                display: inline-block;
+                width: 160px;
+                margin: 10px;
+            }
+
+                #toast ul li img {
+                    width: 100px;
+                }
+
+    .dx-toast-content {
+        min-width: 300px;
+        max-width: 400px;
+    }
+
+    .node-editor{
+  background-size: 20px 20px;
+  background-image: linear-gradient(to right, lightgrey 1px, transparent 1px), linear-gradient(to bottom, lightgrey 1px, transparent 1px);
+  background-color:  #f2f2f2
+  }
+    .node{
+        background: rgba(168,168,168,0.9)!important;
+        border: 1px solid darkgrey !important;
+        border-radius: 4px !important;
+        box-shadow: 4px 5px 9px rgba(100,100,100,0.5) !important;
+    }
+    .node:hover{
+        background: rgba(168,168,168,0.9)!important;
+    }
+
+    .selected{
+        background: rgba(168,168,168,0.9)!important;
+    }
+    .node p{
+        margin:0px;
+        color:white;
+
+        font-family: sans-serif;
+    }
+
+    .node button {
+      background-color: #f1f1f1;
+      color: black;
+      padding: 5px 15px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      text-align: center;
+      margin-right: 10px;
+    }
+    .node button:hover {
+     background-color: grey;
+     color: white;
+    }
+     .customnodetemplate{
+        background: rgba(238,238,238,0.7);
+        border: 1px solid darkgrey;
+        border-radius: 4px;
+        cursor: pointer;
+        display: inline-block;
+        height: auto;
+        padding-bottom: 6px;
+        box-sizing: content-box;
+        box-shadow: 4px 5px 9px rgba(100,100,100,0.5);
+        min-width: 160px;
+    }
+
+
+    .customnodetemplate select, .customnodetemplate input{
+          width: 100% ;
+          border:0px;
+          color: white;
+          text-align: center;
+          font-weight: bold;
+          font-family: sans-serif;
+          font-size: 18px;
+          border-radius: 3px 3px 0 0;
+          /*padding: 8px;*/
+          overflow: hidden;
+          opacity: 0.85;
+
+    }
+    .pin{
+        display:none !important;
+    }
+    .content{
+      display: table;
+      width: 100%;
+      }
+    .col {
+        display: table-cell;
+        white-space: nowrap;
+    }
+    .customnodetemplate input:focus{
+         outline: none;
+    }
+     .customnodetemplate input:hover{
+        cursor: pointer;
+    }
+    .socket{
+      background: #8A9095;
+      display: inline-block;
+      cursor: pointer;
+      border: 2px solid #8A9095;
+      border-radius: 16px;
+      width: 16px;
+      height: 16px;
+      margin: -10px !important;
+      vertical-align: middle;
+      position: relative;
+      z-index: 2;
+      }
+    .input-title,.output-title{
+      vertical-align: middle;
+      color: grey;
+      display: inline-block;
+      font-family: sans-serif;
+      font-size: 16px;
+      margin: 5px 15px;
+      line-height: 16px;
+          }
+    .output {
+        text-align:right;
+    }
+
+    path[class*="inactive"]  {
+        stroke-width: 2.5px;
+        stroke: #C3423D !important;
+    }
+
+    path[class*="inactive"]:hover {
+        stroke-width: 6px;
+        stroke: #C3423D !important;
+    }
+
+    path[class*="inactive"]:hover + .marker {
+        stroke:#C3423D;
+        stroke-width: 4px;
+        stroke-linejoin: miter;
+        fill: #C3423D !important;
+    }
+    path[class*="inactive"] + .marker {
+        fill: #C3423D !important;
+    }
+     path[class*="inactive"] + .marker:hover {
+        stroke:#C3423D !important;
+        stroke-width: 4px;
+        stroke-linejoin: miter;
+        fill: #C3423D !important;
+    }
+</style>

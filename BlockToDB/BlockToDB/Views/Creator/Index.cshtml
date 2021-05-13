@@ -60,56 +60,129 @@
         function importScript() {
             var data = {
                 "id": "demo@0.1.0",
-                "nodes":
-                {
+                "nodes": {
                     "1": {
                         "id": 1,
                         "data": {
                             "inherit-type": "TPT",
-                            "tableName": "Tabela1",
-                            "1-relation": "jeden",
-                            "1-name": "A",
-                            "1-type": "INTEGER",
+                            "tableName": "NazwaTabeli1",
+                            "1-name": "1",
+                            "1-type": "BIT",
                             "1-isPrimaryKey": true,
-                            "2-relation": "jeden",
-                            "2-name": "B",
-                            "2-type": "INTEGER",
+                            "1-notNull": false,
+                            "1-unique": false,
+                            "2-name": "2",
+                            "2-type": "BIT",
                             "2-isPrimaryKey": false,
-                            "3-relation": "jeden",
-                            "3-name": "C",
-                            "3-type": "DATE",
-                            "3-isPrimaryKey": false
+                            "2-notNull": false,
+                            "2-unique": false
                         },
                         "inputs": {
-                            "1": { "connections": [] }, "2": { "connections": [] }, "3": { "connections": [] }, "inheritFrom": { "connections": [] }
+                            "1": {
+                                "connections": [
+
+                                ]
+                            },
+                            "2": {
+                                "connections": [
+
+                                ]
+                            },
+                            "inheritFrom": {
+                                "connections": [
+
+                                ]
+                            }
                         },
                         "outputs": {
-                            "1": { "connections": [] }, "2": { "connections": [{ "node": 2, "input": 2, "data": {} }] }, "3": { "connections": [] }, "inheritTo": { "connections": [] }
+                            "1": {
+                                "connections": [
+                                    {
+                                        "node": 2,
+                                        "input": 2,
+                                        "data": {
+
+                                        }
+                                    }
+                                ]
+                            },
+                            "2": {
+                                "connections": [
+
+                                ]
+                            },
+                            "inheritTo": {
+                                "connections": [
+
+                                ]
+                            }
                         },
-                        "position": [81, 87.5625],
+                        "position": [
+                            79,
+                            268.5625
+                        ],
                         "name": "Tabela"
                     },
                     "2": {
                         "id": 2,
                         "data": {
                             "inherit-type": "TPT",
-                            "tableName": "Tabel2",
-                            "1-relation": "jeden",
-                            "1-name": "A",
+                            "tableName": "NazwaTabeli2",
+                            "1-name": "Id",
                             "1-type": "INTEGER",
                             "1-isPrimaryKey": true,
-                            "2-relation": "jeden",
-                            "2-name": "B",
+                            "1-notNull": false,
+                            "1-unique": false,
+                            "2-name": "2",
                             "2-type": "BIT",
-                            "2-isPrimaryKey": false
+                            "2-isPrimaryKey": false,
+                            "2-notNull": false,
+                            "2-unique": false
                         },
                         "inputs": {
-                            "1": { "connections": [] }, "2": { "connections": [{ "node": 1, "output": 2, "data": {} }] }, "inheritFrom": { "connections": [] }
+                            "1": {
+                                "connections": [
+
+                                ]
+                            },
+                            "2": {
+                                "connections": [
+                                    {
+                                        "node": 1,
+                                        "output": 1,
+                                        "data": {
+
+                                        }
+                                    }
+                                ]
+                            },
+                            "inheritFrom": {
+                                "connections": [
+
+                                ]
+                            }
                         },
                         "outputs": {
-                            "1": { "connections": [] }, "2": { "connections": [] }, "inheritTo": { "connections": [] }
+                            "1": {
+                                "connections": [
+
+                                ]
+                            },
+                            "2": {
+                                "connections": [
+
+                                ]
+                            },
+                            "inheritTo": {
+                                "connections": [
+
+                                ]
+                            }
                         },
-                        "position": [751, 95.5625],
+                        "position": [
+                            805,
+                            278.5625
+                        ],
                         "name": "Tabela"
                     }
                 }

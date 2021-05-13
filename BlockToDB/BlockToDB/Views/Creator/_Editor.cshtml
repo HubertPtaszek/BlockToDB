@@ -106,6 +106,7 @@
                 option.text = array[i];
                 selectList.appendChild(option);
             }
+            selectList.value = this.getData(this.key);
             var text = selectList.options[selectList.selectedIndex].value;
             this.putData(this.key, text);
             selectList.addEventListener("change", () => {
@@ -131,6 +132,8 @@
                 option.text = array[i];
                 selectList.appendChild(option);
             }
+            selectList.value = this.getData(this.key);
+
             var text = selectList.options[selectList.selectedIndex].value;
             this.putData(this.key, text);
             selectList.addEventListener("change", () => {
@@ -151,7 +154,7 @@
             checkbox.name = "name";
             checkbox.value = "value";
             checkbox.id = this.key;
-
+            checkbox.checked = this.getData(this.key);
             // creating label for checkbox
             var label = document.createElement('label');
             label.htmlFor = this.key;
@@ -181,7 +184,7 @@
             checkbox.name = "name";
             checkbox.value = "value";
             checkbox.id = this.key;
-
+            checkbox.checked = this.getData(this.key);
             // creating label for checkbox
             var label = document.createElement('label');
             label.htmlFor = this.key;
@@ -211,7 +214,7 @@
             checkbox.name = "name";
             checkbox.value = "value";
             checkbox.id = this.key;
-
+            checkbox.checked = this.getData(this.key);
             // creating label for checkbox
             var label = document.createElement('label');
             label.htmlFor = this.key;
@@ -287,6 +290,37 @@
         }
     }
 
+    class NodeFactory {
+        modifyNode(node) {
+            var id = [];
+
+            var max = 0;
+            $.each(node.data, function (k, v) {
+                var tmp = k.split("-")[0];
+                if ($.isNumeric(tmp) && tmp > max)
+                { max = tmp; }
+            });
+            debugger
+            if (max > 0) {
+                node.meta.letter = node.meta.letter + 1
+                while ( node.meta.letter <= max) {
+                    let out = new Rete.Output(node.meta.letter, '' + node.meta.letter, numSocket);
+                    let input = new Rete.Input(node.meta.letter, '' + node.meta.letter, numSocket, false);
+                    node.addOutput(out);
+                    node.addInput(input);
+                    node.addControl(new NumControl(this.emitter, node.meta.letter + '-name', '' + node.meta.letter));
+                    node.addControl(new NumControl3(this.emitter, node.meta.letter + '-type'));
+                    node.addControl(new NumControl4(this.emitter, node.meta.letter + '-isPrimaryKey'));
+                    node.addControl(new NumControl7(this.emitter, node.meta.letter + '-notNull'));
+                    node.addControl(new NumControl6(this.emitter, node.meta.letter + '-unique'));
+                    node.meta.letter = node.meta.letter + 1
+                }
+            }
+            
+
+        }
+    }
+
     var CustomNode = {
         template: `<div class="node" :class="[selected(), node.name] | kebab">
   <!--- hide title <div class="title">{{node.name}}</div> -->
@@ -321,8 +355,9 @@
 
 
     class FirstComponent extends Rete.Component {
-        constructor() {
+        constructor(nodeFactory) {
             super('Tabela');
+            this.nodeFactory = nodeFactory;
             this.data.component = CustomNode;
         }
 
@@ -389,9 +424,11 @@
             input.addControl(new NumControl5(this.editor,  'inherit-type'))
             node.addOutput(out);
             node.addInput(input);
+            node.addControl(new NumControl(this.emitter, 'tableName', 'NazwaTabeli'));
+            node.addControl(new BControl(this.editor, node, 'button', callback));
+            this.nodeFactory.modifyNode(node);
             return node
-                .addControl(new NumControl(this.emitter, 'tableName', 'NazwaTabeli'))
-                .addControl(new BControl(this.editor, node, 'button', callback))
+               
             //      			.addOutput(out)
             //            .addControl(new NumControl(this.editor, 'a', 'Out '+node.meta.letter))
         }
@@ -407,7 +444,7 @@
     }
 
     var components = [
-        new FirstComponent(),
+        new FirstComponent(new NodeFactory()),
     ];
 
     var container = document.getElementById("editor");
