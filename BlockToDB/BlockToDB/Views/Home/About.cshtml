@@ -2,14 +2,34 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="wrapper" style="height:400px">
+<div class="wrapper">
     <div class="wrapper-header d-sm-flex align-items-center justify-content-between">
         <h4 class="wrapper-header-title">@SharedResource.About.ToStringSafe()</h4>
     </div>
-    <div class="wrapper-inner pt-2">
-        BlockToDB jest aplikacją umożliwiającą użytkownikowi tworzenie bazy danych przy pomocy interfejsu graficznego.
-        W rezultacie uzytkonik ma możliwość pobrania skrytpu .sql lub utworzeni bazy danych bezpośrednio na serwerze SQL.
-        Autorzy: Mariusz Mularczyk, Hubert Ptaszek
-        BlockToDB, 2021
+    <div class="wrapper-inner pt-2 wrapper-inner-about">
+        <div class="row info">
+            <div class="col-12">
+                <span>
+                    <span class="info-name">
+                        BlockToDB
+                    </span> jest aplikacją umożliwiającą użytkownikowi tworzenie bazy danych przy pomocy interfejsu graficznego.
+                    W rezultacie uzytkonik ma możliwość pobrania skrytpu .sql lub utworzeni bazy danych bezpośrednio na serwerze SQL.
+                </span>
+            </div>
+        </div>
+        <div class="row mt-2 author">
+            <div class="col-12">
+                <span>
+                    <span class="author-name">
+                        Autorzy:
+                    </span>Mariusz Mularczyk, Hubert Ptaszek
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 footer">
+                <span>BlockToDB, 2021</span>
+            </div>
+        </div>
     </div>
 </div>

@@ -28,8 +28,33 @@
 
     &-inner {
         padding: 20px;
-        .no-padding-top{
+
+        .no-padding-top {
             padding-top: 0;
+        }
+
+        &-about {
+            padding-bottom: 8px;
+
+            .info {
+                &-name {
+                    font-weight: 600;
+                }
+            }
+
+            .author {
+                &-name {
+                    font-weight: 600;
+                }
+            }
+
+            .footer {
+                margin-top: 64px;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                color: #a0a0a0;
+            }
         }
     }
 }

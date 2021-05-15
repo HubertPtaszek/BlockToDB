@@ -187,6 +187,18 @@ body {
     padding: 20px; }
     .wrapper-inner .no-padding-top {
       padding-top: 0; }
+    .wrapper-inner-about {
+      padding-bottom: 8px; }
+      .wrapper-inner-about .info-name {
+        font-weight: 600; }
+      .wrapper-inner-about .author-name {
+        font-weight: 600; }
+      .wrapper-inner-about .footer {
+        margin-top: 64px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        color: #a0a0a0; }
 
 /*!
  * Font Awesome Free 5.0.13 by @fontawesome - https://fontawesome.com

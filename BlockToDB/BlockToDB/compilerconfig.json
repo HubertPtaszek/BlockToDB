@@ -2,5 +2,9 @@
   {
     "outputFile": "Content/css/main.css",
     "inputFile": "Content/css/scss/main.scss"
+  },
+  {
+    "outputFile": "Content/css/scss/layout/_wrapper.css",
+    "inputFile": "Content/css/scss/layout/_wrapper.scss"
   }
 ]
