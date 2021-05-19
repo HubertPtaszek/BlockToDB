@@ -90,6 +90,7 @@
     <Compile Include="Core\IService.cs" />
     <Compile Include="Exceptions\BussinesException.cs" />
     <Compile Include="Model\AppUserData.cs" />
+    <Compile Include="Model\BlockToDB\InheritConn.cs" />
     <Compile Include="Model\BlockToDB\CodeDTO.cs" />
     <Compile Include="Model\BlockToDB\Connection.cs" />
     <Compile Include="Model\BlockToDB\Data.cs" />

@@ -39,9 +39,18 @@ namespace BlockToDB.Application
             string isPrimaryKey = Data.FirstOrDefault(x => x.Key == id + "-isPrimaryKey").Value;
             string notNull = Data.FirstOrDefault(x => x.Key == id + "-notNull").Value;
             string unique = Data.FirstOrDefault(x => x.Key == id + "-unique").Value;
-            field.Append(fieldName + " " + fieldType);
+            if(fieldType == "CHARACTER")
+            {
+                field.Append(fieldName + " " + fieldType + "(255)");
 
-            if(isPrimaryKey == "true")
+            }
+            else
+            {
+                field.Append(fieldName + " " + fieldType);
+
+            }
+
+            if (isPrimaryKey == "true")
             {
                 primaryKeys.Add(fieldName);
             }
@@ -54,6 +63,88 @@ namespace BlockToDB.Application
                 field.Append(" UNIQUE");
             }
             field.Append(",");
+            return field.ToString();
+        }
+        public string GetTableOnlyPKField(int id, ref List<string> primaryKeys, string nodeToName, ref List<InheritConn> incheritConns)
+        {
+            StringBuilder field = new StringBuilder();
+            string isPrimaryKey = Data.FirstOrDefault(x => x.Key == id + "-isPrimaryKey").Value;
+
+            if (isPrimaryKey == "true")
+            {
+                string fieldName = Data.FirstOrDefault(x => x.Key == id + "-name").Value;
+                string fieldType = Data.FirstOrDefault(x => x.Key == id + "-type").Value;
+                string notNull = Data.FirstOrDefault(x => x.Key == id + "-notNull").Value;
+                string unique = Data.FirstOrDefault(x => x.Key == id + "-unique").Value;
+
+                primaryKeys.Add(fieldName);
+                if (fieldType == "CHARACTER")
+                {
+                    field.Append(fieldName + " " + fieldType + "(255)");
+
+                }
+                else
+                {
+                    field.Append(fieldName + " " + fieldType);
+
+                }
+
+
+                if (notNull == "true")
+                {
+                    field.Append(" NOT NULL");
+                }
+                if (unique == "true")
+                {
+                    field.Append(" UNIQUE");
+                }
+                field.Append(",");
+                incheritConns.Add(new InheritConn()
+                {
+                    NodeFrom = GetTableName(),
+                    NodeTo = nodeToName,
+                    Field = fieldName
+                });
+                ;
+
+            }
+            return field.ToString();
+        }
+        public string GetTableNonePKField(int id)
+        {
+            StringBuilder field = new StringBuilder();
+            string isPrimaryKey = Data.FirstOrDefault(x => x.Key == id + "-isPrimaryKey").Value;
+
+            if (isPrimaryKey != "true")
+            {
+                string fieldName = Data.FirstOrDefault(x => x.Key == id + "-name").Value;
+                string fieldType = Data.FirstOrDefault(x => x.Key == id + "-type").Value;
+                string notNull = Data.FirstOrDefault(x => x.Key == id + "-notNull").Value;
+                string unique = Data.FirstOrDefault(x => x.Key == id + "-unique").Value;
+
+                if (fieldType == "CHARACTER")
+                {
+                    field.Append(fieldName + " " + fieldType + "(255)");
+
+                }
+                else
+                {
+                    field.Append(fieldName + " " + fieldType);
+
+                }
+
+
+                if (notNull == "true")
+                {
+                    field.Append(" NOT NULL");
+                }
+                if (unique == "true")
+                {
+                    field.Append(" UNIQUE");
+                }
+                field.Append(",");
+            }
+            
             return field.ToString();
         }
         public Dictionary<string, Input> GetConnections() 

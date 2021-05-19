@@ -106,7 +106,6 @@
                 option.text = array[i];
                 selectList.appendChild(option);
             }
-            selectList.value = this.getData(this.key);
             var text = selectList.options[selectList.selectedIndex].value;
             this.putData(this.key, text);
             selectList.addEventListener("change", () => {
@@ -132,8 +131,6 @@
                 option.text = array[i];
                 selectList.appendChild(option);
             }
-            selectList.value = this.getData(this.key);
-
             var text = selectList.options[selectList.selectedIndex].value;
             this.putData(this.key, text);
             selectList.addEventListener("change", () => {
