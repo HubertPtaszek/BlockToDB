@@ -11,5 +11,6 @@ namespace BlockToDB.Application
         public string NodeFrom { get; set; }
         public string NodeTo { get; set; }
         public string Field { get; set; }
+        public string Field2 { get; set; }
     }
 }
