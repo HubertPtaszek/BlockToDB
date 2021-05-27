@@ -67,6 +67,7 @@ namespace BlockToDB.Application
         {
             StringBuilder content = new StringBuilder();
             List<InheritConn> inheritConns = new List<InheritConn>();
+            List<InheritConn> inheritConns2 = new List<InheritConn>();
             foreach (KeyValuePair<string, Node> node in model.Nodes)
             {
                 int fieldsCount = node.Value.Inputs.Count - 1;
@@ -142,6 +143,7 @@ namespace BlockToDB.Application
                     {
                         nodeContent.AppendLine(node.Value.GetTableField(i, ref primaryKeys));
                     }
+                    inheritNode.GetInheritTableConnection(node.Value.GetTableName(), ref inheritConns2, model);
                     if (primaryKeys.Count != 0)
                     {
                         StringBuilder primaryKeysString = new StringBuilder();
@@ -213,7 +215,7 @@ namespace BlockToDB.Application
                     {
                         StringBuilder connContent = new StringBuilder();
                         connContent.Append("ALTER TABLE ");
-                        connContent.Append(nodeName);
+                        connContent.Append(model.GetTableName(connection.Node));
                         connContent.Append("  ADD CONSTRAINT ");
                         connContent.Append("  FK_");
                         connContent.Append(input.Key);
@@ -222,46 +224,73 @@ namespace BlockToDB.Application
                         connContent.Append("_");
                         connContent.Append(rnd.Next(100));
                         connContent.Append(" FOREIGN KEY(");
-                        connContent.Append(node.Value.GetFieldName(int.Parse(input.Key)));
-                        connContent.Append(") REFERENCES ");
-                        connContent.Append(model.GetTableName(connection.Node));
-                        connContent.Append("(");
                         connContent.Append(model.GetTableField(connection.Node, int.Parse(connection.Output)));
+                        connContent.Append(") REFERENCES ");
+                        connContent.Append(nodeName);
+                        connContent.Append("(");
+                        connContent.Append(node.Value.GetFieldName(int.Parse(input.Key)));
                         connContent.Append(");");
                         nodeContent.Append(connContent.ToString());
                     }
                 }
+                content.AppendLine(nodeContent.ToString());
             }
-                foreach (InheritConn inheritConn in inheritConns)
-                {
+            foreach (InheritConn inheritConn in inheritConns)
+            {
 
-                    StringBuilder connContent = new StringBuilder();
-                    connContent.Append("ALTER TABLE ");
-                    connContent.Append(inheritConn.NodeTo);
-                    connContent.Append("  ADD CONSTRAINT ");
-                    connContent.Append("  FK_");
-                    connContent.Append(inheritConn.NodeFrom);
-                    connContent.Append("_");
-                    connContent.Append(inheritConn.NodeTo);
-                    connContent.Append("_");
-                    connContent.Append(rnd.Next(100));
-                    connContent.Append(" FOREIGN KEY(");
-                    connContent.Append(inheritConn.Field);
-                    connContent.Append(") REFERENCES ");
-                    connContent.Append(inheritConn.NodeFrom);
-                    connContent.Append("(");
-                    connContent.Append(inheritConn.Field);
-                    connContent.Append(");");
-                    
-
-
-                    content.AppendLine(connContent.ToString());
-                }
-                //ALTER TABLE MailSent ADD CONSTRAINT fk_profile_sender_id FOREIGN KEY(profil_sender_id) REFERENCES TABLE-NAME(id);
+                StringBuilder connContent = new StringBuilder();
+                connContent.Append("ALTER TABLE ");
+                connContent.Append(inheritConn.NodeTo);
+                connContent.Append("  ADD CONSTRAINT ");
+                connContent.Append("  FK_");
+                connContent.Append(inheritConn.NodeFrom);
+                connContent.Append("_");
+                connContent.Append(inheritConn.NodeTo);
+                connContent.Append("_");
+                connContent.Append(rnd.Next(100));
+                connContent.Append(" FOREIGN KEY(");
+                connContent.Append(inheritConn.Field);
+                connContent.Append(") REFERENCES ");
+                connContent.Append(inheritConn.NodeFrom);
+                connContent.Append("(");
+                connContent.Append(inheritConn.Field);
+                connContent.Append(");");
 
 
 
-                return content.ToString();
+                content.AppendLine(connContent.ToString());
+            }
+
+            foreach (InheritConn inheritConn in inheritConns2)
+            {
+
+                StringBuilder connContent = new StringBuilder();
+                connContent.Append("ALTER TABLE ");
+                connContent.Append(inheritConn.NodeTo);
+                connContent.Append("  ADD CONSTRAINT ");
+                connContent.Append("  FK_");
+                connContent.Append(inheritConn.NodeFrom);
+                connContent.Append("_");
+                connContent.Append(inheritConn.NodeTo);
+                connContent.Append("_");
+                connContent.Append(rnd.Next(100));
+                connContent.Append(" FOREIGN KEY(");
+                connContent.Append(inheritConn.Field);
+                connContent.Append(") REFERENCES ");
+                connContent.Append(inheritConn.NodeFrom);
+                connContent.Append("(");
+                connContent.Append(inheritConn.Field2);
+                connContent.Append(");");
+
+
+
+                content.AppendLine(connContent.ToString());
+            }
+            //ALTER TABLE MailSent ADD CONSTRAINT fk_profile_sender_id FOREIGN KEY(profil_sender_id) REFERENCES TABLE-NAME(id);
+
+
+
+            return content.ToString();
         }
 
     }

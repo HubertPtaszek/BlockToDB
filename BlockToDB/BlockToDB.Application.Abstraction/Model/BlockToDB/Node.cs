@@ -65,6 +65,24 @@ namespace BlockToDB.Application
             field.Append(",");
             return field.ToString();
         }
+        public void GetInheritTableConnection(string nodeToName, ref List<InheritConn> incheritConns, Editor model)
+        {
+            Dictionary<string, Output> inputs = GetConnectionsOutputs();
+            foreach (KeyValuePair<string, Output> input in inputs)
+            {
+                foreach (Connection connection in input.Value.Connections)
+                {
+                    incheritConns.Add(new InheritConn()
+                    {
+                        NodeFrom = model.GetTableName(connection.Node),
+                        NodeTo = nodeToName,
+                        Field = GetFieldName(int.Parse(input.Key)),
+                        Field2 = model.GetTableField(connection.Node, int.Parse(connection.Input))
+                    });
+                }
+            }
+        }
+
         public string GetTableOnlyPKField(int id, ref List<string> primaryKeys, string nodeToName, ref List<InheritConn> incheritConns)
         {
             StringBuilder field = new StringBuilder();
@@ -150,6 +168,10 @@ namespace BlockToDB.Application
         public Dictionary<string, Input> GetConnections() 
         {
             return Inputs.Where(x => x.Key != "inheritFrom").ToDictionary(x => x.Key, x => x.Value);
+        }
+        public Dictionary<string, Output> GetConnectionsOutputs()
+        {
+            return Outputs.Where(x => x.Key != "inheritTo").ToDictionary(x => x.Key, x => x.Value);
         }
         public Input GetInheritFrom()
         {
