@@ -9,6 +9,8 @@ namespace BlockToDB.Application
 
         int GenerateScript(BlockToDBGenerateVM model);
 
+        string CreateRemoteDataBase(BlockToDBGenerateRemoteVM model);
+
         int Add(BlockToDBAddVM model);
 
         void Delete(int id);

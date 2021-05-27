@@ -3,6 +3,7 @@ using BlockToDB.Domain;
 using DevExtreme.AspNet.Data;
 using Newtonsoft.Json;
 using Ninject;
+using System.Data.SqlClient;
 
 namespace BlockToDB.Application
 {
@@ -59,7 +60,18 @@ namespace BlockToDB.Application
         {
             BlockToDBGenerateVM blockToDBGenerate = BlockToDBConverter.FromBlockToDBGenerateRemoteVM(model);
             int fileId = GenerateScript(blockToDBGenerate);
-            //ToDo remote create
+            DatabaseSchema databaseSchema = DatabaseSchemaRepository.GetSingle(x => x.Id == fileId);
+            string connectionString = string.Format("Data Source={0};Initial Catalog=master;Integrated Security=True", model.Url);
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = databaseSchema.Script;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
             string result = "";
             return result;
         }

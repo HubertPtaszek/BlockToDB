@@ -44,7 +44,7 @@ namespace BlockToDB.Areas.Dashboard.Controllers
         {
             if (ModelState.IsValid)
             {
-                string status = "";
+                string status = BlockToDBService.CreateRemoteDataBase(model);
                 return new JsonResult()
                 {
                     Data = new { Status = status }

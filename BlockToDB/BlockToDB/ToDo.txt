@@ -1,5 +1,4 @@
 ﻿2. Poprawa wyglądu przycisku "Wygeneruj".
-3. Strona "O nas".
 7. Metoda nawiazujaca połączenie z serwerem.
 
 import pliku json, ostylowanie strony about, NADPISANIE SKRYTPU w przypadku gdy jest edytowany
