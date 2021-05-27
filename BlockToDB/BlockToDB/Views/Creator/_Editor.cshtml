@@ -106,6 +106,8 @@
                 option.text = array[i];
                 selectList.appendChild(option);
             }
+            var test = this.getData(this.key);
+            selectList.value = test;
             var text = selectList.options[selectList.selectedIndex].value;
             this.putData(this.key, text);
             selectList.addEventListener("change", () => {
@@ -131,6 +133,8 @@
                 option.text = array[i];
                 selectList.appendChild(option);
             }
+            var test = this.getData(this.key);
+            selectList.value = test;
             var text = selectList.options[selectList.selectedIndex].value;
             this.putData(this.key, text);
             selectList.addEventListener("change", () => {
@@ -424,8 +428,6 @@
             this.nodeFactory.modifyNode(node);
             return node
                
-            //      			.addOutput(out)
-            //            .addControl(new NumControl(this.editor, 'a', 'Out '+node.meta.letter))
         }
         worker(node, inputs, outputs) {
             let ob = {};

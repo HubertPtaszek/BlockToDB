@@ -68,12 +68,12 @@
                         "data": {
                             "inherit-type": "TPT",
                             "tableName": "NazwaTabeli1",
-                            "1-name": "1",
+                            "1-name": "Id",
                             "1-type": "BIT",
                             "1-isPrimaryKey": true,
                             "1-notNull": false,
                             "1-unique": false,
-                            "2-name": "2",
+                            "2-name": "test",
                             "2-type": "BIT",
                             "2-isPrimaryKey": false,
                             "2-notNull": false,
@@ -135,7 +135,7 @@
                             "1-isPrimaryKey": true,
                             "1-notNull": false,
                             "1-unique": false,
-                            "2-name": "2",
+                            "2-name": "nazwa",
                             "2-type": "BIT",
                             "2-isPrimaryKey": false,
                             "2-notNull": false,
@@ -191,7 +191,6 @@
             };
             editor.fromJSON(dataJson)
                 .then(() => {
-                    debugger
                     $.each(dataJson.nodes, function (key, value) {
                         var fromId = value.id
                         $.each(value.outputs, function (key, value) {
