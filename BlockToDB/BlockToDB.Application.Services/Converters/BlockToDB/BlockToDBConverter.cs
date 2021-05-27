@@ -68,6 +68,9 @@ namespace BlockToDB.Application
             StringBuilder content = new StringBuilder();
             List<InheritConn> inheritConns = new List<InheritConn>();
             List<InheritConn> inheritConns2 = new List<InheritConn>();
+
+            content.AppendLine("CREATE DATABASE BAZA;");
+
             foreach (KeyValuePair<string, Node> node in model.Nodes)
             {
                 int fieldsCount = node.Value.Inputs.Count - 1;
