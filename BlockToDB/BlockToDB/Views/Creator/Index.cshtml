@@ -60,7 +60,7 @@
         }
 
         function importScript() {
-            var data = {
+            var dataJson = {
                 "id": "demo@0.1.0",
                 "nodes": {
                     "1": {
@@ -189,8 +189,20 @@
                     }
                 }
             };
-            editor.fromJSON(data)
-            .then(() => {
+            editor.fromJSON(dataJson)
+                .then(() => {
+                    debugger
+                    $.each(dataJson.nodes, function (key, value) {
+                        var fromId = value.id
+                        $.each(value.outputs, function (key, value) {
+                            var inputFrom  = parseInt(key);
+                            value.connections.forEach(conn => {
+
+                                editor.connect(editor.nodes.find(element => element.id == fromId).outputs.get(inputFrom), editor.nodes.find(element => element.id == conn.node).inputs.get(conn.input));
+                                });
+                        });
+                    });
+                    
                 editor.on("error", err => {
                     console.log("Error: {0}", err.message);
                 });
@@ -213,7 +225,9 @@
         function exportScript() {
             $("#schemaPopupId").dxPopup("instance").show();
         }
-
+        function exportScript(data) {
+            
+        }
         $("#importBtnId").dxButton({
             elementAttr: { class: "btn btn-normal mr-1" },
             icon: "upload",

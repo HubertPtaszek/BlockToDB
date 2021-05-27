@@ -326,71 +326,7 @@ namespace BlockToDB.Application
             }
             
         }
-        public void TPTGenerate(ref StringBuilder nodeContent, ref List<InheritConn> inheritConns2, ref List<string> primaryKeys, Editor model, Node node, Input inhetitFrom, int fieldsCount, ref int islast, string firstNodeName)
-        {
 
-            Connection conn = inhetitFrom.Connections[0];
-            int fieldsCountInherit = model.Nodes.FirstOrDefault(x => x.Key == conn.Node.ToString()).Value.Inputs.Count - 1;
-            Node inheritNode = model.Nodes.FirstOrDefault(x => x.Key == conn.Node.ToString()).Value;
-
-            Input inhetitFrom2 = inheritNode.GetInheritFrom();
-            string inhetitType = "0";
-            if (inhetitFrom2.Connections.Count > 0)
-            {
-                inhetitType = inheritNode.GetInheritType();
-            }
-
-            if (inhetitType == "TPT")
-            {
-                int fieldsCount2 = inheritNode.Inputs.Count - 1;
-                islast++;
-                TPCGenerate(ref nodeContent, ref inheritConns2, ref primaryKeys, model, inheritNode, inhetitFrom2, fieldsCount2, ref islast, firstNodeName);
-                islast--;
-            }
-            else
-            {
-                islast--;
-            }
-
-            if (inhetitType == "0")
-            {
-                for (int i = 1; i <= fieldsCountInherit; i++)
-                {
-                    nodeContent.AppendLine(inheritNode.GetTableField(i, ref primaryKeys));
-                }
-            }
-            for (int i = 1; i <= fieldsCount; i++)
-            {
-                nodeContent.AppendLine(node.GetTableField(i, ref primaryKeys));
-            }
-            inheritNode.GetInheritTableConnection(firstNodeName, ref inheritConns2, model);
-            if (islast < 0)
-            {
-                if (primaryKeys.Count != 0)
-                {
-                    StringBuilder primaryKeysString = new StringBuilder();
-
-                    primaryKeysString.Append("PRIMARY KEY (");
-                    int last = primaryKeys.Count;
-                    int j = primaryKeys.Count;
-                    foreach (string key in primaryKeys)
-                    {
-                        primaryKeysString.Append(key);
-                        if (last == j)
-                        {
-                            primaryKeysString.Append(")");
-                        }
-                        else
-                        {
-                            j++;
-                            primaryKeysString.Append(",");
-                        }
-                    }
-                    nodeContent.AppendLine(primaryKeysString.ToString());
-                }
-            }
-
-        }
 
     }
 }
