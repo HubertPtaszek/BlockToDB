@@ -1,5 +1,4 @@
-﻿@model BlockToDBVM
-@{
+﻿@{
     string schemaValidationGroup = Guid.NewGuid().ToString();
 }
 
@@ -35,7 +34,7 @@
                 url: '@Url.Action("SaveSchemaData", "Creator")',
                 type: "post",
                  data: {
-                    Id: @(Model.Id),
+                    Id: schemaId,
                     Json: JSON.stringify(json),
                     Name: dbName
                  },

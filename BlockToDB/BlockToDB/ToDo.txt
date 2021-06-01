@@ -1,12 +1,3 @@
 ﻿2. Poprawa wyglądu przycisku "Wygeneruj".
-7. Metoda nawiazujaca połączenie z serwerem.
 
-import pliku json, ostylowanie strony about, NADPISANIE SKRYTPU w przypadku gdy jest edytowany
-
-
-test generowania do pliku,
-test tworzenia na serwerze,
-test exportu 
-zrobienie importu z pliku
-
-
+test tworzenia na serwerze

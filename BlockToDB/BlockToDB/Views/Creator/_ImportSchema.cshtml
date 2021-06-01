@@ -1,12 +1,15 @@
 ﻿<div id="fileUploaderId"></div>
 
 <script>
+    var schemaId = null;
+
     function importScriptHandler() {
         var btn = $("#fileUploaderId").find('.dx-fileuploader-button.dx-button.dx-button-normal.dx-button-mode-contained.dx-widget.dx-button-has-text');
         btn.click()
     }
 
-    function importScript(data, name) {
+    function importScript(data, name, id) {
+        schemaId = id;
         var dataJson = JSON.parse(data);
         $("#serverDatabaseNameBoxId").dxTextBox("instance").option("value", name);
         $("#generateDatabaseName").dxTextBox("instance").option("value", name);
@@ -18,7 +21,6 @@
                     $.each(value.outputs, function (key, value) {
                         var inputFrom = parseInt(key);
                         value.connections.forEach(conn => {
-
                             editor.connect(editor.nodes.find(element => element.id == fromId).outputs.get(inputFrom), editor.nodes.find(element => element.id == conn.node).inputs.get(conn.input));
                         });
                     });
@@ -56,13 +58,13 @@
                 name = name.replace(')', '');
                 read.readAsBinaryString(file);
                 read.onloadend = function () {
-                    importScript(read.result, name);
+                    importScript(read.result, name, null);
                 }
             },
             uploadMethod: "POST",
             uploadMode: "instantly",
             uploadUrl: '/',
             visible: false
-        });        
+        });
     });
 </script>

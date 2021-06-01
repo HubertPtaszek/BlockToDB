@@ -26,7 +26,7 @@
 </div>
 
 @Html.Partial("_ServerPopup")
-@Html.Partial("_SchemaPopup", Model)
+@Html.Partial("_SchemaPopup")
 @Html.Partial("_GeneratePopup")
 @Html.Partial("_ImportSchema")
 
@@ -49,18 +49,18 @@
     }
 
     function initEditor() {
-        @{ 
-            if (!Model.Json.IsNullOrEmpty())
-            { 
-                <text>
-                    importScript('@(Model.Json.ToScriptStringSafe())', '@(Model.Name.ToScriptStringSafe())');
-                </text>
-            }
-        }
+        importScript('@(Model.Json.ToScriptStringSafe())', '@(Model.Name.ToScriptStringSafe())', @(Model.Id));
     }
 
     $(document).ready(function () {
-        initEditor();
+        @{
+            if (!Model.Json.IsNullOrEmpty())
+            {
+                <text>
+                    initEditor();
+                </text>
+            }
+        }
 
         $("#importBtnId").dxButton({
             elementAttr: { class: "btn btn-normal mr-1" },
