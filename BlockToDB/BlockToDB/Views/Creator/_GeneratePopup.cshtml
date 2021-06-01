@@ -1,0 +1,94 @@
+﻿@{
+    string generateValidationGroup = Guid.NewGuid().ToString();
+}
+
+<div id="generatePopupId"></div>
+<div style="display:none">
+    <div id="generatePopupContainer">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label>@SharedResource.NameDB.ToStringSafe()</label>
+                    <div id="generateDatabaseName"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="popup-footer d-flex justify-content-end mt-3">
+                    <div id="cancelGenerateBtnId"></div>
+                    <div id="downloadGenerateBtnId"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        function downloadScript() {
+            var dbName = $("#generateDatabaseName").dxTextBox("instance").option('value');
+            var json = editor.toJSON();
+            $.ajax({
+                url: '@Url.Action("GenerateScriptFile", "Creator")',
+                type: "post",
+                data: {
+                    Json: JSON.stringify(json),
+                    Name: dbName
+                },
+                success: function (data) {
+                    window.location = "@Url.Action("Download", "Creator", new { id = "__id__", isScript = true })".replace(/__id__/g, data.Id);
+                    $("#loadPanelId").dxLoadPanel("instance").hide();
+                }
+            });
+        }
+
+        $("#generateDatabaseName").dxTextBox({
+            mode: "text"
+        }).dxValidator({
+            validationRules: [
+                { type: 'required', message: "@ErrorResource.RequiredShort" },
+            ],
+            validationGroup: "@generateValidationGroup"
+        });
+
+        $("#cancelGenerateBtnId").dxButton({
+            elementAttr: { class: "btn btn-normal mr-1" },
+            onClick: function () {
+                $("#generatePopupId").dxPopup("instance").hide();
+            },
+            text: "@SharedResource.Cancel.ToScriptStringSafe()",
+            type: "normal"
+        }).dxButton("instance");
+
+        $("#downloadGenerateBtnId").dxButton({
+            elementAttr: { class: "btn btn-default" },
+            onClick: function () {
+                var res = DevExpress.validationEngine.validateGroup("@generateValidationGroup");
+                if (res.isValid) {
+                    $("#generatePopupId").dxPopup("instance").hide();
+                    $("#loadPanelId").dxLoadPanel("instance").show();
+                    downloadScript();
+                }
+            },
+            text: "@SharedResource.Generate.ToScriptStringSafe()",
+            type: "default"
+        }).dxButton("instance");
+
+        $("#generatePopupId").dxPopup({
+            title: "@SharedResource.Generate.ToScriptStringSafe()",
+            showTitle: true,
+            width: 600,
+            height: "auto",
+            visible: false,
+            dragEnabled: false,
+            shading: true,
+            shadingColor: "rgba(0,0,0,0.5)",
+            showCloseButton: false,
+            closeOnOutsideClick: false,
+            contentTemplate: function () {
+                return $('#generatePopupContainer');
+            }
+        }).dxPopup("instance");
+    });
+</script>

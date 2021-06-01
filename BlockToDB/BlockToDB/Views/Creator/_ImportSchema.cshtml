@@ -1,0 +1,69 @@
+﻿<div id="fileUploaderId"></div>
+
+<script>
+    function importScriptHandler() {
+        var btn = $("#fileUploaderId").find('.dx-fileuploader-button.dx-button.dx-button-normal.dx-button-mode-contained.dx-widget.dx-button-has-text');
+        btn.click()
+    }
+
+    $(document).ready(function () {
+        $("#fileUploaderId").dxFileUploader({
+            accept: "application/json",
+            allowCanceling: false,
+            multiple: false,
+            onUploaded: function (e) {
+                var file = e.file;
+                var read = new FileReader();
+                var name = file.name.split('.')[0].replace(/\s+/g, '');
+                name = name.replace('(', '');
+                name = name.replace(')', '');
+                read.readAsBinaryString(file);
+                read.onloadend = function () {
+                    importScript(read.result, name);
+                }
+            },
+            uploadMethod: "POST",
+            uploadMode: "instantly",
+            uploadUrl: '/',
+            visible: false
+        });
+
+
+        function importScript(data, name) {
+            var dataJson = JSON.parse(data);
+            $("#serverDatabaseNameBoxId").dxTextBox("instance").option("value", name);
+            $("#generateDatabaseName").dxTextBox("instance").option("value", name);
+            $("#databaseName").dxTextBox("instance").option("value", name);
+            editor.fromJSON(dataJson)
+                .then(() => {
+                    $.each(dataJson.nodes, function (key, value) {
+                        var fromId = value.id
+                        $.each(value.outputs, function (key, value) {
+                            var inputFrom = parseInt(key);
+                            value.connections.forEach(conn => {
+
+                                editor.connect(editor.nodes.find(element => element.id == fromId).outputs.get(inputFrom), editor.nodes.find(element => element.id == conn.node).inputs.get(conn.input));
+                            });
+                        });
+                    });
+
+                    editor.on("error", err => {
+                        console.log("Error: {0}", err.message);
+                    });
+                    editor.on(
+                        "process connectioncreated connectionremoved nodecreated",
+                        async function () {
+                            if (engine.silent) return;
+                            onMessageTask = [];
+                            console.log("process");
+                            await engine.abort();
+                            await engine.process(editor.toJSON());
+                        }
+                    );
+                    editor.trigger("process");
+                    editor.view.resize();
+                    AreaPlugin.zoomAt(editor);
+                });
+        }
+    });
+</script>

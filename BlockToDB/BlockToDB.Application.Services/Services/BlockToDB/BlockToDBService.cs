@@ -3,7 +3,11 @@ using BlockToDB.Domain;
 using DevExtreme.AspNet.Data;
 using Newtonsoft.Json;
 using Ninject;
+using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
+using System.Web;
 
 namespace BlockToDB.Application
 {
@@ -34,7 +38,7 @@ namespace BlockToDB.Application
         public int GenerateScript(BlockToDBGenerateVM model)
         {
             Editor editor = JsonConvert.DeserializeObject<Editor>(model.Json); //deserializowanie JSON-a
-            string result = BlockToDBConverter.ToSqlCode(editor); //algorytm do tworzenia skryptu
+            string result = BlockToDBConverter.ToSqlCode(editor, model.Name); //algorytm do tworzenia skryptu
             DatabaseSchema databaseSchema = new DatabaseSchema();
             if (model.Id.HasValue)
             {
@@ -48,7 +52,7 @@ namespace BlockToDB.Application
                 {
                     Json = model.Json,
                     Script = result,
-                    Name = "Script1"
+                    Name = model.Name
                 };
                 DatabaseSchemaRepository.Add(databaseSchema);
             }
@@ -62,17 +66,26 @@ namespace BlockToDB.Application
             int fileId = GenerateScript(blockToDBGenerate);
             DatabaseSchema databaseSchema = DatabaseSchemaRepository.GetSingle(x => x.Id == fileId);
             string connectionString = string.Format("Data Source={0};Initial Catalog=master;Integrated Security=True", model.Url);
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            //string newcs = string.Format("Data Source={0};Initial Catalog=master;Integrated Security=False; User Id={1};Password={2}", model.Url, model.UserName, model.Password);
+            Editor editor = JsonConvert.DeserializeObject<Editor>(model.Json);
+            List<string> commands = BlockToDBConverter.ToSqlCodeList(editor, model.Name);
+            string result = "";
+            try
             {
-                conn.Open();
-                using (SqlCommand cmd = conn.CreateCommand())
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    cmd.CommandText = databaseSchema.Script;
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(commands[0], conn);
+                    cmd.ExecuteNonQuery();
+                    conn.ChangeDatabase(model.Name);
+                    cmd.CommandText = commands[1];
                     cmd.ExecuteNonQuery();
                 }
             }
-
-            string result = "";
+            catch (Exception)
+            {
+                result = "Error";
+            }
             return result;
         }
 

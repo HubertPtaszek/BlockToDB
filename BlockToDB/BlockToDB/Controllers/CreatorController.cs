@@ -19,7 +19,8 @@ namespace BlockToDB.Areas.Dashboard.Controllers
         public ActionResult Index(int? id)
         {
             BlockToDBVM model = new BlockToDBVM();
-            if (id.HasValue) {
+            if (id.HasValue)
+            {
                 model = BlockToDBService.GetBlockToDBVM(id.Value);
             }
             return View("Index", model);

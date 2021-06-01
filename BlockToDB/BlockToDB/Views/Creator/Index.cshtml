@@ -27,31 +27,17 @@
 
 @Html.Partial("_ServerPopup")
 @Html.Partial("_SchemaPopup")
+@Html.Partial("_GeneratePopup")
+@Html.Partial("_ImportSchema")
 
 <script>
     function generateBtnHandler(val) {
         if (val == 0) {
-            $("#loadPanelId").dxLoadPanel("instance").show();
-            generateScript();
+            $("#generatePopupId").dxPopup("instance").show();
         }
         else {
             $("#serverPopupId").dxPopup("instance").show();
         }
-    }
-
-    function generateScript() {
-            var json = editor.toJSON();
-             $.ajax({
-                url: '@Url.Action("GenerateScriptFile", "Creator")',
-                type: "post",
-                data: {
-                    Json: JSON.stringify(json),
-                 },
-                 success: function (data) {
-                     window.location = "@Url.Action("Download", "Creator", new { id = "__id__", isScript = true })".replace(/__id__/g, data.Id);
-                     $("#loadPanelId").dxLoadPanel("instance").hide();
-                 }
-            });
     }
 
     $(document).ready(function () {
@@ -59,178 +45,14 @@
             $("#schemaPopupId").dxPopup("instance").show();
         }
 
-        function importScript() {
-            var dataJson = {
-                "id": "demo@0.1.0",
-                "nodes": {
-                    "1": {
-                        "id": 1,
-                        "data": {
-                            "inherit-type": "TPT",
-                            "tableName": "NazwaTabeli1",
-                            "1-name": "Id",
-                            "1-type": "BIT",
-                            "1-isPrimaryKey": true,
-                            "1-notNull": false,
-                            "1-unique": false,
-                            "2-name": "test",
-                            "2-type": "BIT",
-                            "2-isPrimaryKey": false,
-                            "2-notNull": false,
-                            "2-unique": false
-                        },
-                        "inputs": {
-                            "1": {
-                                "connections": [
-
-                                ]
-                            },
-                            "2": {
-                                "connections": [
-
-                                ]
-                            },
-                            "inheritFrom": {
-                                "connections": [
-
-                                ]
-                            }
-                        },
-                        "outputs": {
-                            "1": {
-                                "connections": [
-                                    {
-                                        "node": 2,
-                                        "input": 2,
-                                        "data": {
-
-                                        }
-                                    }
-                                ]
-                            },
-                            "2": {
-                                "connections": [
-
-                                ]
-                            },
-                            "inheritTo": {
-                                "connections": [
-
-                                ]
-                            }
-                        },
-                        "position": [
-                            79,
-                            268.5625
-                        ],
-                        "name": "Tabela"
-                    },
-                    "2": {
-                        "id": 2,
-                        "data": {
-                            "inherit-type": "TPT",
-                            "tableName": "NazwaTabeli2",
-                            "1-name": "Id",
-                            "1-type": "INTEGER",
-                            "1-isPrimaryKey": true,
-                            "1-notNull": false,
-                            "1-unique": false,
-                            "2-name": "nazwa",
-                            "2-type": "BIT",
-                            "2-isPrimaryKey": false,
-                            "2-notNull": false,
-                            "2-unique": false
-                        },
-                        "inputs": {
-                            "1": {
-                                "connections": [
-
-                                ]
-                            },
-                            "2": {
-                                "connections": [
-                                    {
-                                        "node": 1,
-                                        "output": 1,
-                                        "data": {
-
-                                        }
-                                    }
-                                ]
-                            },
-                            "inheritFrom": {
-                                "connections": [
-
-                                ]
-                            }
-                        },
-                        "outputs": {
-                            "1": {
-                                "connections": [
-
-                                ]
-                            },
-                            "2": {
-                                "connections": [
-
-                                ]
-                            },
-                            "inheritTo": {
-                                "connections": [
-
-                                ]
-                            }
-                        },
-                        "position": [
-                            805,
-                            278.5625
-                        ],
-                        "name": "Tabela"
-                    }
-                }
-            };
-            editor.fromJSON(dataJson)
-                .then(() => {
-                    $.each(dataJson.nodes, function (key, value) {
-                        var fromId = value.id
-                        $.each(value.outputs, function (key, value) {
-                            var inputFrom  = parseInt(key);
-                            value.connections.forEach(conn => {
-
-                                editor.connect(editor.nodes.find(element => element.id == fromId).outputs.get(inputFrom), editor.nodes.find(element => element.id == conn.node).inputs.get(conn.input));
-                                });
-                        });
-                    });
-                    
-                editor.on("error", err => {
-                    console.log("Error: {0}", err.message);
-                });
-                editor.on(
-                    "process connectioncreated connectionremoved nodecreated",
-                    async function () {
-                        if (engine.silent) return;
-                        onMessageTask = [];
-                        console.log("process");
-                        await engine.abort();
-                        await engine.process(editor.toJSON());
-                    }
-                );
-                editor.trigger("process");
-                editor.view.resize();
-                AreaPlugin.zoomAt(editor);
-            });
-        }
-
         function exportScript() {
             $("#schemaPopupId").dxPopup("instance").show();
         }
-        function exportScript(data) {
-            
-        }
+
         $("#importBtnId").dxButton({
             elementAttr: { class: "btn btn-normal mr-1" },
             icon: "upload",
-            onClick: importScript,
+            onClick: importScriptHandler,
             text: "@SharedResource.Import.ToScriptStringSafe()",
             type: "normal"
         }).dxButton("instance");

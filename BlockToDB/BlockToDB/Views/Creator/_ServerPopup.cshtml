@@ -6,7 +6,13 @@
 <div style="display:none">
     <div id="serverPopupContainer">
         <div class="row">
-            <div class="col-12">
+            <div class="col-6">
+                <div class="form-group">
+                    <label>@SharedResource.NameDB.ToStringSafe()</label>
+                    <div id="serverDatabaseNameBoxId"></div>
+                </div>
+            </div>
+            <div class="col-6">
                 <div class="form-group">
                     <label>@SharedResource.ServerUrl.ToStringSafe()</label>
                     <div id="urlBoxId"></div>
@@ -48,14 +54,25 @@
                     Json: JSON.stringify(json),
                     Url: $("#urlBoxId").dxTextBox("instance").option("value"),
                     UserName: $("#userBoxId").dxTextBox("instance").option("value"),
-                    Password: $("#passwordBoxId").dxTextBox("instance").option("value")
+                    Password: $("#passwordBoxId").dxTextBox("instance").option("value"),
+                    Name: $("#serverDatabaseNameBoxId").dxTextBox("instance").option("value")
                  },
                  success: function (data) {
                      $("#loadPanelId").dxLoadPanel("instance").hide();
-                    //results done or error (bad connection?)
+                     debugger;
+                     console.log("result: " + data);
                  }
             });
         }
+
+        $("#serverDatabaseNameBoxId").dxTextBox({
+            mode: "text"
+        }).dxValidator({
+            validationRules: [
+                { type: 'required', message: "@ErrorResource.RequiredShort" },
+            ],
+            validationGroup: "@serverValidationGroup"
+        });
 
         $("#urlBoxId").dxTextBox({
             mode: "url"

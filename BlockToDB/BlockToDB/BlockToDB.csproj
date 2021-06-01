@@ -728,6 +728,8 @@
     <Content Include="Views\Creator\_ServerPopup.cshtml" />
     <Content Include="Views\Creator\_SchemaPopup.cshtml" />
     <Content Include="Views\Creator\_Editor.cshtml" />
+    <Content Include="Views\Creator\_GeneratePopup.cshtml" />
+    <Content Include="Views\Creator\_ImportSchema.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
