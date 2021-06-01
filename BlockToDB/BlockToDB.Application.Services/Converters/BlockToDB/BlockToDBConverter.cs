@@ -41,21 +41,11 @@ namespace BlockToDB.Application
             return model;
         }
 
-        public DatabaseSchema FromBlockToDBEditVM(BlockToDBEditVM model, DatabaseSchema databaseSchema)
+        public DatabaseSchema FromBlockToDBAddOrEditVM(BlockToDBAddOrEditVM model, DatabaseSchema databaseSchema)
         {
             databaseSchema.Json = model.Json;
             databaseSchema.Name = model.Name;
             return databaseSchema;
-        }
-
-        public DatabaseSchema FromBlockToDBAddVM(BlockToDBAddVM model)
-        {
-            return new DatabaseSchema()
-            {
-                Json = model.Json,
-                Script = "",
-                Name = model.Name
-            };
         }
 
         public DatabaseSchema FromBlockToDBGenerateVM(BlockToDBGenerateVM model, DatabaseSchema databaseSchema, string result)

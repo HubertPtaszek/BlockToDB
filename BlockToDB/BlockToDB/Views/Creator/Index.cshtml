@@ -26,7 +26,7 @@
 </div>
 
 @Html.Partial("_ServerPopup")
-@Html.Partial("_SchemaPopup")
+@Html.Partial("_SchemaPopup", Model)
 @Html.Partial("_GeneratePopup")
 @Html.Partial("_ImportSchema")
 
@@ -40,14 +40,27 @@
         }
     }
 
-    $(document).ready(function () {
-        function saveSchemaBtnHandler() {
-            $("#schemaPopupId").dxPopup("instance").show();
-        }
+    function saveSchemaBtnHandler() {
+        $("#schemaPopupId").dxPopup("instance").show();
+    }
 
-        function exportScript() {
-            $("#schemaPopupId").dxPopup("instance").show();
+    function exportScript() {
+        $("#schemaPopupId").dxPopup("instance").show();
+    }
+
+    function initEditor() {
+        @{ 
+            if (!Model.Json.IsNullOrEmpty())
+            { 
+                <text>
+                    importScript('@(Model.Json.ToScriptStringSafe())', '@(Model.Name.ToScriptStringSafe())');
+                </text>
+            }
         }
+    }
+
+    $(document).ready(function () {
+        initEditor();
 
         $("#importBtnId").dxButton({
             elementAttr: { class: "btn btn-normal mr-1" },

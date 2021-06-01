@@ -55,22 +55,22 @@ namespace BlockToDB.Areas.Dashboard.Controllers
         }
 
         [HttpPost]
-        public ActionResult SaveSchemaData(BlockToDBAddVM model)
+        public ActionResult SaveSchemaData(BlockToDBAddOrEditVM model)
         {
             if (ModelState.IsValid)
             {
-                BlockToDBService.Add(model);
+                BlockToDBService.AddOrEdit(model);
                 return new HttpStatusCodeResult(HttpStatusCode.Created, "Added");
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
         [HttpPost]
-        public ActionResult ExportSchemaData(BlockToDBAddVM model)
+        public ActionResult ExportSchemaData(BlockToDBAddOrEditVM model)
         {
             if (ModelState.IsValid)
             {
-                int fileId = BlockToDBService.Add(model);
+                int fileId = BlockToDBService.AddOrEdit(model);
                 return new JsonResult()
                 {
                     Data = new { Id = fileId }

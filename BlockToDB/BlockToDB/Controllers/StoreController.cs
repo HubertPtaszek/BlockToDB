@@ -21,27 +21,11 @@ namespace BlockToDB.Areas.Dashboard.Controllers
             return View();
         }
 
-        public ActionResult Edit(int id)
-        {
-            BlockToDBEditVM blockToDBEdit = BlockToDBService.GetToEdit(id);
-            return View(blockToDBEdit);
-        }
-
         [HttpGet]
         public ActionResult GetData(DataSourceLoadOptions loadOptions)
         {
             object data = BlockToDBService.GetSchemasToList(loadOptions);
             return CustomJson(data);
-        }
-
-        [HttpPost]
-        public ActionResult EditSchemaData(BlockToDBEditVM model)
-        {
-            if (ModelState.IsValid)
-            {
-                BlockToDBService.Edit(model);
-            }
-            return new HttpStatusCodeResult(HttpStatusCode.Created, "Edited");
         }
 
         [HttpDelete]

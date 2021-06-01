@@ -105,8 +105,7 @@
     <Compile Include="ViewModels\BlockToDB\BlockToDBCreateVM.cs" />
     <Compile Include="ViewModels\BlockToDB\BlockToDBGenerateRemoteVM.cs" />
     <Compile Include="ViewModels\BlockToDB\BlockToDBGenerateVM.cs" />
-    <Compile Include="ViewModels\BlockToDB\BlockToDBAddVM.cs" />
-    <Compile Include="ViewModels\BlockToDB\BlockToDBEditVM.cs" />
+    <Compile Include="ViewModels\BlockToDB\BlockToDBAddOrEditVM.cs" />
     <Compile Include="ViewModels\Core\DownloadVM.cs" />
     <Compile Include="ViewModels\Membership\AppUser\AppUserAddVM.cs" />
     <Compile Include="ViewModels\Membership\AppUser\AppUserDetailsVM.cs" />

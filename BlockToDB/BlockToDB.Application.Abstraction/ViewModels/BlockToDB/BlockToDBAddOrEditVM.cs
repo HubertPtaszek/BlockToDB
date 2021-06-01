@@ -1,9 +1,8 @@
 namespace BlockToDB.Application
 {
-    public class BlockToDBEditVM
+    public class BlockToDBAddOrEditVM
     {
-
-        public int Id { get; set; }
+        public int? Id { get; set; }
         [RequiredShort]
         public string Name { get; set; }
         [RequiredShort]

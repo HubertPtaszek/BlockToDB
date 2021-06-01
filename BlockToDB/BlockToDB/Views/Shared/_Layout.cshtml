@@ -49,7 +49,7 @@
                 <div class="navbar-wrapper">
                     <ul class="navbar-links">
                         <li class="@(tab == "Creator" ? "is-active" : "")">
-                            <a href="@Url.Action("Index", "Creator")"><i class="fas fa-cubes"></i>@SharedResource.Creator.ToStringSafe()</a>
+                            <a href="@Url.Action("Index", "Creator", new { id = "" })"><i class="fas fa-cubes"></i>@SharedResource.Creator.ToStringSafe()</a>
                         </li>
                         @{
                             if (Context.User.Identity.IsAuthenticated)
@@ -107,7 +107,7 @@
         });
 
         function goToDashboard() {
-            window.location = "@Url.Action("Index", "Creator")";
+            window.location = "@Url.Action("Index", "Creator", new { id = "" })";
         }
 
         $(document).ready(function () {

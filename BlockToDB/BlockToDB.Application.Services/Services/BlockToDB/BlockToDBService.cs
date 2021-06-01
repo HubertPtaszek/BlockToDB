@@ -6,8 +6,6 @@ using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.IO;
-using System.Web;
 
 namespace BlockToDB.Application
 {
@@ -89,36 +87,17 @@ namespace BlockToDB.Application
             return result;
         }
 
-        public int Add(BlockToDBAddVM model)
+        public int AddOrEdit(BlockToDBAddOrEditVM model)
         {
-            DatabaseSchema databaseSchema = BlockToDBConverter.FromBlockToDBAddVM(model);
-            DatabaseSchemaRepository.Add(databaseSchema);
+            DatabaseSchema databaseSchema = new DatabaseSchema();
+            if (model.Id.HasValue)
+            {
+                databaseSchema = DatabaseSchemaRepository.GetSingle(x => x.Id == model.Id.Value);
+            }
+            databaseSchema = BlockToDBConverter.FromBlockToDBAddOrEditVM(model, databaseSchema);
+            DatabaseSchemaRepository.AddOrEdit(databaseSchema);
             DatabaseSchemaRepository.Save();
             return databaseSchema.Id;
-        }
-
-        public void Edit(BlockToDBEditVM model)
-        {
-            DatabaseSchema databaseSchema = DatabaseSchemaRepository.GetSingle(x => x.Id == model.Id);
-            if (databaseSchema == null)
-            {
-                throw new BussinesException(1001, "Brak danych");
-            }
-            databaseSchema = BlockToDBConverter.FromBlockToDBEditVM(model, databaseSchema);
-            DatabaseSchemaRepository.Edit(databaseSchema);
-            DatabaseSchemaRepository.Save();
-        }
-
-        public BlockToDBEditVM GetToEdit(int id)
-        {
-            DatabaseSchema databaseSchema = DatabaseSchemaRepository.GetSingle(x => x.Id == id);
-            BlockToDBEditVM blockToDBEdit = new BlockToDBEditVM()
-            {
-                Id = databaseSchema.Id,
-                Name = databaseSchema.Name,
-                Json = databaseSchema.Json,
-            };
-            return blockToDBEdit;
         }
 
         public void Delete(int id)

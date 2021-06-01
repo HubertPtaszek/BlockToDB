@@ -12,13 +12,9 @@ namespace BlockToDB.Application
 
         string CreateRemoteDataBase(BlockToDBGenerateRemoteVM model);
 
-        int Add(BlockToDBAddVM model);
+        int AddOrEdit(BlockToDBAddOrEditVM model);
 
         void Delete(int id);
-
-        void Edit(BlockToDBEditVM model);
-
-        BlockToDBEditVM GetToEdit(int id);
 
         DownloadVM DownloadFile(int id, bool isScript);
 
