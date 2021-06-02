@@ -246,4 +246,7 @@
   <data name="Name" xml:space="preserve">
     <value>Nazwa</value>
   </data>
+  <data name="ConnectionErrorInfo" xml:space="preserve">
+    <value>Nie udało się nawiązać połączenia. Sprawdź dane i spróbuj jeszcze raz!</value>
+  </data>
 </root>

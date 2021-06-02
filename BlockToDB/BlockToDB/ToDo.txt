@@ -1,3 +1,0 @@
-﻿2. Poprawa wyglądu przycisku "Wygeneruj".
-
-test tworzenia na serwerze
