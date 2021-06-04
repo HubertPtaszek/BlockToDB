@@ -124,6 +124,15 @@ namespace BlockToDB.Resources.Shared {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nie udało się nawiązać połączenia. Sprawdź dane i spróbuj jeszcze raz!.
+        /// </summary>
+        public static string ConnectionErrorInfo {
+            get {
+                return ResourceManager.GetString("ConnectionErrorInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Utwórz.
         /// </summary>
         public static string Create {

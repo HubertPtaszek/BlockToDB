@@ -63,8 +63,7 @@ namespace BlockToDB.Application
             BlockToDBGenerateVM blockToDBGenerate = BlockToDBConverter.FromBlockToDBGenerateRemoteVM(model);
             int fileId = GenerateScript(blockToDBGenerate);
             DatabaseSchema databaseSchema = DatabaseSchemaRepository.GetSingle(x => x.Id == fileId);
-            string connectionString = string.Format("Data Source={0};Initial Catalog=master;Integrated Security=True", model.Url);
-            //string newcs = string.Format("Data Source={0};Initial Catalog=master;Integrated Security=False; User Id={1};Password={2}", model.Url, model.UserName, model.Password);
+            string connectionString = string.Format("Data Source={0};Initial Catalog=master;Integrated Security=False; User Id={1};Password={2}", model.Url, model.UserName, model.Password);
             Editor editor = JsonConvert.DeserializeObject<Editor>(model.Json);
             List<string> commands = BlockToDBConverter.ToSqlCodeList(editor, model.Name);
             string result = "";
