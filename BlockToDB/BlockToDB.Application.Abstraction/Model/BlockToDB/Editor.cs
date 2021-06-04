@@ -24,7 +24,11 @@ namespace BlockToDB.Application
             string fieldName = Nodes.FirstOrDefault(x => x.Key == nodeId.ToString()).Value.Data.FirstOrDefault(x => x.Key == fieldId + "-name").Value;
             return fieldName;
         }
-
+        public string GetRelationType(int nodeId, int fieldId)
+        {
+            string fieldName = Nodes.FirstOrDefault(x => x.Key == nodeId.ToString()).Value.Data.FirstOrDefault(x => x.Key == fieldId + "-relation").Value;
+            return fieldName;
+        }
         public string GetTableField(int id, int nodeId,ref List<string> primaryKeys)
         {
             StringBuilder field = new StringBuilder();

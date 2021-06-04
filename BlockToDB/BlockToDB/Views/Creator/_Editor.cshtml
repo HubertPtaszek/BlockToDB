@@ -71,7 +71,7 @@
             this.placeholder = ph;
         }
         handler(el, editor) {
-            var array = ["jeden", "wiele"];
+            var array = ["JW", "WW"];
             var selectList = document.createElement("select");
             selectList.id = this.key;
             el.appendChild(selectList);
@@ -81,6 +81,8 @@
                 option.text = array[i];
                 selectList.appendChild(option);
             }
+            var text = this.placeholder;
+            selectList.value = text;
             var text = selectList.options[selectList.selectedIndex].value;
             this.putData(this.key, text);
             selectList.addEventListener("change", () => {
@@ -90,10 +92,11 @@
     }
 
     class NumControl3 extends Rete.Control {
-        constructor(emitter, key) {
+        constructor(emitter, key, ph ) {
             super(key);
             this.render = 'js';
             this.key = key;
+            this.placeholder = ph;
         }
         handler(el, editor) {
             var array = ["BIT", "DATE", "FLOAT", "DECIMAL", "SMALLINT", "INTEGER", "CHARACTER"];
@@ -106,8 +109,8 @@
                 option.text = array[i];
                 selectList.appendChild(option);
             }
-            var test = this.getData(this.key);
-            selectList.value = test;
+            var text =  this.placeholder;
+            selectList.value  = text;
             var text = selectList.options[selectList.selectedIndex].value;
             this.putData(this.key, text);
             selectList.addEventListener("change", () => {
@@ -117,10 +120,11 @@
     }
 
     class NumControl5 extends Rete.Control {
-        constructor(emitter, key) {
+        constructor(emitter, key, ph) {
             super(key);
             this.render = 'js';
             this.key = key;
+            this.placeholder = ph;
         }
         handler(el, editor) {
             var array = ["TPT", "TPC"];
@@ -133,8 +137,10 @@
                 option.text = array[i];
                 selectList.appendChild(option);
             }
-            var test = this.getData(this.key);
-            selectList.value = test;
+
+            var text = this.placeholder || "TPT";
+            selectList.value = text;
+            debugger
             var text = selectList.options[selectList.selectedIndex].value;
             this.putData(this.key, text);
             selectList.addEventListener("change", () => {
@@ -306,10 +312,12 @@
                 while ( node.meta.letter <= max) {
                     let out = new Rete.Output(node.meta.letter, '' + node.meta.letter, numSocket);
                     let input = new Rete.Input(node.meta.letter, '' + node.meta.letter, numSocket, false);
+                    input.addControl(new NumControl2(this.editor, node.meta.letter + '-relation', 'JW'))
                     node.addOutput(out);
                     node.addInput(input);
+                    debugger
                     node.addControl(new NumControl(this.emitter, node.meta.letter + '-name', '' + node.meta.letter));
-                    node.addControl(new NumControl3(this.emitter, node.meta.letter + '-type'));
+                    node.addControl(new NumControl3(this.emitter, node.meta.letter + '-type', node.data[node.meta.letter + '-type']));
                     node.addControl(new NumControl4(this.emitter, node.meta.letter + '-isPrimaryKey'));
                     node.addControl(new NumControl7(this.emitter, node.meta.letter + '-notNull'));
                     node.addControl(new NumControl6(this.emitter, node.meta.letter + '-unique'));
@@ -403,11 +411,11 @@
                     node.meta.letter = node.meta.letter + 1;
                     let out = new Rete.Output(node.meta.letter, '' + node.meta.letter, numSocket);
                     let input = new Rete.Input(node.meta.letter, '' + node.meta.letter, numSocket, false);
-                    //input.addControl(new NumControl2(this.editor, node.meta.letter + '-relation'))
+                    input.addControl(new NumControl2(this.editor, node.meta.letter + '-relation', 'JW'))
                     node.addOutput(out);
                     node.addInput(input);
                     node.addControl(new NumControl(this.emitter, node.meta.letter + '-name', '' + node.meta.letter ));
-                    node.addControl(new NumControl3(this.emitter, node.meta.letter + '-type'));
+                    node.addControl(new NumControl3(this.emitter, node.meta.letter + '-type', 'BIT'));
                     node.addControl(new NumControl4(this.emitter, node.meta.letter + '-isPrimaryKey'));
                     node.addControl(new NumControl7(this.emitter, node.meta.letter + '-notNull'));
                     node.addControl(new NumControl6(this.emitter, node.meta.letter + '-unique'));
@@ -420,7 +428,7 @@
             }
             let out = new Rete.Output('inheritTo', 'inheritTo', inheritSocket);
             let input = new Rete.Input('inheritFrom', 'inheritFrom', inheritSocket, false);
-            input.addControl(new NumControl5(this.editor,  'inherit-type'))
+            input.addControl(new NumControl5(this.editor, 'inherit-type', node.data['inherit-type']))
             node.addOutput(out);
             node.addInput(input);
             node.addControl(new NumControl(this.emitter, 'tableName', 'NazwaTabeli'));
