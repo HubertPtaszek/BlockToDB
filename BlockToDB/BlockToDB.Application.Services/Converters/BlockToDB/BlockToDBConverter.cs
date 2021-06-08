@@ -203,6 +203,49 @@ namespace BlockToDB.Application
                         }
                         else
                         {
+                            StringBuilder connContent = new StringBuilder();
+                            string newTable = nodeName + "_" + model.GetTableName(connection.Node);
+                            connContent.AppendLine("CREATE TABLE " + newTable + " (");
+                            connContent.AppendLine(model.GetTableName(connection.Node) + model.GetTableFieldToNewTable(connection.Node, int.Parse(connection.Output)));
+                            connContent.AppendLine(nodeName + node.Value.GetTableFieldToNewTable(int.Parse(input.Key)));
+
+                            connContent.AppendLine(");");
+
+                            connContent.Append("ALTER TABLE ");
+                            connContent.Append(newTable);
+                            connContent.Append("  ADD CONSTRAINT ");
+                            connContent.Append("  FK_");
+                            connContent.Append(input.Key);
+                            connContent.Append("_");
+                            connContent.Append(connection.Output);
+                            connContent.Append("_");
+                            connContent.Append(rnd.Next(1000));
+                            connContent.Append(" FOREIGN KEY(");
+                            connContent.Append(model.GetTableName(connection.Node) + model.GetTableField(connection.Node, int.Parse(connection.Output)));
+                            connContent.Append(") REFERENCES ");
+                            connContent.Append(model.GetTableName(connection.Node));
+                            connContent.Append("(");
+                            connContent.Append(model.GetTableField(connection.Node, int.Parse(connection.Output)));
+                            connContent.AppendLine(");");
+
+                            connContent.Append("ALTER TABLE ");
+                            connContent.Append(newTable);
+                            connContent.Append("  ADD CONSTRAINT ");
+                            connContent.Append("  FK_");
+                            connContent.Append(connection.Output);
+                            connContent.Append("_");
+                            connContent.Append(input.Key);
+                            connContent.Append("_");
+                            connContent.Append(rnd.Next(1000));
+                            connContent.Append(" FOREIGN KEY(");
+                            connContent.Append(nodeName + node.Value.GetFieldName(int.Parse(input.Key)));
+                            connContent.Append(") REFERENCES ");
+                            connContent.Append(nodeName);
+                            connContent.Append("(");
+                            connContent.Append(node.Value.GetFieldName(int.Parse(input.Key)));
+                            connContent.AppendLine(");");
+
+                            nodeContent.Append(connContent.ToString());
 
                         }
                        
@@ -374,24 +417,74 @@ namespace BlockToDB.Application
                 {
                     foreach (Connection connection in input.Value.Connections)
                     {
-                        StringBuilder connContent = new StringBuilder();
-                        connContent.Append("ALTER TABLE ");
-                        connContent.Append(model.GetTableName(connection.Node));
-                        connContent.Append("  ADD CONSTRAINT ");
-                        connContent.Append("  FK_");
-                        connContent.Append(input.Key);
-                        connContent.Append("_");
-                        connContent.Append(connection.Output);
-                        connContent.Append("_");
-                        connContent.Append(rnd.Next(100));
-                        connContent.Append(" FOREIGN KEY(");
-                        connContent.Append(model.GetTableField(connection.Node, int.Parse(connection.Output)));
-                        connContent.Append(") REFERENCES ");
-                        connContent.Append(nodeName);
-                        connContent.Append("(");
-                        connContent.Append(node.Value.GetFieldName(int.Parse(input.Key)));
-                        connContent.Append(");");
-                        nodeContent.Append(connContent.ToString());
+                        string relationType = model.GetRelationType(node.Value.Id, int.Parse(input.Key));
+                        if (relationType == "JW")
+                        {
+                            StringBuilder connContent = new StringBuilder();
+                            connContent.Append("ALTER TABLE ");
+                            connContent.Append(model.GetTableName(connection.Node));
+                            connContent.Append("  ADD CONSTRAINT ");
+                            connContent.Append("  FK_");
+                            connContent.Append(input.Key);
+                            connContent.Append("_");
+                            connContent.Append(connection.Output);
+                            connContent.Append("_");
+                            connContent.Append(rnd.Next(100));
+                            connContent.Append(" FOREIGN KEY(");
+                            connContent.Append(model.GetTableField(connection.Node, int.Parse(connection.Output)));
+                            connContent.Append(") REFERENCES ");
+                            connContent.Append(nodeName);
+                            connContent.Append("(");
+                            connContent.Append(node.Value.GetFieldName(int.Parse(input.Key)));
+                            connContent.Append(");");
+                            nodeContent.Append(connContent.ToString());
+                        }
+                        else
+                        {
+                            StringBuilder connContent = new StringBuilder();
+                            string newTable = nodeName + "_" + model.GetTableName(connection.Node);
+                            connContent.Append("CREATE TABLE " + newTable + " (");
+                            connContent.Append(model.GetTableName(connection.Node) + model.GetTableFieldToNewTable(connection.Node, int.Parse(connection.Output)));
+                            connContent.Append(nodeName + node.Value.GetTableFieldToNewTable(int.Parse(input.Key)));
+
+                            connContent.Append(");");
+
+                            connContent.Append("ALTER TABLE ");
+                            connContent.Append(newTable);
+                            connContent.Append("  ADD CONSTRAINT ");
+                            connContent.Append("  FK_");
+                            connContent.Append(input.Key);
+                            connContent.Append("_");
+                            connContent.Append(connection.Output);
+                            connContent.Append("_");
+                            connContent.Append(rnd.Next(1000));
+                            connContent.Append(" FOREIGN KEY(");
+                            connContent.Append(model.GetTableName(connection.Node) + model.GetTableField(connection.Node, int.Parse(connection.Output)));
+                            connContent.Append(") REFERENCES ");
+                            connContent.Append(model.GetTableName(connection.Node));
+                            connContent.Append("(");
+                            connContent.Append(model.GetTableField(connection.Node, int.Parse(connection.Output)));
+                            connContent.Append(");");
+
+                            connContent.Append("ALTER TABLE ");
+                            connContent.Append(newTable);
+                            connContent.Append("  ADD CONSTRAINT ");
+                            connContent.Append("  FK_");
+                            connContent.Append(connection.Output);
+                            connContent.Append("_");
+                            connContent.Append(input.Key);
+                            connContent.Append("_");
+                            connContent.Append(rnd.Next(1000));
+                            connContent.Append(" FOREIGN KEY(");
+                            connContent.Append(nodeName + node.Value.GetFieldName(int.Parse(input.Key)));
+                            connContent.Append(") REFERENCES ");
+                            connContent.Append(nodeName);
+                            connContent.Append("(");
+                            connContent.Append(node.Value.GetFieldName(int.Parse(input.Key)));
+                            connContent.Append(");");
+
+                            nodeContent.Append(connContent.ToString());
+                        }
                     }
                 }
                 content.AppendLine(nodeContent.ToString());

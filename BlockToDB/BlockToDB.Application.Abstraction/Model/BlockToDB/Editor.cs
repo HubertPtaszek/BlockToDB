@@ -54,6 +54,26 @@ namespace BlockToDB.Application
             field.Append(",");
             return field.ToString();
         }
+        public string GetTableFieldToNewTable(int id, int nodeId)
+        {
+            StringBuilder field = new StringBuilder();
+            string fieldName = Nodes.FirstOrDefault(x => x.Key == nodeId.ToString()).Value.Data.FirstOrDefault(x => x.Key == id + "-name").Value;
+            string fieldType = Nodes.FirstOrDefault(x => x.Key == nodeId.ToString()).Value.Data.FirstOrDefault(x => x.Key == id + "-type").Value;
+            string isPrimaryKey = Nodes.FirstOrDefault(x => x.Key == nodeId.ToString()).Value.Data.FirstOrDefault(x => x.Key == id + "-isPrimaryKey").Value;
+            string notNull = Nodes.FirstOrDefault(x => x.Key == nodeId.ToString()).Value.Data.FirstOrDefault(x => x.Key == id + "-notNull").Value;
+            string unique = Nodes.FirstOrDefault(x => x.Key == nodeId.ToString()).Value.Data.FirstOrDefault(x => x.Key == id + "-unique").Value;
+            field.Append(fieldName + " " + fieldType);
 
+            if (notNull == "true")
+            {
+                field.Append(" NOT NULL");
+            }
+            if (unique == "true")
+            {
+                field.Append(" UNIQUE");
+            }
+            field.Append(",");
+            return field.ToString();
+        }
     }
 }

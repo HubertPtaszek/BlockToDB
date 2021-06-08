@@ -190,5 +190,37 @@ namespace BlockToDB.Application
             string fieldName = Data.FirstOrDefault(x => x.Key == id + "-name").Value;
             return fieldName;
         }
+        public string GetTableFieldToNewTable(int id)
+        {
+            StringBuilder field = new StringBuilder();
+
+            string fieldName = Data.FirstOrDefault(x => x.Key == id + "-name").Value;
+            string fieldType = Data.FirstOrDefault(x => x.Key == id + "-type").Value;
+            string notNull = Data.FirstOrDefault(x => x.Key == id + "-notNull").Value;
+            string unique = Data.FirstOrDefault(x => x.Key == id + "-unique").Value;
+
+            if (fieldType == "CHARACTER")
+            {
+                field.Append(fieldName + " " + fieldType + "(255)");
+
+            }
+            else
+            {
+                field.Append(fieldName + " " + fieldType);
+
+            }
+
+
+            if (notNull == "true")
+            {
+                field.Append(" NOT NULL");
+            }
+            if (unique == "true")
+            {
+                field.Append(" UNIQUE");
+            }
+            field.Append(",");
+            return field.ToString();
+        }
     }
 }
