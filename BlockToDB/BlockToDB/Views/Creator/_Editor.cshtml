@@ -312,7 +312,7 @@
                 while ( node.meta.letter <= max) {
                     let out = new Rete.Output(node.meta.letter, '' + node.meta.letter, numSocket);
                     let input = new Rete.Input(node.meta.letter, '' + node.meta.letter, numSocket, false);
-                    input.addControl(new NumControl2(this.editor, node.meta.letter + '-relation', 'JW'))
+                    input.addControl(new NumControl2(this.editor, node.meta.letter + '-relation', node.data[node.meta.letter + '-relation']))
                     node.addOutput(out);
                     node.addInput(input);
                     debugger
