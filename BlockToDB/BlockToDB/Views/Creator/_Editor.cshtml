@@ -62,13 +62,24 @@
             }
         }
     };
+    function changeStyle(p1, p2, p3) {
+        debugger
+        if (p2 == "JW") {
+            document.getElementById(p1 + "-socket-" + p3).style.background = "#96b38a";
+        }
+        else {
+            document.getElementById(p1 + "-socket-" + p3).style.background = "#63F8E8";
+        }
+
+    }
 
     class NumControl2 extends Rete.Control {
-        constructor(emitter, key, ph) {
+        constructor(emitter, key, ph, nodeId) {
             super(key);
             this.render = 'js';
             this.key = key;
             this.placeholder = ph;
+            this.nodeId = nodeId;
         }
         handler(el, editor) {
             var array = ["JW", "WW"];
@@ -87,6 +98,7 @@
             this.putData(this.key, text);
             selectList.addEventListener("change", () => {
                 this.putData(this.key, selectList.options[selectList.selectedIndex].value);
+                changeStyle(this.key, selectList.options[selectList.selectedIndex].value, this.nodeId);
             });
         }
     }
@@ -312,7 +324,7 @@
                 while ( node.meta.letter <= max) {
                     let out = new Rete.Output(node.meta.letter, '' + node.meta.letter, numSocket);
                     let input = new Rete.Input(node.meta.letter, '' + node.meta.letter, numSocket, false);
-                    input.addControl(new NumControl2(this.editor, node.meta.letter + '-relation', node.data[node.meta.letter + '-relation']))
+                    input.addControl(new NumControl2(this.editor, node.meta.letter + '-relation', node.data[node.meta.letter + '-relation'], node.id))
                     node.addOutput(out);
                     node.addInput(input);
                     debugger
@@ -324,7 +336,7 @@
                     node.meta.letter = node.meta.letter + 1
                 }
             }
-            
+
 
         }
     }
@@ -336,7 +348,7 @@
       <div style="float:left; width:91px ">
             <!-- Inputs-->
             <div class="input" style="float:left; width:91px;" v-for="input in inputs()" :key="input.key" style="height:50px">
-              <Socket v-socket:input="input" type="input" :socket="input.socket"></Socket>
+              <Socket v-socket:input="input" type="input" :socket="input.socket" :id="input.key + '-relation-socket-' + node.id "></Socket>
               <div class="input-control" style="display: inline-block; margin-right: 10px;" v-show="input.showControl()" v-control="input.control"></div>
             </div>
 </div>
@@ -411,7 +423,7 @@
                     node.meta.letter = node.meta.letter + 1;
                     let out = new Rete.Output(node.meta.letter, '' + node.meta.letter, numSocket);
                     let input = new Rete.Input(node.meta.letter, '' + node.meta.letter, numSocket, false);
-                    input.addControl(new NumControl2(this.editor, node.meta.letter + '-relation', 'JW'))
+                    input.addControl(new NumControl2(this.editor, node.meta.letter + '-relation', 'JW', node.id))
                     node.addOutput(out);
                     node.addInput(input);
                     node.addControl(new NumControl(this.emitter, node.meta.letter + '-name', '' + node.meta.letter ));
@@ -435,7 +447,7 @@
             node.addControl(new BControl(this.editor, node, 'button', callback));
             this.nodeFactory.modifyNode(node);
             return node
-               
+
         }
         worker(node, inputs, outputs) {
             let ob = {};
@@ -459,10 +471,10 @@
     editor.use(JsRenderPlugin);
     editor.use(MinimapPlugin.default);
     editor.use(ConnectionPathPlugin, {
-        arrow: {
+@*        arrow: {
             color: 'steelblue',
             marker: 'M-5,-10 L-5,10 L20,0 z'
-        }
+        }*@
     });
     editor.use(ConnectionMasteryPlugin.default);
 
