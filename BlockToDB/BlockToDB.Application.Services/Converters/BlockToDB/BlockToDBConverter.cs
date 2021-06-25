@@ -184,7 +184,8 @@ namespace BlockToDB.Application
                         {
                             StringBuilder connContent = new StringBuilder();
                             connContent.Append("ALTER TABLE ");
-                            connContent.Append(model.GetTableName(connection.Node));
+                            connContent.Append(nodeName);
+
                             connContent.Append("  ADD CONSTRAINT ");
                             connContent.Append("  FK_");
                             connContent.Append(input.Key);
@@ -193,11 +194,13 @@ namespace BlockToDB.Application
                             connContent.Append("_");
                             connContent.Append(rnd.Next(100));
                             connContent.Append(" FOREIGN KEY(");
-                            connContent.Append(model.GetTableField(connection.Node, int.Parse(connection.Output)));
-                            connContent.Append(") REFERENCES ");
-                            connContent.Append(nodeName);
-                            connContent.Append("(");
                             connContent.Append(node.Value.GetFieldName(int.Parse(input.Key)));
+
+                            connContent.Append(") REFERENCES ");
+                            connContent.Append(model.GetTableName(connection.Node));
+
+                            connContent.Append("(");
+                            connContent.Append(model.GetTableField(connection.Node, int.Parse(connection.Output)));
                             connContent.Append(");");
                             nodeContent.Append(connContent.ToString());
                         }
@@ -422,7 +425,7 @@ namespace BlockToDB.Application
                         {
                             StringBuilder connContent = new StringBuilder();
                             connContent.Append("ALTER TABLE ");
-                            connContent.Append(model.GetTableName(connection.Node));
+                            connContent.Append(nodeName);
                             connContent.Append("  ADD CONSTRAINT ");
                             connContent.Append("  FK_");
                             connContent.Append(input.Key);
@@ -431,11 +434,11 @@ namespace BlockToDB.Application
                             connContent.Append("_");
                             connContent.Append(rnd.Next(100));
                             connContent.Append(" FOREIGN KEY(");
-                            connContent.Append(model.GetTableField(connection.Node, int.Parse(connection.Output)));
-                            connContent.Append(") REFERENCES ");
-                            connContent.Append(nodeName);
-                            connContent.Append("(");
                             connContent.Append(node.Value.GetFieldName(int.Parse(input.Key)));
+                            connContent.Append(") REFERENCES ");
+                            connContent.Append(model.GetTableName(connection.Node));
+                            connContent.Append("(");
+                            connContent.Append(model.GetTableField(connection.Node, int.Parse(connection.Output)));
                             connContent.Append(");");
                             nodeContent.Append(connContent.ToString());
                         }
